@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tab switching functionality
     const tabs = document.querySelectorAll('nav a');
     const quickLinks = document.querySelectorAll('.tab-link');
-    const contents = document.querySelectorAll('#profile, #concept-map, #competencies, #abilities-attitudes, #personalization');
+    const contents = document.querySelectorAll('#profile, #concept-map, #competencies, #abilities-attitudes, #activities, #personalization');
 
     function switchTab(targetId) {
         // Update tab styles
@@ -31,15 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         tab.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = tab.getAttribute('href').substring(1);
-            switchTab(targetId);
-        });
-    });
-
-    // Handle quick links
-    quickLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('data-tab');
             switchTab(targetId);
         });
     });

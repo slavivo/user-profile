@@ -1,0 +1,158 @@
+<!-- Activities -->
+<div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-900">Student Activities</h2>
+    <button onclick="toggleCreateActivityModal()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Create Activity
+    </button>
+</div>
+
+<div class="space-y-6">
+    {% for activity in student.activities %}
+    <div class="bg-white shadow rounded-lg p-6">
+        <div class="flex justify-between items-start">
+            <div>
+                <h3 class="text-lg font-medium text-gray-900">{{ activity.name }}</h3>
+                <p class="text-sm text-gray-500 mt-1">ID: {{ activity.id }}</p>
+            </div>
+            <div class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
+                Score: {{ activity.student_performance.overall_score }}/10
+            </div>
+        </div>
+
+        <!-- Learning Goals - Always visible -->
+        <div class="mt-4 bg-indigo-50 rounded-lg p-4">
+            <h4 class="text-sm font-medium text-gray-900 mb-2">Learning Goals</h4>
+            <ul class="list-disc list-inside space-y-1">
+                {% for goal in activity.learning_goals %}
+                <li class="text-sm text-indigo-800">{{ goal }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Description - Collapsible -->
+        <div class="mt-4">
+            <button onclick="toggleDescription('{{ activity.id }}')" class="flex items-center text-sm text-indigo-600 hover:text-indigo-800">
+                <span id="description-button-{{ activity.id }}">Show Description</span>
+                <svg id="description-icon-{{ activity.id }}" class="w-5 h-5 ml-1 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="description-{{ activity.id }}" class="hidden mt-2">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-gray-600 whitespace-pre-wrap">{{ activity.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connected Nodes -->
+        <div class="mt-4">
+            <h4 class="text-sm font-medium text-gray-900 mb-2">Connected Concepts</h4>
+            <div class="flex flex-wrap gap-2">
+                {% for node in activity.connected_nodes %}
+                <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">{{ node }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Competency Scores -->
+        <div class="mt-4">
+            <h4 class="text-sm font-medium text-gray-900 mb-2">Competency Development (1-10)</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {% for competency, score in activity.competency_scores.items() %}
+                <div class="bg-gray-50 p-3 rounded">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-sm text-gray-600">{{ competency|title }}</span>
+                        <span class="text-sm font-medium text-indigo-600">{{ score }}/10</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ score * 10 }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Taxonomy Classification -->
+        <div class="mt-4">
+            <h4 class="text-sm font-medium text-gray-900 mb-2">Taxonomy Classification</h4>
+            
+            <!-- Processing Levels -->
+            <div class="mb-4">
+                <h5 class="text-sm text-gray-600 mb-2">Processing Levels</h5>
+                <div class="space-y-2">
+                    {% for level in activity.taxonomy.processing_levels %}
+                    <div class="flex items-center">
+                        <div class="w-32 text-sm text-gray-600">{{ level.level }}</div>
+                        <div class="flex-grow">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ level.weight * 100 }}%"></div>
+                            </div>
+                        </div>
+                        <div class="w-16 text-right text-sm text-gray-600">{{ "%.0f"|format(level.weight * 100) }}%</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Knowledge Domains -->
+            <div>
+                <h5 class="text-sm text-gray-600 mb-2">Knowledge Domains</h5>
+                <div class="space-y-2">
+                    {% for domain in activity.taxonomy.knowledge_domains %}
+                    <div class="flex items-center">
+                        <div class="w-32 text-sm text-gray-600">{{ domain.domain }}</div>
+                        <div class="flex-grow">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ domain.weight * 100 }}%"></div>
+                            </div>
+                        </div>
+                        <div class="w-16 text-right text-sm text-gray-600">{{ "%.0f"|format(domain.weight * 100) }}%</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Performance -->
+        <div class="mt-4">
+            <h4 class="text-sm font-medium text-gray-900">Connected Concepts Performance</h4>
+            <div class="mt-2 space-y-2">
+                {% for concept_id, data in activity.student_performance.concept_scores.items() %}
+                    <div class="concept-score">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-sm text-gray-600">{{ data.name }}</span>
+                            <span class="text-sm font-medium text-gray-900">{{ data.score }}/10</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ data.score * 10 }}%"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% include 'components/activities/create_activity.html' %}
+
+<script>
+function toggleDescription(activityId) {
+    const description = document.getElementById(`description-${activityId}`);
+    const button = document.getElementById(`description-button-${activityId}`);
+    const icon = document.getElementById(`description-icon-${activityId}`);
+    
+    if (description.classList.contains('hidden')) {
+        description.classList.remove('hidden');
+        button.textContent = 'Hide Description';
+        icon.classList.add('rotate-180');
+    } else {
+        description.classList.add('hidden');
+        button.textContent = 'Show Description';
+        icon.classList.remove('rotate-180');
+    }
+}
+</script> 

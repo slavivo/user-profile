@@ -1,0 +1,202 @@
+<!-- Create Activity Form -->
+<div id="create-activity-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Create New Activity</h3>
+            <button onclick="toggleCreateActivityModal()" class="text-gray-400 hover:text-gray-500">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- API Controls -->
+        <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+            <div class="flex items-center justify-between space-x-4">
+                <div class="w-64">
+                    <label for="activity-api-select" class="block text-sm font-medium text-gray-700 mb-2">AI Provider</label>
+                    <select id="activity-api-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <option value="gemini">Google Gemini</option>
+                        <option value="openai">OpenAI</option>
+                    </select>
+                </div>
+                <div class="w-64">
+                    <label for="activity-model-select" class="block text-sm font-medium text-gray-700 mb-2">Model</label>
+                    <select id="activity-model-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <!-- Models will be populated by JavaScript -->
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Creation Mode Selector -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Creation Mode</label>
+            <div class="flex space-x-4">
+                <button id="brief-mode-btn" onclick="switchMode('brief')" class="px-4 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white">
+                    Brief Description
+                </button>
+                <button id="full-mode-btn" onclick="switchMode('full')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
+                    Full Description
+                </button>
+            </div>
+        </div>
+
+        <!-- Activity Name -->
+        <div class="mb-4">
+            <label for="activity-name" class="block text-sm font-medium text-gray-700 mb-2">Activity Name</label>
+            <input type="text" id="activity-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter activity name">
+        </div>
+
+        <!-- Brief Description Mode -->
+        <div id="brief-mode" class="mb-4">
+            <label for="brief-description" class="block text-sm font-medium text-gray-700 mb-2">Brief Description</label>
+            <textarea id="brief-description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Briefly describe what you want the activity to accomplish..."></textarea>
+            <p class="mt-1 text-sm text-gray-500">AI will generate a detailed description and all other details based on this brief description.</p>
+        </div>
+
+        <!-- Full Description Mode -->
+        <div id="full-mode" class="hidden mb-4">
+            <label for="full-description" class="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
+            <textarea id="full-description" rows="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Provide a detailed description of the activity..."></textarea>
+            <p class="mt-1 text-sm text-gray-500">AI will generate learning goals, taxonomy classification, and other metadata based on this description.</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end space-x-3 mt-6">
+            <button onclick="toggleCreateActivityModal()" class="px-4 py-2 text-sm font-medium rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
+                Cancel
+            </button>
+            <button onclick="generateActivity()" class="px-4 py-2 text-sm font-medium rounded-md border border-transparent bg-indigo-600 text-white hover:bg-indigo-700">
+                Generate Activity
+            </button>
+        </div>
+
+        <!-- Generation Progress -->
+        <div id="generation-progress" class="hidden mt-4">
+            <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex items-center">
+                    <div class="mr-3">
+                        <svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-900">Generating Activity</h4>
+                        <p class="text-sm text-gray-500" id="generation-status">Processing...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include shared configurations -->
+<script src="/static/js/shared/configs.js"></script>
+<script>
+function toggleCreateActivityModal() {
+    const modal = document.getElementById('create-activity-modal');
+    modal.classList.toggle('hidden');
+}
+
+function populateModels() {
+    const provider = document.getElementById('activity-api-select').value;
+    const modelSelect = document.getElementById('activity-model-select');
+    const models = modelConfigs[provider];
+    
+    modelSelect.innerHTML = models.map(model => 
+        `<option value="${model.id}" ${model.default ? 'selected' : ''}>${model.name}</option>`
+    ).join('');
+}
+
+function switchMode(mode) {
+    const briefMode = document.getElementById('brief-mode');
+    const fullMode = document.getElementById('full-mode');
+    const briefBtn = document.getElementById('brief-mode-btn');
+    const fullBtn = document.getElementById('full-mode-btn');
+
+    if (mode === 'brief') {
+        briefMode.classList.remove('hidden');
+        fullMode.classList.add('hidden');
+        briefBtn.classList.remove('bg-gray-200', 'text-gray-700');
+        briefBtn.classList.add('bg-indigo-600', 'text-white');
+        fullBtn.classList.remove('bg-indigo-600', 'text-white');
+        fullBtn.classList.add('bg-gray-200', 'text-gray-700');
+    } else {
+        briefMode.classList.add('hidden');
+        fullMode.classList.remove('hidden');
+        fullBtn.classList.remove('bg-gray-200', 'text-gray-700');
+        fullBtn.classList.add('bg-indigo-600', 'text-white');
+        briefBtn.classList.remove('bg-indigo-600', 'text-white');
+        briefBtn.classList.add('bg-gray-200', 'text-gray-700');
+    }
+}
+
+async function generateActivity() {
+    // Show progress indicator
+    const progress = document.getElementById('generation-progress');
+    const status = document.getElementById('generation-status');
+    progress.classList.remove('hidden');
+    
+    // Get form data
+    const provider = document.getElementById('activity-api-select').value;
+    const model = document.getElementById('activity-model-select').value;
+    const name = document.getElementById('activity-name').value;
+    const isBriefMode = !document.getElementById('brief-mode').classList.contains('hidden');
+    const description = isBriefMode ? 
+        document.getElementById('brief-description').value :
+        document.getElementById('full-description').value;
+
+    try {
+        status.textContent = 'Sending request...';
+        
+        const response = await fetch('/generate_activity', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                provider,
+                model,
+                name,
+                description,
+                mode: isBriefMode ? 'brief' : 'full'
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        // Hide modal and show success message
+        toggleCreateActivityModal();
+        
+        // Refresh only the activities section
+        const activitiesSection = document.getElementById('activities-section');
+        if (activitiesSection) {
+            const activitiesResponse = await fetch('/activities_content');
+            const activitiesHtml = await activitiesResponse.text();
+            activitiesSection.innerHTML = activitiesHtml;
+        }
+
+    } catch (error) {
+        status.textContent = `Error: ${error.message}`;
+        console.error('Error:', error);
+    }
+}
+
+// Initialize models on page load and when provider changes
+document.addEventListener('DOMContentLoaded', () => {
+    // Populate models immediately since we have direct access to modelConfigs
+    populateModels();
+    
+    document.getElementById('activity-api-select').addEventListener('change', populateModels);
+});
+</script> 

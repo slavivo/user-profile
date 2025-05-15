@@ -1,5 +1,5 @@
 from tenacity import retry, wait_random_exponential, stop_after_attempt
-from typing import Tuple, Dict, Any, Optional
+from typing import Tuple, Dict, Any, Optional, List
 import numpy as np
 import openai
 import google.generativeai as genai
@@ -632,3 +632,116 @@ def is_valid_graph_format(response_text):
         print(f"Validation failed with exception: {str(e)}")
         print("Response text:", repr(response_text))
         return False
+    
+def get_full_description_prompt(name: str, brief_description: str) -> str:
+    return f"""Create a detailed educational activity description based on the following brief information:
+Activity Name: {name}
+Brief Description: {brief_description}
+
+Please provide a comprehensive description that includes:
+1. Overview of the activity
+2. Step-by-step instructions
+3. Required materials or resources
+4. Expected duration
+5. Prerequisites (if any)
+6. Expected outcomes
+
+Format the response as a well-structured description with clear sections."""
+
+def get_learning_goals_prompt(name: str, description: str) -> str:
+    return f"""Based on the following activity, identify 3-5 specific learning goals:
+Activity Name: {name}
+Description: {description}
+
+Each learning goal should:
+1. Be specific and measurable
+2. Start with an action verb
+3. Focus on a single outcome
+4. Be aligned with computer science education principles
+
+Format the response as a JSON array of strings, each representing a learning goal.
+Example:
+[
+    "Implement basic sorting algorithms to solve practical problems",
+    "Analyze algorithm efficiency using Big O notation",
+    "Design test cases to validate algorithm correctness"
+]"""
+
+def get_connected_concepts_prompt(name: str, description: str, learning_goals: List[str]) -> str:
+    goals_text = "\n".join([f"- {goal}" for goal in learning_goals])
+    return f"""Identify the key concepts from our concept map that are connected to this activity:
+Activity Name: {name}
+Description: {description}
+
+Learning Goals:
+{goals_text}
+
+Consider both direct and indirect connections to the following main concept areas:
+1. Data, Information and Modeling
+2. Algorithms and Programming
+3. IT Systems
+4. Digital Technology
+
+Format the response as a JSON object with concept IDs and connection strengths (0-100).
+Example:
+{{
+    "data2": 85,
+    "algo1": 90,
+    "sys3": 70
+}}"""
+
+def get_competency_prompt(name: str, description: str, learning_goals: List[str]) -> str:
+    goals_text = "\n".join([f"- {goal}" for goal in learning_goals])
+    return f"""Analyze the competency development opportunities in this activity:
+Activity Name: {name}
+Description: {description}
+
+Learning Goals:
+{goals_text}
+
+Evaluate the development of these competencies:
+1. Problem Solving
+2. Critical Thinking
+3. Analytical Skills
+4. Technical Proficiency
+5. Communication
+6. Collaboration
+
+Format the response as a JSON object with competency scores (0-100).
+Example:
+{{
+    "problem_solving": 85,
+    "critical_thinking": 90,
+    "analytical_skills": 75,
+    "technical_proficiency": 80,
+    "communication": 65,
+    "collaboration": 70
+}}"""
+
+def get_taxonomy_prompt(name: str, description: str, learning_goals: List[str]) -> str:
+    goals_text = "\n".join([f"- {goal}" for goal in learning_goals])
+    return f"""Classify this activity using Marzano and Kendall's Taxonomy:
+Activity Name: {name}
+Description: {description}
+
+Learning Goals:
+{goals_text}
+
+Consider the following levels:
+1. Retrieval
+2. Comprehension
+3. Analysis
+4. Knowledge Utilization
+5. Metacognition
+6. Self-system Thinking
+
+Format the response as a JSON object with taxonomy levels and their relevance scores (0-100).
+Example:
+{{
+    "retrieval": 60,
+    "comprehension": 80,
+    "analysis": 90,
+    "knowledge_utilization": 85,
+    "metacognition": 70,
+    "self_system_thinking": 65
+}}"""

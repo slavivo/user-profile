@@ -6,9 +6,9 @@ const modelConfigs = {
         { id: 'gemini-2.5-pro-preview-05-06', name: 'Gemini 2.5 Pro' }
     ],
     openai: [
-        { id: 'gpt-4o-2024-08-06', name: 'GPT-4O', default: true },
-        { id: 'o4-mini-2025-04-16', name: 'GPT-4O Mini' },
-        { id: 'o3-mini-2025-01-31', name: 'GPT-3O Mini' }
+        { id: 'gpt-4o-2024-08-06', name: 'GPT-4o', default: true },
+        { id: 'o4-mini-2025-04-16', name: 'GPT-4o Mini' },
+        { id: 'o3-mini-2025-01-31', name: 'GPT-3o Mini' }
     ]
 };
 
@@ -85,37 +85,33 @@ function initializeCytoscape(container, elements) {
                 selector: 'node',
                 style: {
                     'label': 'data(label)',
-                    'background-color': '#ffffff',
-                    'border-width': '2px',
-                    'border-color': '#6366f1',
-                    'color': '#1f2937',
+                    'background-color': '#f8fafc',  // Light gray background
+                    'border-width': 1,
+                    'border-color': '#e2e8f0',     // Subtle border
+                    'color': '#334155',            // Darker text for better contrast
                     'text-wrap': 'wrap',
-                    'text-max-width': '100px',
-                    'font-size': '12px',
+                    'text-max-width': 100,
+                    'font-size': 12,
                     'font-family': 'system-ui, -apple-system, sans-serif',
-                    'font-weight': '500',
+                    'font-weight': 500,
                     'text-valign': 'center',
                     'text-halign': 'center',
-                    'width': '130px',
-                    'height': '45px',
-                    'padding': '12px',
-                    'shadow-blur': '10px',
-                    'shadow-color': '#a5b4fc',
-                    'shadow-opacity': 0.3,
-                    'shadow-offset-x': '0px',
-                    'shadow-offset-y': '4px',
-                    'border-radius': '8px'
+                    'width': 130,
+                    'height': 45,
+                    'padding': 12,
+                    'shape': 'round-rectangle',    // Rounded rectangle shape
+                    'background-opacity': 0.95
                 }
             },
             {
                 selector: 'edge',
                 style: {
-                    'width': 2,
-                    'line-color': '#cbd5e1',
-                    'target-arrow-color': '#cbd5e1',
+                    'width': 1.5,                  // Thinner edges
+                    'line-color': '#e2e8f0',       // Lighter edge color
+                    'target-arrow-color': '#e2e8f0',
                     'target-arrow-shape': 'vee',
                     'curve-style': 'bezier',
-                    'arrow-scale': 1.5,
+                    'arrow-scale': 1.2,
                     'line-style': 'solid'
                 }
             }

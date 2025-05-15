@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="profile" class="bg-white shadow rounded-lg p-6">
+    <div class="space-y-8">
+        {% include "components/profile/basic_info.html" %}
+        {% include "components/profile/key_metrics.html" %}
+        {% include "components/profile/quick_links.html" %}
+    </div>
+</div>
+
+<div id="concept-map" class="hidden bg-white shadow rounded-lg p-6">
+    {% include "components/concept_map/main.html" %}
+</div>
+
+<div id="abilities-attitudes" class="hidden bg-white shadow rounded-lg p-6">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Abilities & Attitudes</h2>
+    {% with abilities=student.abilities %}
+        {% include "components/abilities/cognitive.html" %}
+        {% include "components/abilities/physical.html" %}
+        {% include "components/abilities/social.html" %}
+    {% endwith %}
+    {% with attitudes=student.attitudes %}
+        {% include "components/abilities/attitudes.html" %}
+    {% endwith %}
+</div>
+
+<div id="competencies" class="hidden bg-white shadow rounded-lg p-6">
+    {% include "components/competencies/main.html" %}
+</div>
+
+<div id="personalization" class="hidden bg-white shadow rounded-lg p-6">
+    {% include "components/personalization/main.html" %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/graph.js') }}"></script>
+{% endblock %} 

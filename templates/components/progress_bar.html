@@ -1,0 +1,11 @@
+{% macro progress_bar(label, value) %}
+<div class="bg-gray-50 p-4 rounded-lg">
+    <div class="flex items-center justify-between mb-2">
+        <h4 class="text-sm font-medium text-gray-900">{{ label }}</h4>
+        <span class="text-sm font-medium text-indigo-600">{{ value }}%</span>
+    </div>
+    <div class="relative w-full h-2 bg-gray-200 rounded-full">
+        <div class="absolute top-0 left-0 h-full bg-indigo-600 rounded-full" style="width: {{ value }}%"></div>
+    </div>
+</div>
+{% endmacro %} 

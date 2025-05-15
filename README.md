@@ -80,9 +80,9 @@ The application supports two AI providers:
 - Gemini 2.5 Pro
 
 ### OpenAI Models
-- GPT-4O
-- GPT-4O Mini
-- GPT-3O Mini
+- GPT-4o
+- GPT-4o Mini
+- GPT-3o Mini
 
 ## Graph Generation Process
 
@@ -110,11 +110,3 @@ The application supports two AI providers:
 - Never commit `config.ini` or any files containing API keys
 - Use environment variables in production
 - Keep dependencies updated for security patches
-
-## License
-
-[Your chosen license]
-
-## Contributing
-
-[Your contribution guidelines] 

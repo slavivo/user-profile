@@ -1,0 +1,25 @@
+<!-- Basic Info -->
+<div>
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Student Profile</h2>
+    <div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Student Information</h3>
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Student ID</dt>
+                <dd class="text-sm text-gray-900">{{ student.id }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">School Year</dt>
+                <dd class="text-sm text-gray-900">{{ student.school_year }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Grade</dt>
+                <dd class="text-sm text-gray-900">{{ student.grade }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Class</dt>
+                <dd class="text-sm text-gray-900">{{ student.class }}</dd>
+            </div>
+        </dl>
+    </div>
+</div> 

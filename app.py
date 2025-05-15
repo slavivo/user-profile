@@ -10,6 +10,7 @@ from utils import (
 )
 import asyncio
 from functools import partial
+import json
 
 app = Flask(__name__)
 
@@ -21,9 +22,67 @@ config.read('config.ini')
 OPENAI_KEY = config['DEFAULT']['OPENAI_KEY']
 GENAI_KEY = config['DEFAULT']['GENAI_KEY']
 
+# Sample student data - in a real app, this would come from a database
+student_data = {
+    'id': 'STU2024001',
+    'school_year': '2023-2024',
+    'grade': 'Second Grade',
+    'class': '2.A',
+    'top_abilities': [
+        {'name': 'Pattern Recognition', 'value': 92},
+        {'name': 'Problem Decomposition', 'value': 88},
+        {'name': 'Logical Reasoning', 'value': 85}
+    ],
+    'top_attitudes': [
+        {'name': 'Growth Mindset', 'value': 95},
+        {'name': 'Curiosity', 'value': 90},
+        {'name': 'Initiative', 'value': 87}
+    ],
+    'abilities': {
+        'cognitive': {
+            'pattern_recognition': 92,
+            'processing_speed': 84,
+            'problem_decomposition': 88,
+            'spatial_reasoning': 78,
+            'logical_reasoning': 85,
+            'abstract_thinking': 82,
+            'memory_capacity': 80,
+            'information_organization': 82
+        },
+        'physical': {
+            'hand_eye_coordination': 78,
+            'fine_motor_skills': 75,
+            'typing_speed': 85,
+            'visual_acuity': 80
+        },
+        'social': {
+            'emotional_intelligence': 88,
+            'social_perception': 85,
+            'communication_clarity': 83,
+            'active_listening': 82,
+            'empathy': 87,
+            'stress_management': 79
+        }
+    },
+    'attitudes': {
+        'growth_mindset': 95,
+        'persistence': 88,
+        'curiosity': 90,
+        'initiative': 87,
+        'adaptability': 85,
+        'risk_taking': 80,
+        'self_discipline': 86,
+        'collaboration': 89,
+        'open_mindedness': 88,
+        'responsibility': 91,
+        'attention_to_detail': 84,
+        'innovation_orientation': 86
+    }
+}
+
 @app.route('/')
-def home():
-    return render_template('index.html')
+def index():
+    return render_template('pages/profile.html', student=student_data)
 
 async def get_reformatting_client(provider_preference='gemini'):
     """Get a client for reformatting, preferring Gemini 2.0 flash or GPT-4O"""

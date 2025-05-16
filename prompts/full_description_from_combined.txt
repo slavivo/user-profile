@@ -1,0 +1,18 @@
+Create a detailed educational activity description that incorporates all the following elements:
+${name}
+${brief_description}
+${full_description}
+${goals_text}
+${concepts_text}
+${competencies_text}
+${taxonomy_text}
+
+Please provide a comprehensive description that includes:
+1. Overview of the activity and how it addresses all specified elements
+2. Step-by-step instructions that incorporate all requirements
+3. Required materials or resources
+4. Expected duration
+5. Prerequisites (if any)
+6. Expected outcomes tied to all specified goals and requirements
+
+Format the response as a well-structured description with clear sections. 

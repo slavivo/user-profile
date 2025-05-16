@@ -1,0 +1,17 @@
+Based on the following activity, identify 3-5 specific learning goals:
+Activity Name: ${name}
+Description: ${description}
+
+Each learning goal should:
+1. Be specific and measurable
+2. Start with an action verb
+3. Focus on a single outcome
+4. Be aligned with computer science education principles
+
+Format the response as a JSON array of strings, each representing a learning goal.
+Example:
+[
+    "Implement basic sorting algorithms to solve practical problems",
+    "Analyze algorithm efficiency using Big O notation",
+    "Design test cases to validate algorithm correctness"
+] 

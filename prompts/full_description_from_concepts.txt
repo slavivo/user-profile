@@ -1,0 +1,17 @@
+Create a detailed educational activity description that focuses on teaching the following concepts:
+${concepts_text}
+
+Additional Context:
+Activity Name: ${name}
+Brief Description: ${brief_description}
+
+The activity should be designed to effectively teach and reinforce understanding of these specific concepts.
+Please provide a comprehensive description that includes:
+1. Overview of the activity and how it relates to each concept
+2. Step-by-step instructions that incorporate concept exploration
+3. Required materials or resources
+4. Expected duration
+5. Prerequisites (if any)
+6. Expected outcomes tied to concept mastery
+
+Format the response as a well-structured description with clear sections. 

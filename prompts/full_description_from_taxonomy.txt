@@ -1,0 +1,25 @@
+Generate a detailed activity description for "${name}" that aligns with the following cognitive levels and knowledge domains:
+
+Processing Levels:
+- Retrieval: ${retrieval}%
+- Comprehension: ${comprehension}%
+- Analysis: ${analysis}%
+- Knowledge Utilization: ${knowledge_utilization}%
+- Metacognition: ${metacognition}%
+- Self-system Thinking: ${self_system_thinking}%
+
+Knowledge Domains:
+- Information: ${information_domain}%
+- Mental Procedures: ${mental_procedures_domain}%
+- Psychomotor Procedures: ${psychomotor_procedures_domain}%
+
+Brief Context: ${brief_description}
+
+Generate a comprehensive description that:
+1. Emphasizes activities and tasks that match the specified cognitive processing levels
+2. Balances content across the knowledge domains according to the given percentages
+3. Incorporates elements that specifically target higher-level thinking where indicated
+4. Includes hands-on components when psychomotor procedures are emphasized
+5. Promotes metacognitive strategies and self-reflection where specified
+
+Format the response as a clear, well-structured description that could be used by an educator to implement the activity. 

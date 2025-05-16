@@ -6,6 +6,7 @@ import google.generativeai as genai
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 import asyncio
+from .template_handler import PromptTemplate
 
 class RateLimiter:
     def __init__(self, interval):
@@ -488,61 +489,11 @@ def print_logprobs(logprobs):
     for category, prob in categories_probs:
         print(f"Category: {category}, linear probability: {np.round(prob*100,2)}")
 
-def get_graph_generation_prompt(concept):
-    return f"""Generate a knowledge graph for the concept of {concept} in computer science education.
-The graph should represent key sub-concepts and their relationships.
-Format the response as a JSON object with two arrays: 'nodes' and 'edges'.
-Each node should have an 'id', 'label', and 'progress' (a number between 0-100 representing mastery).
-Each edge should have a 'source' (node id) and 'target' (node id).
-Keep the graph focused and hierarchical with clear dependencies.
-
-Example format:
-{{
-    "nodes": [
-        {{"id": "concept1", "label": "Basic Concept", "progress": 85}},
-        {{"id": "concept2", "label": "Advanced Concept", "progress": 70}}
-    ],
-    "edges": [
-        {{"source": "concept1", "target": "concept2"}}
-    ]
-}}"""
-
 def get_initial_graph_prompt(concept):
-    return f"""Analyze the concept of {concept} in computer science education and describe a knowledge graph structure.
-List the key nodes (concepts) that should be included and describe how they should be connected.
-Focus on creating a clear hierarchical structure with meaningful relationships.
-You don't need to follow any specific format - just describe the nodes and their connections in natural language.
-Keep the response focused on essential concepts and their direct relationships."""
+    return PromptTemplate.render('initial_graph', concept=concept)
 
 def get_reformatting_prompt(concept, initial_response):
-    return f"""Convert the following knowledge graph description into a properly formatted JSON structure.
-The description is for the concept of {concept} and contains information about nodes and their relationships.
-
-Description to convert:
-{initial_response}
-
-Format the response as a JSON object with two arrays: 'nodes' and 'edges' following these rules:
-1. Each node must have:
-   - 'id': a unique string identifier (use concept1, concept2, etc.)
-   - 'label': the actual concept name
-   - 'progress': a number between 0-100 representing estimated mastery level
-2. Each edge must have:
-   - 'source': the id of the source node
-   - 'target': the id of the target node
-3. The JSON must be properly formatted with no trailing commas
-4. All strings must be in double quotes
-5. The response should contain ONLY the JSON object, no additional text
-
-Example format:
-{{
-    "nodes": [
-        {{"id": "concept1", "label": "Basic Concept", "progress": 85}},
-        {{"id": "concept2", "label": "Advanced Concept", "progress": 70}}
-    ],
-    "edges": [
-        {{"source": "concept1", "target": "concept2"}}
-    ]
-}}"""
+    return PromptTemplate.render('reformatting', concept=concept, initial_response=initial_response)
 
 def is_valid_graph_format(response_text):
     """Validate if the response has the correct graph format"""
@@ -634,114 +585,19 @@ def is_valid_graph_format(response_text):
         return False
     
 def get_full_description_prompt(name: str, brief_description: str) -> str:
-    return f"""Create a detailed educational activity description based on the following brief information:
-Activity Name: {name}
-Brief Description: {brief_description}
-
-Please provide a comprehensive description that includes:
-1. Overview of the activity
-2. Step-by-step instructions
-3. Required materials or resources
-4. Expected duration
-5. Prerequisites (if any)
-6. Expected outcomes
-
-Format the response as a well-structured description with clear sections."""
+    return PromptTemplate.render('full_description', name=name, brief_description=brief_description)
 
 def get_learning_goals_prompt(name: str, description: str) -> str:
-    return f"""Based on the following activity, identify 3-5 specific learning goals:
-Activity Name: {name}
-Description: {description}
-
-Each learning goal should:
-1. Be specific and measurable
-2. Start with an action verb
-3. Focus on a single outcome
-4. Be aligned with computer science education principles
-
-Format the response as a JSON array of strings, each representing a learning goal.
-Example:
-[
-    "Implement basic sorting algorithms to solve practical problems",
-    "Analyze algorithm efficiency using Big O notation",
-    "Design test cases to validate algorithm correctness"
-]"""
+    return PromptTemplate.render('learning_goals', name=name, description=description)
 
 def get_connected_concepts_prompt(name: str, description: str, learning_goals: List[str]) -> str:
     goals_text = "\n".join([f"- {goal}" for goal in learning_goals])
-    return f"""Identify the key concepts from our concept map that are connected to this activity:
-Activity Name: {name}
-Description: {description}
-
-Learning Goals:
-{goals_text}
-
-Consider both direct and indirect connections to the following main concept areas:
-1. Data, Information and Modeling
-2. Algorithms and Programming
-3. IT Systems
-4. Digital Technology
-
-Format the response as a JSON object with concept IDs and connection strengths (0-100).
-Example:
-{{
-    "data2": 85,
-    "algo1": 90,
-    "sys3": 70
-}}"""
+    return PromptTemplate.render('connected_concepts', name=name, description=description, goals_text=goals_text)
 
 def get_competency_prompt(name: str, description: str, learning_goals: List[str]) -> str:
     goals_text = "\n".join([f"- {goal}" for goal in learning_goals])
-    return f"""Analyze the competency development opportunities in this activity:
-Activity Name: {name}
-Description: {description}
-
-Learning Goals:
-{goals_text}
-
-Evaluate the development of these competencies:
-1. Problem Solving
-2. Critical Thinking
-3. Analytical Skills
-4. Technical Proficiency
-5. Communication
-6. Collaboration
-
-Format the response as a JSON object with competency scores (0-100).
-Example:
-{{
-    "problem_solving": 85,
-    "critical_thinking": 90,
-    "analytical_skills": 75,
-    "technical_proficiency": 80,
-    "communication": 65,
-    "collaboration": 70
-}}"""
+    return PromptTemplate.render('competency', name=name, description=description, goals_text=goals_text)
 
 def get_taxonomy_prompt(name: str, description: str, learning_goals: List[str]) -> str:
     goals_text = "\n".join([f"- {goal}" for goal in learning_goals])
-    return f"""Classify this activity using Marzano and Kendall's Taxonomy:
-Activity Name: {name}
-Description: {description}
-
-Learning Goals:
-{goals_text}
-
-Consider the following levels:
-1. Retrieval
-2. Comprehension
-3. Analysis
-4. Knowledge Utilization
-5. Metacognition
-6. Self-system Thinking
-
-Format the response as a JSON object with taxonomy levels and their relevance scores (0-100).
-Example:
-{{
-    "retrieval": 60,
-    "comprehension": 80,
-    "analysis": 90,
-    "knowledge_utilization": 85,
-    "metacognition": 70,
-    "self_system_thinking": 65
-}}"""
+    return PromptTemplate.render('taxonomy', name=name, description=description, goals_text=goals_text)

@@ -1,0 +1,25 @@
+Analyze the competency development opportunities in this activity:
+Activity Name: ${name}
+Description: ${description}
+
+Learning Goals:
+${goals_text}
+
+Evaluate the development of these competencies:
+1. Problem Solving
+2. Critical Thinking
+3. Analytical Skills
+4. Technical Proficiency
+5. Communication
+6. Collaboration
+
+Format the response as a JSON object with competency scores (0-100).
+Example:
+{
+    "problem_solving": 85,
+    "critical_thinking": 90,
+    "analytical_skills": 75,
+    "technical_proficiency": 80,
+    "communication": 65,
+    "collaboration": 70
+} 

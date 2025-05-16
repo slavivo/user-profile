@@ -1,0 +1,20 @@
+Identify the key concepts from our concept map that are connected to this activity:
+Activity Name: ${name}
+Description: ${description}
+
+Learning Goals:
+${goals_text}
+
+Consider both direct and indirect connections to the following main concept areas:
+1. Data, Information and Modeling
+2. Algorithms and Programming
+3. IT Systems
+4. Digital Technology
+
+Format the response as a JSON object with concept IDs and connection strengths (0-100).
+Example:
+{
+    "data2": 85,
+    "algo1": 90,
+    "sys3": 70
+} 

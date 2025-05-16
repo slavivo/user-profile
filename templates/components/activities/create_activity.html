@@ -32,12 +32,27 @@
         <!-- Creation Mode Selector -->
         <div class="mb-6">
             <label class="block text-sm font-medium text-gray-700 mb-2">Creation Mode</label>
-            <div class="flex space-x-4">
+            <div class="grid grid-cols-2 gap-4 mb-4">
                 <button id="brief-mode-btn" onclick="switchMode('brief')" class="px-4 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white">
                     Brief Description
                 </button>
                 <button id="full-mode-btn" onclick="switchMode('full')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
                     Full Description
+                </button>
+                <button id="concepts-mode-btn" onclick="switchMode('concepts')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
+                    Select Concepts
+                </button>
+                <button id="competencies-mode-btn" onclick="switchMode('competencies')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
+                    Select Competencies
+                </button>
+                <button id="learning-goals-mode-btn" onclick="switchMode('learning-goals')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
+                    Define Learning Goals
+                </button>
+                <button id="taxonomy-mode-btn" onclick="switchMode('taxonomy')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
+                    Set Taxonomy Levels
+                </button>
+                <button id="combined-mode-btn" onclick="switchMode('combined')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700 col-span-2">
+                    Combined Options
                 </button>
             </div>
         </div>
@@ -60,6 +75,194 @@
             <label for="full-description" class="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
             <textarea id="full-description" rows="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Provide a detailed description of the activity..."></textarea>
             <p class="mt-1 text-sm text-gray-500">AI will generate learning goals, taxonomy classification, and other metadata based on this description.</p>
+        </div>
+
+        <!-- Concepts Mode -->
+        <div id="concepts-mode" class="hidden mb-4">
+            <div class="mb-4">
+                <label for="concepts-brief-description" class="block text-sm font-medium text-gray-700 mb-2">Brief Description</label>
+                <textarea id="concepts-brief-description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Briefly describe what you want the activity to accomplish..."></textarea>
+                <p class="mt-1 text-sm text-gray-500">This will help generate a more focused activity around your selected concepts.</p>
+            </div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Select Concepts to Focus On</label>
+            <div class="max-h-60 overflow-y-auto border rounded-md p-4 mb-4">
+                <div class="grid grid-cols-2 gap-4" id="concepts-list">
+                    <!-- Concepts will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Selected Concepts</label>
+                <div id="selected-concepts" class="flex flex-wrap gap-2">
+                    <!-- Selected concepts will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Competencies Mode -->
+        <div id="competencies-mode" class="hidden mb-4">
+            <div class="mb-4">
+                <label for="competencies-brief-description" class="block text-sm font-medium text-gray-700 mb-2">Brief Description</label>
+                <textarea id="competencies-brief-description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Briefly describe what you want the activity to accomplish..."></textarea>
+                <p class="mt-1 text-sm text-gray-500">This will help generate a more focused activity that develops your target competencies.</p>
+            </div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Set Target Competency Levels</label>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Problem Solving</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="problem-solving-level">
+                    <span class="w-16" id="problem-solving-value">50%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Critical Thinking</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="critical-thinking-level">
+                    <span class="w-16" id="critical-thinking-value">50%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Analysis</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="analysis-level">
+                    <span class="w-16" id="analysis-value">50%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Technical</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="technical-level">
+                    <span class="w-16" id="technical-value">50%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Communication</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="communication-level">
+                    <span class="w-16" id="communication-value">50%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Collaboration</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="collaboration-level">
+                    <span class="w-16" id="collaboration-value">50%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Goals Mode -->
+        <div id="learning-goals-mode" class="hidden mb-4">
+            <div class="mb-4">
+                <label for="learning-goals-brief-description" class="block text-sm font-medium text-gray-700 mb-2">Brief Description</label>
+                <textarea id="learning-goals-brief-description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Briefly describe what you want the activity to accomplish..."></textarea>
+                <p class="mt-1 text-sm text-gray-500">This will help generate a more focused activity that achieves your learning goals.</p>
+            </div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Define Learning Goals</label>
+            <div id="learning-goals-list" class="space-y-2">
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="new-learning-goal" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter a learning goal...">
+                    <button onclick="addLearningGoal()" class="px-3 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Add</button>
+                </div>
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Added Learning Goals</label>
+                <div id="added-learning-goals" class="space-y-2">
+                    <!-- Added learning goals will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Taxonomy Mode -->
+        <div id="taxonomy-mode" class="hidden mb-4">
+            <div class="mb-4">
+                <label for="taxonomy-brief-description" class="block text-sm font-medium text-gray-700 mb-2">Brief Description</label>
+                <textarea id="taxonomy-brief-description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Briefly describe what you want the activity to accomplish..."></textarea>
+                <p class="mt-1 text-sm text-gray-500">This will help generate a more focused activity that targets specific cognitive levels.</p>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- Processing Levels -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Processing Levels</label>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Retrieval</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="retrieval-level">
+                            <span class="w-16" id="retrieval-value">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Comprehension</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="comprehension-level">
+                            <span class="w-16" id="comprehension-value">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Analysis</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="analysis-level">
+                            <span class="w-16" id="analysis-value">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Knowledge Utilization</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="knowledge-utilization-level">
+                            <span class="w-16" id="knowledge-utilization-value">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Metacognition</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="metacognition-level">
+                            <span class="w-16" id="metacognition-value">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Self-system Thinking</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="self-system-thinking-level">
+                            <span class="w-16" id="self-system-thinking-value">50%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Knowledge Domains -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Knowledge Domains</label>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Information</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="information-domain-level">
+                            <span class="w-16" id="information-domain-value">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Mental Procedures</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="mental-procedures-level">
+                            <span class="w-16" id="mental-procedures-value">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Psychomotor Procedures</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="psychomotor-procedures-level">
+                            <span class="w-16" id="psychomotor-procedures-value">50%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Combined Mode -->
+        <div id="combined-mode" class="hidden mb-4">
+            <div class="space-y-4">
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="include-brief" class="rounded text-indigo-600 focus:ring-indigo-500" onchange="updateCombinedSections()">
+                    <label for="include-brief" class="text-sm font-medium text-gray-700">Include Brief Description</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="include-full" class="rounded text-indigo-600 focus:ring-indigo-500" onchange="updateCombinedSections()">
+                    <label for="include-full" class="text-sm font-medium text-gray-700">Include Full Description</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="include-concepts" class="rounded text-indigo-600 focus:ring-indigo-500" onchange="updateCombinedSections()">
+                    <label for="include-concepts" class="text-sm font-medium text-gray-700">Include Concepts</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="include-competencies" class="rounded text-indigo-600 focus:ring-indigo-500" onchange="updateCombinedSections()">
+                    <label for="include-competencies" class="text-sm font-medium text-gray-700">Include Competencies</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="include-learning-goals" class="rounded text-indigo-600 focus:ring-indigo-500" onchange="updateCombinedSections()">
+                    <label for="include-learning-goals" class="text-sm font-medium text-gray-700">Include Learning Goals</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="include-taxonomy" class="rounded text-indigo-600 focus:ring-indigo-500" onchange="updateCombinedSections()">
+                    <label for="include-taxonomy" class="text-sm font-medium text-gray-700">Include Taxonomy Levels</label>
+                </div>
+            </div>
+            <div id="combined-sections" class="space-y-4">
+                <!-- Selected sections will be shown here -->
+            </div>
         </div>
 
         <!-- Action Buttons -->
@@ -95,6 +298,69 @@
 <!-- Include shared configurations -->
 <script src="/static/js/shared/configs.js"></script>
 <script>
+// Add this at the top of your script
+let conceptsData = null;
+
+async function loadConcepts() {
+    try {
+        const response = await fetch('/api/concepts');
+        conceptsData = await response.json();
+        populateConceptsList();
+    } catch (error) {
+        console.error('Error loading concepts:', error);
+    }
+}
+
+function populateConceptsList() {
+    if (!conceptsData || !conceptsData.nodes) return;
+    
+    const conceptsList = document.getElementById('concepts-list');
+    conceptsList.innerHTML = conceptsData.nodes.map((node, index) => `
+        <div class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50">
+            <input type="checkbox" id="concept-${index}" value="${node.label}" 
+                   class="rounded text-indigo-600 focus:ring-indigo-500"
+                   onchange="toggleConcept(this)">
+            <label for="concept-${index}" class="text-sm text-gray-700 cursor-pointer flex-grow">${node.label}</label>
+        </div>
+    `).join('');
+}
+
+function toggleConcept(checkbox) {
+    const conceptLabel = checkbox.value;
+    const selectedConcepts = document.getElementById('selected-concepts');
+    
+    if (checkbox.checked) {
+        // Add concept if it doesn't exist
+        if (!document.querySelector(`[data-concept="${conceptLabel}"]`)) {
+            const conceptTag = document.createElement('div');
+            conceptTag.className = 'inline-flex items-center bg-indigo-100 text-indigo-800 rounded-full px-3 py-1';
+            conceptTag.dataset.concept = conceptLabel;
+            conceptTag.innerHTML = `
+                <span class="text-sm">${conceptLabel}</span>
+                <button onclick="removeConcept('${conceptLabel}')" class="ml-2 text-indigo-600 hover:text-indigo-800">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            `;
+            selectedConcepts.appendChild(conceptTag);
+        }
+    } else {
+        // Remove concept
+        removeConcept(conceptLabel);
+    }
+}
+
+function removeConcept(conceptLabel) {
+    const conceptElement = document.querySelector(`[data-concept="${conceptLabel}"]`);
+    if (conceptElement) {
+        conceptElement.remove();
+        // Uncheck the checkbox
+        const checkbox = document.querySelector(`input[value="${conceptLabel}"]`);
+        if (checkbox) checkbox.checked = false;
+    }
+}
+
 function toggleCreateActivityModal() {
     const modal = document.getElementById('create-activity-modal');
     modal.classList.toggle('hidden');
@@ -111,26 +377,355 @@ function populateModels() {
 }
 
 function switchMode(mode) {
-    const briefMode = document.getElementById('brief-mode');
-    const fullMode = document.getElementById('full-mode');
-    const briefBtn = document.getElementById('brief-mode-btn');
-    const fullBtn = document.getElementById('full-mode-btn');
-
-    if (mode === 'brief') {
-        briefMode.classList.remove('hidden');
-        fullMode.classList.add('hidden');
-        briefBtn.classList.remove('bg-gray-200', 'text-gray-700');
-        briefBtn.classList.add('bg-indigo-600', 'text-white');
-        fullBtn.classList.remove('bg-indigo-600', 'text-white');
-        fullBtn.classList.add('bg-gray-200', 'text-gray-700');
-    } else {
-        briefMode.classList.add('hidden');
-        fullMode.classList.remove('hidden');
-        fullBtn.classList.remove('bg-gray-200', 'text-gray-700');
-        fullBtn.classList.add('bg-indigo-600', 'text-white');
-        briefBtn.classList.remove('bg-indigo-600', 'text-white');
-        briefBtn.classList.add('bg-gray-200', 'text-gray-700');
+    // Hide all mode sections
+    const modes = ['brief', 'full', 'concepts', 'competencies', 'learning-goals', 'taxonomy', 'combined'];
+    modes.forEach(m => {
+        document.getElementById(`${m}-mode`).classList.add('hidden');
+        document.getElementById(`${m}-mode-btn`).classList.remove('bg-indigo-600', 'text-white');
+        document.getElementById(`${m}-mode-btn`).classList.add('bg-gray-200', 'text-gray-700');
+    });
+    
+    // Show selected mode
+    document.getElementById(`${mode}-mode`).classList.remove('hidden');
+    document.getElementById(`${mode}-mode-btn`).classList.remove('bg-gray-200', 'text-gray-700');
+    document.getElementById(`${mode}-mode-btn`).classList.add('bg-indigo-600', 'text-white');
+    
+    // Special handling for combined mode
+    if (mode === 'combined') {
+        setupCombinedMode();
     }
+}
+
+function setupCombinedMode() {
+    // Add event listeners to checkboxes
+    const checkboxes = ['brief', 'full', 'concepts', 'competencies', 'learning-goals', 'taxonomy'];
+    checkboxes.forEach(type => {
+        const checkbox = document.getElementById(`include-${type}`);
+        checkbox.addEventListener('change', () => updateCombinedSections());
+    });
+}
+
+function updateCombinedSections() {
+    const combinedSections = document.getElementById('combined-sections');
+    
+    // Check if the element exists
+    if (!combinedSections) {
+        console.error('Could not find combined-sections element');
+        return;
+    }
+    
+    combinedSections.innerHTML = '';
+    
+    // Check each section and clone if selected
+    if (document.getElementById('include-brief').checked) {
+        const briefSection = document.createElement('div');
+        briefSection.className = 'mb-4';
+        briefSection.innerHTML = `
+            <label for="combined-brief-description" class="block text-sm font-medium text-gray-700 mb-2">Brief Description</label>
+            <textarea id="combined-brief-description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Briefly describe what you want the activity to accomplish..."></textarea>
+        `;
+        combinedSections.appendChild(briefSection);
+    }
+    
+    if (document.getElementById('include-full').checked) {
+        const fullSection = document.createElement('div');
+        fullSection.className = 'mb-4';
+        fullSection.innerHTML = `
+            <label for="combined-full-description" class="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
+            <textarea id="combined-full-description" rows="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Provide a detailed description of the activity..."></textarea>
+        `;
+        combinedSections.appendChild(fullSection);
+    }
+    
+    if (document.getElementById('include-concepts').checked) {
+        const conceptsSection = document.createElement('div');
+        conceptsSection.className = 'mb-4';
+        conceptsSection.innerHTML = `
+            <label class="block text-sm font-medium text-gray-700 mb-2">Select Concepts</label>
+            <div class="max-h-60 overflow-y-auto border rounded-md p-4">
+                <div class="grid grid-cols-2 gap-4" id="combined-concepts-list"></div>
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Selected Concepts</label>
+                <div id="combined-selected-concepts" class="flex flex-wrap gap-2"></div>
+            </div>
+        `;
+        combinedSections.appendChild(conceptsSection);
+        // Populate concepts list
+        if (conceptsData && conceptsData.nodes) {
+            document.getElementById('combined-concepts-list').innerHTML = conceptsData.nodes.map((node, index) => `
+                <div class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50">
+                    <input type="checkbox" id="combined-concept-${index}" value="${node.label}" 
+                           class="rounded text-indigo-600 focus:ring-indigo-500"
+                           onchange="toggleCombinedConcept(this)">
+                    <label for="combined-concept-${index}" class="text-sm text-gray-700 cursor-pointer flex-grow">${node.label}</label>
+                </div>
+            `).join('');
+        }
+    }
+    
+    if (document.getElementById('include-competencies').checked) {
+        const competenciesSection = document.createElement('div');
+        competenciesSection.className = 'mb-4';
+        competenciesSection.innerHTML = `
+            <label class="block text-sm font-medium text-gray-700 mb-2">Set Target Competency Levels</label>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Problem Solving</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-problem-solving-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Critical Thinking</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-critical-thinking-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Analysis</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-analysis-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Technical</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-technical-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Communication</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-communication-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">Collaboration</label>
+                    <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-collaboration-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+            </div>
+        `;
+        combinedSections.appendChild(competenciesSection);
+    }
+    
+    if (document.getElementById('include-learning-goals').checked) {
+        const learningGoalsSection = document.createElement('div');
+        learningGoalsSection.className = 'mb-4';
+        learningGoalsSection.innerHTML = `
+            <label class="block text-sm font-medium text-gray-700 mb-2">Define Learning Goals</label>
+            <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="combined-new-learning-goal" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter a learning goal...">
+                    <button onclick="addCombinedLearningGoal()" class="px-3 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Add</button>
+                </div>
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Added Learning Goals</label>
+                <div id="combined-added-learning-goals" class="space-y-2">
+                    <!-- Added learning goals will appear here -->
+                </div>
+            </div>
+        `;
+        combinedSections.appendChild(learningGoalsSection);
+        
+        // Add Enter key support for the combined learning goals input
+        document.getElementById('combined-new-learning-goal')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addCombinedLearningGoal();
+            }
+        });
+    }
+
+    if (document.getElementById('include-taxonomy').checked) {
+        const taxonomySection = document.createElement('div');
+        taxonomySection.className = 'mb-4';
+        taxonomySection.innerHTML = `
+            <div class="space-y-6">
+                <!-- Processing Levels -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Processing Levels</label>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Retrieval</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-retrieval-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                            <span class="w-16">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Comprehension</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-comprehension-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                            <span class="w-16">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Analysis</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-analysis-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                            <span class="w-16">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Knowledge Utilization</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-knowledge-utilization-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                            <span class="w-16">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Metacognition</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-metacognition-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                            <span class="w-16">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Self-system Thinking</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-self-system-thinking-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                            <span class="w-16">50%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Knowledge Domains -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Knowledge Domains</label>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Information</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-information-domain-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                            <span class="w-16">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Mental Procedures</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-mental-procedures-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                            <span class="w-16">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="w-1/3">Psychomotor Procedures</label>
+                            <input type="range" min="0" max="100" value="50" class="w-1/2" id="combined-psychomotor-procedures-level" oninput="this.nextElementSibling.textContent = this.value + '%'">
+                            <span class="w-16">50%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        combinedSections.appendChild(taxonomySection);
+    }
+}
+
+function toggleCombinedConcept(checkbox) {
+    const conceptLabel = checkbox.value;
+    const selectedConcepts = document.getElementById('combined-selected-concepts');
+    
+    if (checkbox.checked) {
+        if (!document.querySelector(`[data-concept="${conceptLabel}"]`)) {
+            const conceptTag = document.createElement('div');
+            conceptTag.className = 'inline-flex items-center bg-indigo-100 text-indigo-800 rounded-full px-3 py-1';
+            conceptTag.dataset.concept = conceptLabel;
+            conceptTag.innerHTML = `
+                <span class="text-sm">${conceptLabel}</span>
+                <button onclick="removeCombinedConcept('${conceptLabel}')" class="ml-2 text-indigo-600 hover:text-indigo-800">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            `;
+            selectedConcepts.appendChild(conceptTag);
+        }
+    } else {
+        removeCombinedConcept(conceptLabel);
+    }
+}
+
+function removeCombinedConcept(conceptLabel) {
+    const conceptElement = document.querySelector(`[data-concept="${conceptLabel}"]`);
+    if (conceptElement) {
+        conceptElement.remove();
+        const checkbox = document.querySelector(`input[value="${conceptLabel}"]`);
+        if (checkbox) checkbox.checked = false;
+    }
+}
+
+function addLearningGoal() {
+    const input = document.getElementById('new-learning-goal');
+    const goal = input.value.trim();
+    
+    if (goal) {
+        const goalsContainer = document.getElementById('added-learning-goals');
+        const goalElement = document.createElement('div');
+        goalElement.className = 'flex items-center justify-between p-2 bg-indigo-50 rounded-md';
+        goalElement.innerHTML = `
+            <span class="text-indigo-900">${goal}</span>
+            <button onclick="this.parentElement.remove()" class="text-indigo-600 hover:text-indigo-800">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        `;
+        goalsContainer.appendChild(goalElement);
+        input.value = '';
+    }
+}
+
+// Add event listener for Enter key in learning goals input
+document.getElementById('new-learning-goal')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        addLearningGoal();
+    }
+});
+
+function getCompetencyLevels() {
+    return {
+        problem_solving: parseInt(document.getElementById('problem-solving-level').value),
+        critical_thinking: parseInt(document.getElementById('critical-thinking-level').value),
+        analysis: parseInt(document.getElementById('analysis-level').value),
+        technical: parseInt(document.getElementById('technical-level').value),
+        communication: parseInt(document.getElementById('communication-level').value),
+        collaboration: parseInt(document.getElementById('collaboration-level').value)
+    };
+}
+
+function getSelectedConcepts() {
+    const concepts = [];
+    document.querySelectorAll('#selected-concepts > div > span').forEach(span => {
+        concepts.push(span.textContent);
+    });
+    return concepts;
+}
+
+function getLearningGoals() {
+    const goals = [];
+    document.querySelectorAll('#added-learning-goals > div > span').forEach(span => {
+        goals.push(span.textContent);
+    });
+    return goals;
+}
+
+function getTaxonomyLevels() {
+    return {
+        processing_levels: {
+            retrieval: parseInt(document.getElementById('retrieval-level').value),
+            comprehension: parseInt(document.getElementById('comprehension-level').value),
+            analysis: parseInt(document.getElementById('analysis-level').value),
+            knowledge_utilization: parseInt(document.getElementById('knowledge-utilization-level').value),
+            metacognition: parseInt(document.getElementById('metacognition-level').value),
+            self_system_thinking: parseInt(document.getElementById('self-system-thinking-level').value)
+        },
+        knowledge_domains: {
+            information: parseInt(document.getElementById('information-domain-level').value),
+            mental_procedures: parseInt(document.getElementById('mental-procedures-level').value),
+            psychomotor_procedures: parseInt(document.getElementById('psychomotor-procedures-level').value)
+        }
+    };
+}
+
+function getCombinedTaxonomyLevels() {
+    return {
+        processing_levels: {
+            retrieval: parseInt(document.getElementById('combined-retrieval-level').value),
+            comprehension: parseInt(document.getElementById('combined-comprehension-level').value),
+            analysis: parseInt(document.getElementById('combined-analysis-level').value),
+            knowledge_utilization: parseInt(document.getElementById('combined-knowledge-utilization-level').value),
+            metacognition: parseInt(document.getElementById('combined-metacognition-level').value),
+            self_system_thinking: parseInt(document.getElementById('combined-self-system-thinking-level').value)
+        },
+        knowledge_domains: {
+            information: parseInt(document.getElementById('combined-information-domain-level').value),
+            mental_procedures: parseInt(document.getElementById('combined-mental-procedures-level').value),
+            psychomotor_procedures: parseInt(document.getElementById('combined-psychomotor-procedures-level').value)
+        }
+    };
 }
 
 async function generateActivity() {
@@ -143,11 +738,100 @@ async function generateActivity() {
     const provider = document.getElementById('activity-api-select').value;
     const model = document.getElementById('activity-model-select').value;
     const name = document.getElementById('activity-name').value;
-    const isBriefMode = !document.getElementById('brief-mode').classList.contains('hidden');
-    const description = isBriefMode ? 
-        document.getElementById('brief-description').value :
-        document.getElementById('full-description').value;
+    
+    // Get data based on active mode
+    let requestData = {
+        provider,
+        model,
+        name,
+        mode: 'combined',
+        brief_description: null,
+        full_description: null,
+        concepts: null,
+        competencies: null,
+        learning_goals: null,
+        taxonomy: null
+    };
 
+    // In combined mode, gather data from all visible sections
+    const combinedMode = !document.getElementById('combined-mode').classList.contains('hidden');
+    
+    if (combinedMode) {
+        // Handle combined mode parameters
+        if (document.getElementById('include-brief').checked) {
+            requestData.brief_description = document.getElementById('combined-brief-description')?.value;
+            console.log('Brief description:', requestData.brief_description);
+        }
+        
+        if (document.getElementById('include-full').checked) {
+            requestData.full_description = document.getElementById('combined-full-description')?.value;
+            console.log('Full description:', requestData.full_description);
+        }
+        
+        if (document.getElementById('include-concepts').checked) {
+            // Get concepts from the combined-selected-concepts container
+            const concepts = [];
+            document.querySelectorAll('#combined-selected-concepts > div > span').forEach(span => {
+                concepts.push(span.textContent);
+            });
+            requestData.concepts = concepts;
+            console.log('Concepts:', requestData.concepts);
+        }
+        
+        if (document.getElementById('include-competencies').checked) {
+            // Get competencies from the combined competencies sliders
+            requestData.competencies = {
+                problem_solving: parseInt(document.getElementById('combined-problem-solving-level').value),
+                critical_thinking: parseInt(document.getElementById('combined-critical-thinking-level').value),
+                analysis: parseInt(document.getElementById('combined-analysis-level').value),
+                technical: parseInt(document.getElementById('combined-technical-level').value),
+                communication: parseInt(document.getElementById('combined-communication-level').value),
+                collaboration: parseInt(document.getElementById('combined-collaboration-level').value)
+            };
+            console.log('Competencies:', requestData.competencies);
+        }
+        
+        if (document.getElementById('include-learning-goals').checked) {
+            // Get learning goals from the combined-added-learning-goals container
+            const goals = [];
+            document.querySelectorAll('#combined-added-learning-goals > div > span').forEach(span => {
+                goals.push(span.textContent);
+            });
+            requestData.learning_goals = goals;
+            console.log('Learning goals:', requestData.learning_goals);
+        }
+        
+        if (document.getElementById('include-taxonomy').checked) {
+            // Get taxonomy values from the combined taxonomy sliders
+            requestData.taxonomy = getCombinedTaxonomyLevels();
+        }
+    } else {
+        // Single mode handling remains unchanged
+        if (!document.getElementById('brief-mode').classList.contains('hidden')) {
+            requestData.mode = 'brief';
+            requestData.brief_description = document.getElementById('brief-description').value;
+        } else if (!document.getElementById('full-mode').classList.contains('hidden')) {
+            requestData.mode = 'full';
+            requestData.full_description = document.getElementById('full-description').value;
+        } else if (!document.getElementById('concepts-mode').classList.contains('hidden')) {
+            requestData.mode = 'concepts';
+            requestData.brief_description = document.getElementById('concepts-brief-description').value;
+            requestData.concepts = getSelectedConcepts();
+        } else if (!document.getElementById('competencies-mode').classList.contains('hidden')) {
+            requestData.mode = 'competencies';
+            requestData.brief_description = document.getElementById('competencies-brief-description').value;
+            requestData.competencies = getCompetencyLevels();
+        } else if (!document.getElementById('learning-goals-mode').classList.contains('hidden')) {
+            requestData.mode = 'learning-goals';
+            requestData.brief_description = document.getElementById('learning-goals-brief-description').value;
+            requestData.learning_goals = getLearningGoals();
+        } else if (!document.getElementById('taxonomy-mode').classList.contains('hidden')) {
+            requestData.mode = 'taxonomy';
+            requestData.brief_description = document.getElementById('taxonomy-brief-description').value;
+            requestData.taxonomy = getTaxonomyLevels();
+        }
+    }
+    
     try {
         status.textContent = 'Sending request...';
         
@@ -156,13 +840,7 @@ async function generateActivity() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                provider,
-                model,
-                name,
-                description,
-                mode: isBriefMode ? 'brief' : 'full'
-            })
+            body: JSON.stringify(requestData)
         });
 
         if (!response.ok) {
@@ -192,11 +870,59 @@ async function generateActivity() {
     }
 }
 
-// Initialize models on page load and when provider changes
-document.addEventListener('DOMContentLoaded', () => {
-    // Populate models immediately since we have direct access to modelConfigs
-    populateModels();
+function addCombinedLearningGoal() {
+    const input = document.getElementById('combined-new-learning-goal');
+    const goal = input.value.trim();
     
+    if (goal) {
+        const goalsContainer = document.getElementById('combined-added-learning-goals');
+        const goalElement = document.createElement('div');
+        goalElement.className = 'flex items-center justify-between p-2 bg-indigo-50 rounded-md';
+        goalElement.innerHTML = `
+            <span class="text-indigo-900">${goal}</span>
+            <button onclick="this.parentElement.remove()" class="text-indigo-600 hover:text-indigo-800">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        `;
+        goalsContainer.appendChild(goalElement);
+        input.value = '';
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    populateModels();
     document.getElementById('activity-api-select').addEventListener('change', populateModels);
+    
+    // Load concepts when the page loads
+    loadConcepts();
+    
+    // Set up competency sliders
+    const competencySliders = ['problem-solving', 'critical-thinking', 'analysis', 'technical', 'communication', 'collaboration'];
+    competencySliders.forEach(comp => {
+        const slider = document.getElementById(`${comp}-level`);
+        const value = document.getElementById(`${comp}-value`);
+        slider.addEventListener('input', () => {
+            value.textContent = `${slider.value}%`;
+        });
+    });
+
+    // Set up taxonomy sliders
+    const taxonomySliders = [
+        'retrieval', 'comprehension', 'analysis', 'knowledge-utilization',
+        'metacognition', 'self-system-thinking', 'information-domain', 
+        'mental-procedures', 'psychomotor-procedures'
+    ];
+    taxonomySliders.forEach(tax => {
+        const slider = document.getElementById(`${tax}-level`);
+        const value = document.getElementById(`${tax}-value`);
+        if (slider && value) {
+            slider.addEventListener('input', () => {
+                value.textContent = `${slider.value}%`;
+            });
+        }
+    });
 });
 </script> 

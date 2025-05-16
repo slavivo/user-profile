@@ -1,0 +1,5 @@
+Analyze the concept of ${concept} in computer science education and describe a knowledge graph structure.
+List the key nodes (concepts) that should be included and describe how they should be connected.
+Focus on creating a clear hierarchical structure with meaningful relationships.
+You don't need to follow any specific format - just describe the nodes and their connections in natural language.
+Keep the response focused on essential concepts and their direct relationships. 

@@ -1,0 +1,25 @@
+Classify this activity using Marzano and Kendall's Taxonomy:
+Activity Name: ${name}
+Description: ${description}
+
+Learning Goals:
+${goals_text}
+
+Consider the following levels:
+1. Retrieval
+2. Comprehension
+3. Analysis
+4. Knowledge Utilization
+5. Metacognition
+6. Self-system Thinking
+
+Format the response as a JSON object with taxonomy levels and their relevance scores (0-100).
+Example:
+{
+    "retrieval": 60,
+    "comprehension": 80,
+    "analysis": 90,
+    "knowledge_utilization": 85,
+    "metacognition": 70,
+    "self_system_thinking": 65
+} 

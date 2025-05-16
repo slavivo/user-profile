@@ -13,6 +13,8 @@ import uuid
 from datetime import datetime
 from utils.activity_generation import generate_activity_metadata
 from student_data import student_data
+from graph_data import graph_data
+import json
 
 app = Flask(__name__)
 
@@ -34,9 +36,17 @@ def get_api_client(provider: str, model: str = None):
     else:
         raise ValueError('Invalid API provider')
 
+def get_concept_name(node_id):
+    """Get concept name from its ID by searching through all graph data."""
+    for category, data in graph_data.items():
+        for node in data['nodes']:
+            if node['data']['id'] == node_id:
+                return node['data']['label']
+    return node_id  # Return ID if name not found
+
 @app.route('/')
 def index():
-    return render_template('pages/profile.html', student=student_data)
+    return render_template('pages/profile.html', student=student_data, get_concept_name=get_concept_name)
 
 async def get_reformatting_client(provider_preference='gemini'):
     """Get a client for reformatting, preferring Gemini 2.0 flash or GPT-4O"""
@@ -156,6 +166,47 @@ def generate_graph():
     asyncio.set_event_loop(loop)
     try:
         result = loop.run_until_complete(generate_graph_async(api_provider, model, concept))
+        
+        # If generation was successful, update the stored graph data
+        if isinstance(result, dict) and not result.get('error'):
+            # Update the graph data for the specific concept
+            if 'response' in result:
+                try:
+                    # Parse the response if it's a string
+                    graph_json = json.loads(result['response']) if isinstance(result['response'], str) else result['response']
+                    
+                    # Format the data for Cytoscape
+                    formatted_data = {
+                        "nodes": [
+                            {"data": {
+                                "id": node["id"],
+                                "label": node["label"],
+                                "progress": node["progress"]
+                            }} for node in graph_json["nodes"]
+                        ],
+                        "edges": [
+                            {"data": {
+                                "source": edge["source"],
+                                "target": edge["target"]
+                            }} for edge in graph_json["edges"]
+                        ]
+                    }
+                    
+                    # Store the formatted data
+                    graph_data[concept] = formatted_data
+                    
+                    # Return both the new graph and confirmation of update
+                    return jsonify({
+                        'response': formatted_data,
+                        'message': 'Graph data updated successfully',
+                        'initial_description': result.get('initial_description')
+                    })
+                except (json.JSONDecodeError, KeyError) as e:
+                    return jsonify({
+                        'error': f'Failed to process graph data: {str(e)}',
+                        'initial_description': result.get('initial_description')
+                    }), 500
+        
         return jsonify(result)
     finally:
         loop.close()
@@ -163,7 +214,7 @@ def generate_graph():
 @app.route('/activities_content')
 def activities_content():
     """Return just the activities section HTML"""
-    return render_template('components/activities/activities_list.html', activities=student_data['activities'])
+    return render_template('components/activities/activities_list.html', activities=student_data['activities'], get_concept_name=get_concept_name)
 
 @app.route('/generate_activity', methods=['POST'])
 async def generate_activity():
@@ -240,7 +291,13 @@ async def generate_activity():
             'name': generated_data['name'],
             'description': generated_data['description'],
             'learning_goals': generated_data['learning_goals'],
-            'connected_nodes': list(generated_data['connected_concepts'].keys()),
+            'connected_nodes': [
+                {
+                    'id': node_id,
+                    'connection_strength': strength
+                }
+                for node_id, strength in generated_data['connected_concepts'].items()
+            ],
             'competency_scores': {
                 'problem_solving': int(generated_data['competencies']['problem_solving'] / 10),
                 'critical_thinking': int(generated_data['competencies']['critical_thinking'] / 10),
@@ -284,34 +341,23 @@ async def generate_activity():
         print(f"Error generating activity: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/concepts')
-def get_concepts():
-    """Return the current concept graph data"""
+@app.route('/api/all_nodes')
+def get_all_nodes():
+    """Return all nodes from all concept graphs combined"""
     try:
-        # Return the concepts from student data
-        # This assumes student_data has a 'concept_graph' field
-        # If not, you'll need to modify this to match your data structure
-        if 'concept_graph' in student_data:
-            return jsonify(student_data['concept_graph'])
-        else:
-            # Return a default concept graph structure
-            return jsonify({
-                'nodes': [
-                    {'id': 'algo1', 'label': 'Algorithms', 'progress': 75},
-                    {'id': 'data1', 'label': 'Data Structures', 'progress': 65},
-                    {'id': 'prog1', 'label': 'Programming Basics', 'progress': 90},
-                    {'id': 'web1', 'label': 'Web Development', 'progress': 80},
-                    {'id': 'db1', 'label': 'Databases', 'progress': 70},
-                    {'id': 'net1', 'label': 'Networking', 'progress': 60}
-                ],
-                'edges': [
-                    {'source': 'prog1', 'target': 'algo1'},
-                    {'source': 'prog1', 'target': 'data1'},
-                    {'source': 'algo1', 'target': 'web1'},
-                    {'source': 'data1', 'target': 'db1'},
-                    {'source': 'web1', 'target': 'net1'}
-                ]
-            })
+        # Get all nodes from all categories in graph_data
+        all_nodes = []
+        for category, data in graph_data.items():
+            all_nodes.extend(data['nodes'])
+        return jsonify(all_nodes)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/concept_graph_data')
+def get_concept_graph_data():
+    """Return the detailed concept graph data for all categories"""
+    try:
+        return jsonify(graph_data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

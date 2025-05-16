@@ -8,6 +8,7 @@ from .base import (
     get_taxonomy_prompt
 )
 from .template_handler import PromptTemplate
+from graph_data import graph_data
 
 def validate_and_extract_json(response_text: str) -> Tuple[bool, Any]:
     """Validate and extract JSON from AI response."""
@@ -98,6 +99,17 @@ def format_taxonomy_text(taxonomy: Dict[str, Any]) -> str:
             
     return result.strip()
 
+def format_concepts_for_prompt(nodes: List[Dict]) -> str:
+    """Format concept nodes into a readable list for the prompt."""
+    return "\n".join([f"- {node['data']['id']}: {node['data']['label']}" for node in nodes])
+
+def get_all_concept_nodes() -> List[Dict]:
+    """Get all concept nodes from the graph data."""
+    all_nodes = []
+    for category, data in graph_data.items():
+        all_nodes.extend(data['nodes'])
+    return all_nodes
+
 async def generate_full_description(
     client: Any,
     provider: str,
@@ -183,8 +195,6 @@ async def generate_full_description(
         model=model,
         messages=[{"role": "user", "content": prompt}]
     )
-
-    print(f"Prompt: {prompt}")
     
     response = await api_client.chat_completion_request(params)
     return response.content
@@ -240,12 +250,19 @@ async def generate_activity_metadata(
         
         # Generate connected concepts if not provided
         if not concepts:
-            # TODO add the actual concepts in our concept map to the prompt
+            # Get all available concept nodes
+            all_nodes = get_all_concept_nodes()
+            concepts_list = format_concepts_for_prompt(all_nodes)
+            
             messages = [{
                 "role": "user",
-                "content": get_connected_concepts_prompt(name, description, metadata["learning_goals"])
+                "content": get_connected_concepts_prompt(
+                    name=name,
+                    description=description,
+                    goals_text="\n".join([f"- {goal}" for goal in metadata["learning_goals"]]),
+                    concepts_list=concepts_list
+                )
             }]
-            print(f"Concepts prompt: {messages}")
             metadata["connected_concepts"] = await generate_with_retry(client, provider, model, messages)
         else:
             metadata["connected_concepts"] = {concept: 100 for concept in concepts}  # Assuming max relevance for selected concepts
@@ -262,13 +279,11 @@ async def generate_activity_metadata(
         
         # Generate taxonomy if not provided
         if not taxonomy:
-            print("Generating taxonomy")
             messages = [{
                 "role": "user",
                 "content": get_taxonomy_prompt(name, description, metadata["learning_goals"])
             }]
             taxonomy_data = await generate_with_retry(client, provider, model, messages)
-            print(f"Raw taxonomy data: {taxonomy_data}")
             
             # Convert flat taxonomy to nested structure
             metadata["taxonomy"] = {
@@ -286,7 +301,6 @@ async def generate_activity_metadata(
                     "psychomotor_procedures": 20
                 }
             }
-            print(f"Converted taxonomy: {metadata['taxonomy']}")
         else:
             # Use provided taxonomy with nested structure
             # Check if taxonomy already has nested structure

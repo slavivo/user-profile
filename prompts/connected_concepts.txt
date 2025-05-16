@@ -5,16 +5,22 @@ Description: ${description}
 Learning Goals:
 ${goals_text}
 
-Consider both direct and indirect connections to the following main concept areas:
-1. Data, Information and Modeling
-2. Algorithms and Programming
-3. IT Systems
-4. Digital Technology
+Available Concepts:
+${concepts_list}
+
+For each concept listed above, determine its relevance to this activity on a scale of 0-100.
+Consider both direct and indirect connections between the activity's goals and each concept.
 
 Format the response as a JSON object with concept IDs and connection strengths (0-100).
 Example:
 {
-    "data2": 85,
-    "algo1": 90,
-    "sys3": 70
-} 
+    "data2": 85,  // Strong connection to Data Structures
+    "algo1": 90,  // Very relevant to Basic Programming
+    "sys3": 70    // Moderate connection to System Architecture
+}
+
+Note:
+- Use only concept IDs from the available concepts list
+- Connection strength should reflect how important the concept is for this activity
+- 0 means no connection, 100 means essential concept
+- Include only relevant concepts (strength > 0) 

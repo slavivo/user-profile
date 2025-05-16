@@ -590,9 +590,15 @@ def get_full_description_prompt(name: str, brief_description: str) -> str:
 def get_learning_goals_prompt(name: str, description: str) -> str:
     return PromptTemplate.render('learning_goals', name=name, description=description)
 
-def get_connected_concepts_prompt(name: str, description: str, learning_goals: List[str]) -> str:
-    goals_text = "\n".join([f"- {goal}" for goal in learning_goals])
-    return PromptTemplate.render('connected_concepts', name=name, description=description, goals_text=goals_text)
+def get_connected_concepts_prompt(name: str, description: str, goals_text: str, concepts_list: str) -> str:
+    """Get prompt for generating connected concepts."""
+    return PromptTemplate.render(
+        'connected_concepts',
+        name=name,
+        description=description,
+        goals_text=goals_text,
+        concepts_list=concepts_list
+    )
 
 def get_competency_prompt(name: str, description: str, learning_goals: List[str]) -> str:
     goals_text = "\n".join([f"- {goal}" for goal in learning_goals])

@@ -303,8 +303,9 @@ let conceptsData = null;
 
 async function loadConcepts() {
     try {
-        const response = await fetch('/api/concepts');
-        conceptsData = await response.json();
+        const response = await fetch('/api/all_nodes');
+        const nodes = await response.json();
+        conceptsData = { nodes };
         populateConceptsList();
     } catch (error) {
         console.error('Error loading concepts:', error);
@@ -317,10 +318,10 @@ function populateConceptsList() {
     const conceptsList = document.getElementById('concepts-list');
     conceptsList.innerHTML = conceptsData.nodes.map((node, index) => `
         <div class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50">
-            <input type="checkbox" id="concept-${index}" value="${node.label}" 
+            <input type="checkbox" id="concept-${index}" value="${node.data.label}" 
                    class="rounded text-indigo-600 focus:ring-indigo-500"
                    onchange="toggleConcept(this)">
-            <label for="concept-${index}" class="text-sm text-gray-700 cursor-pointer flex-grow">${node.label}</label>
+            <label for="concept-${index}" class="text-sm text-gray-700 cursor-pointer flex-grow">${node.data.label}</label>
         </div>
     `).join('');
 }
@@ -455,10 +456,10 @@ function updateCombinedSections() {
         if (conceptsData && conceptsData.nodes) {
             document.getElementById('combined-concepts-list').innerHTML = conceptsData.nodes.map((node, index) => `
                 <div class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50">
-                    <input type="checkbox" id="combined-concept-${index}" value="${node.label}" 
+                    <input type="checkbox" id="combined-concept-${index}" value="${node.data.label}" 
                            class="rounded text-indigo-600 focus:ring-indigo-500"
                            onchange="toggleCombinedConcept(this)">
-                    <label for="combined-concept-${index}" class="text-sm text-gray-700 cursor-pointer flex-grow">${node.label}</label>
+                    <label for="combined-concept-${index}" class="text-sm text-gray-700 cursor-pointer flex-grow">${node.data.label}</label>
                 </div>
             `).join('');
         }

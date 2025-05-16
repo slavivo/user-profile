@@ -49,7 +49,13 @@ The activity emphasizes both theoretical understanding and practical implementat
                 'Learn to evaluate and select appropriate data structures for specific use cases',
                 'Develop technical documentation and analysis skills'
             ],
-            'connected_nodes': ['Data Structures', 'Basic Programming', 'Control Structures', 'Databases', 'System Architecture'],
+            'connected_nodes': [
+                {'id': 'data2', 'connection_strength': 90},  # Data Structures
+                {'id': 'algo1', 'connection_strength': 85},  # Basic Programming
+                {'id': 'algo2', 'connection_strength': 80},  # Control Structures
+                {'id': 'data3', 'connection_strength': 75},  # Databases
+                {'id': 'sys3', 'connection_strength': 70}    # System Architecture
+            ],
             'competency_scores': {
                 'problem_solving': 9,
                 'logical_reasoning': 8,
@@ -135,7 +141,13 @@ The project emphasizes both technical skills and communication abilities, requir
                 'Understand principles of visual storytelling and data narrative',
                 'Gain experience in technical documentation and project presentation'
             ],
-            'connected_nodes': ['Data Types', 'Data Structures', 'Information Processing', 'Functions', 'Networks'],
+            'connected_nodes': [
+                {'id': 'data1', 'connection_strength': 90},  # Data Types
+                {'id': 'data2', 'connection_strength': 85},  # Data Structures
+                {'id': 'data5', 'connection_strength': 85},  # Information Processing
+                {'id': 'algo3', 'connection_strength': 75},  # Functions
+                {'id': 'sys2', 'connection_strength': 70}    # Networks
+            ],
             'competency_scores': {
                 'data_analysis': 8,
                 'visualization': 9,
@@ -224,7 +236,13 @@ The workshop emphasizes hands-on learning and practical problem-solving, requiri
                 'Gain experience in project documentation and technical presentation',
                 'Develop problem-solving skills in a hardware-software integrated environment'
             ],
-            'connected_nodes': ['Operating Systems', 'Networks', 'Hardware Basics', 'Digital Logic', 'Functions'],
+            'connected_nodes': [
+                {'id': 'sys1', 'connection_strength': 85},   # Operating Systems
+                {'id': 'sys2', 'connection_strength': 80},   # Networks
+                {'id': 'dig1', 'connection_strength': 90},   # Hardware Basics
+                {'id': 'dig2', 'connection_strength': 85},   # Digital Logic
+                {'id': 'algo3', 'connection_strength': 75}   # Functions
+            ],
             'competency_scores': {
                 'hardware': 8,
                 'programming': 7,

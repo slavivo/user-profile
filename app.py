@@ -351,6 +351,8 @@ def prepare_personalized_params():
         data = request.json
         concept_focus = data.get('concept_focus')
         competency_focus = data.get('competency_focus')
+        provider = data.get('provider', 'gemini')  # Default to gemini if not provided
+        model = data.get('model', 'gemini-2.0-flash')  # Default to gemini-2.0-flash if not provided
 
         if not concept_focus or not competency_focus:
             return jsonify({'error': 'Missing required parameters'}), 400
@@ -358,6 +360,9 @@ def prepare_personalized_params():
         # Get personalized activity parameters
         try:
             activity_params = prepare_personalized_activity_params(concept_focus, competency_focus)
+            # Add provider and model to the activity parameters
+            activity_params['provider'] = provider
+            activity_params['model'] = model
             return jsonify(activity_params)
         except ValueError as e:
             return jsonify({'error': str(e)}), 400

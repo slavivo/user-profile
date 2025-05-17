@@ -48,6 +48,31 @@
         </div>
     </div>
 
+    <!-- API Controls -->
+    <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">AI Provider Settings</h3>
+            <p class="mt-1 text-sm text-gray-500">Choose the AI model for activity generation</p>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="personalization-api-select" class="block text-sm font-medium text-gray-700 mb-2">AI Provider</label>
+                    <select id="personalization-api-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <option value="gemini">Google Gemini</option>
+                        <option value="openai">OpenAI</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="personalization-model-select" class="block text-sm font-medium text-gray-700 mb-2">Model</label>
+                    <select id="personalization-model-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <!-- Models will be populated by JavaScript -->
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="flex justify-end space-x-4 items-center">
         <!-- Loading indicator (hidden by default) -->
         <div id="loadingIndicator" class="hidden items-center text-indigo-600">
@@ -68,12 +93,44 @@
     </div>
 </div>
 
+<!-- Include shared configurations -->
 <script>
+    // Check if configs.js is already loaded
+    if (!document.querySelector('script[src="/static/js/shared/configs.js"]')) {
+        const script = document.createElement('script');
+        script.src = '/static/js/shared/configs.js';
+        document.head.appendChild(script);
+    }
+</script>
+
+<script>
+// Add this at the top of your script
+function populatePersonalizationModels() {
+    const provider = document.getElementById('personalization-api-select').value;
+    const modelSelect = document.getElementById('personalization-model-select');
+    if (typeof modelConfigs !== 'undefined') {
+        const models = modelConfigs[provider];
+        modelSelect.innerHTML = models.map(model => 
+            `<option value="${model.id}" ${model.default ? 'selected' : ''}>${model.name}</option>`
+        ).join('');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize models on page load
+    populatePersonalizationModels();
+    
+    // Update models when provider changes
+    document.getElementById('personalization-api-select').addEventListener('change', populatePersonalizationModels);
+});
+
 document.getElementById('generatePersonalizedActivity').addEventListener('click', function() {
     const button = this;
     const loadingIndicator = document.getElementById('loadingIndicator');
     const conceptFocus = document.getElementById('conceptFocus').value;
     const competencyFocus = document.getElementById('competencyFocus').value;
+    const provider = document.getElementById('personalization-api-select').value;
+    const model = document.getElementById('personalization-model-select').value;
 
     // Show loading indicator and disable button
     loadingIndicator.classList.remove('hidden');
@@ -89,7 +146,9 @@ document.getElementById('generatePersonalizedActivity').addEventListener('click'
         },
         body: JSON.stringify({
             concept_focus: conceptFocus,
-            competency_focus: competencyFocus
+            competency_focus: competencyFocus,
+            provider: provider,
+            model: model
         })
     })
     .then(response => response.json())
@@ -106,8 +165,8 @@ document.getElementById('generatePersonalizedActivity').addEventListener('click'
             },
             body: JSON.stringify({
                 name: params.name,
-                provider: 'gemini',
-                model: 'gemini-2.0-flash',
+                provider: provider,
+                model: model,
                 mode: params.mode,
                 brief_description: params.brief_description,
                 concepts: params.concepts,
@@ -121,9 +180,6 @@ document.getElementById('generatePersonalizedActivity').addEventListener('click'
             // Activity was successfully generated
             // Switch to the Activities tab to show the new activity
             document.querySelector('a[href="#activities"]').click();
-            
-            // No need to refresh the activities list, switching tabs will show it
-            // with the new activity already included
         } else {
             throw new Error(data.error || 'Failed to generate activity');
         }

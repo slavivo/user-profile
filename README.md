@@ -9,8 +9,25 @@ A Flask-based web application for visualizing student profiles, competencies, an
   - Visualize educational concepts using Cytoscape.js
   - AI-powered graph generation using OpenAI or Google Gemini
   - Hierarchical concept visualization with progress tracking
-- **Competency Tracking**: Monitor progress across 8 key competency areas
-- **Personalization**: (Coming soon) Customize learning paths and preferences
+- **Competency Tracking**: 
+  - Monitor progress across 8 key competency areas:
+    - Learning Competency
+    - Problem Solving
+    - Communication
+    - Social and Personal
+    - Civic
+    - Digital
+    - Work
+    - Cultural Awareness
+  - Dynamic UI that displays only active competencies (scores > 0)
+- **Activity Management**:
+  - AI-powered activity generation with multiple creation modes
+  - Structured activity data with learning goals, competencies, and taxonomy
+  - Integrated student performance tracking
+- **Personalization**:
+  - Concept focus selection (polish, discover, or broaden)
+  - Competency focus selection (target strong or weak areas)
+  - AI-driven activity generation based on focus areas
 
 ## Technology Stack
 
@@ -24,29 +41,16 @@ A Flask-based web application for visualizing student profiles, competencies, an
   - OpenAI API
   - Support for multiple model variants
 
-## Project Structure
+## Core Directory Structure
 
 ```
 .
 ├── app.py              # Main Flask application
-├── utils/
-│   ├── base.py        # Core utility functions and prompt handling
-│   └── template_handler.py  # Template system for prompts
-├── prompts/           # AI prompt templates
-│   ├── graph_generation.txt    # Knowledge graph generation
-│   ├── initial_graph.txt       # Initial graph description
-│   ├── reformatting.txt        # JSON structure formatting
-│   ├── learning_goals.txt      # Learning goals generation
-│   ├── connected_concepts.txt   # Concept connections
-│   ├── competency.txt          # Competency analysis
-│   └── taxonomy.txt            # Taxonomy classification
-├── static/
-│   └── js/
-│       └── graph.js   # Graph visualization and interaction logic
-├── templates/
-│   └── index.html     # Main application template
-├── config.ini         # API configuration (not in git)
-└── requirements.txt   # Python dependencies
+├── utils/             # Core utilities and helper functions
+├── prompts/           # AI prompt templates for various features
+├── static/            # Frontend assets and JavaScript
+├── templates/         # HTML templates and components
+└── config.ini         # API configuration (not in git)
 ```
 
 ## Setup
@@ -94,26 +98,9 @@ The application supports two AI providers:
 - GPT-4o Mini
 - GPT-3o Mini
 
-## Graph Generation Process
-
-1. **Initial Description**: The system first generates a free-form description of the concept relationships
-2. **JSON Formatting**: The description is then formatted into a proper JSON structure
-3. **Validation**: The JSON structure is validated for correct format and completeness
-4. **Visualization**: The graph is rendered using Cytoscape.js with a hierarchical layout
-
 ## Prompt System
 
 The application uses a template-based prompt system for AI interactions. All prompts are stored as text files in the `prompts/` directory, making them easy to edit without touching the code.
-
-### Available Prompts
-
-1. **graph_generation.txt**: Generates a knowledge graph for a concept
-2. **initial_graph.txt**: Creates initial description of concept relationships
-3. **reformatting.txt**: Converts descriptions to JSON structure
-4. **learning_goals.txt**: Generates learning goals for activities
-5. **connected_concepts.txt**: Identifies related concepts
-6. **competency.txt**: Analyzes competency development
-7. **taxonomy.txt**: Classifies activities using Marzano's Taxonomy
 
 ### Editing Prompts
 
@@ -130,62 +117,3 @@ To edit a prompt:
 2. Open the desired .txt file in any text editor
 3. Modify the text while keeping the ${variable} placeholders intact
 4. Save the file
-
-#### Important Guidelines
-
-- **DO NOT** change or remove the ${variable} placeholders
-- **DO NOT** rename the prompt files
-- Keep the JSON format examples in the prompts if they exist
-- Maintain clear formatting and structure
-- Test changes with different concepts/activities
-
-#### Available Variables
-
-Different prompts use different variables:
-
-- `${concept}`: Used in graph-related prompts
-- `${name}`: Activity name
-- `${description}`: Activity description
-- `${goals_text}`: Formatted learning goals
-- `${initial_response}`: Initial graph description
-
-### Example Prompt Edit
-
-Original in `learning_goals.txt`:
-```
-Based on the following activity, identify 3-5 specific learning goals:
-Activity Name: ${name}
-Description: ${description}
-```
-
-Modified version:
-```
-Based on the following activity, identify 4-6 detailed learning goals:
-Activity Name: ${name}
-Description: ${description}
-
-Please ensure each goal is:
-1. Highly specific and measurable
-2. Starts with a strong action verb
-3. Focuses on one clear outcome
-```
-
-## Development
-
-### Adding New Features
-
-1. Backend changes go in `app.py` or `utils.py`
-2. Frontend JavaScript changes go in `static/js/graph.js`
-3. UI changes go in `templates/index.html`
-
-### Code Style
-
-- Python: Follow PEP 8 guidelines
-- JavaScript: Use modern ES6+ features
-- HTML/CSS: Follow TailwindCSS conventions
-
-## Security Notes
-
-- Never commit `config.ini` or any files containing API keys
-- Use environment variables in production
-- Keep dependencies updated for security patches

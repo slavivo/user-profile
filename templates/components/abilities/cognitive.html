@@ -3,14 +3,9 @@
 <!-- Cognitive Abilities -->
 <div class="mb-8">
     <h3 class="text-lg font-medium text-gray-900 mb-4">Cognitive Abilities</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {{ progress_bar("Pattern Recognition", abilities.cognitive.pattern_recognition) }}
-        {{ progress_bar("Processing Speed", abilities.cognitive.processing_speed) }}
-        {{ progress_bar("Problem Decomposition", abilities.cognitive.problem_decomposition) }}
-        {{ progress_bar("Spatial Reasoning", abilities.cognitive.spatial_reasoning) }}
-        {{ progress_bar("Logical Reasoning", abilities.cognitive.logical_reasoning) }}
-        {{ progress_bar("Abstract Thinking", abilities.cognitive.abstract_thinking) }}
-        {{ progress_bar("Memory Capacity", abilities.cognitive.memory_capacity) }}
-        {{ progress_bar("Information Organization", abilities.cognitive.information_organization) }}
+    <div id="cognitive-abilities-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Content will be dynamically populated by JavaScript -->
     </div>
-</div> 
+</div>
+
+<script src="{{ url_for('static', filename='js/abilities.js') }}"></script> 

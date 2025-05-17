@@ -5,16 +5,56 @@ student_data = {
     'school_year': '2023-2024',
     'grade': 'Second Grade',
     'class': '2.A',
-    'top_abilities': [
-        {'name': 'Pattern Recognition', 'value': 92},
-        {'name': 'Memory Capacity', 'value': 88},
-        {'name': 'Emotional Intelligence', 'value': 85}
-    ],
-    'top_attitudes': [
-        {'name': 'Curiosity', 'value': 90},
-        {'name': 'Collaboration', 'value': 88},
-        {'name': 'Responsibility', 'value': 85}
-    ],
+    'abilities': {
+        'cognitive': {
+            'pattern_recognition': 92,
+            'processing_speed': 75,
+            'problem_decomposition': 85,
+            'spatial_reasoning': 70,
+            'logical_reasoning': 88,
+            'abstract_thinking': 82,
+            'memory_capacity': 88,
+            'information_organization': 78
+        },
+        'social': {
+            'emotional_intelligence': 85,
+            'social_perception': 82,
+            'communication_clarity': 75,
+            'active_listening': 80,
+            'empathy': 88,
+            'stress_management': 72
+        },
+        'physical': {
+            'hand_eye_coordination': 85,
+            'fine_motor_skills': 78,
+            'typing_speed': 70,
+            'visual_acuity': 82
+        }
+    },
+    'attitudes': {
+        'growth_mindset': 82,
+        'persistence': 85,
+        'curiosity': 90,
+        'initiative': 75,
+        'adaptability': 80,
+        'risk_taking': 72,
+        'self_discipline': 85,
+        'collaboration': 88,
+        'open_mindedness': 85,
+        'responsibility': 85,
+        'attention_to_detail': 80,
+        'innovation_orientation': 78
+    },
+    'competencies': {
+        'learning_competency': 75,
+        'problem_solving': 85,
+        'communication': 80,
+        'social_and_personal': 82,
+        'civic': 75,
+        'digital': 88,
+        'work': 78,
+        'cultural_awareness': 80
+    },
     'activities': [
         {
             'id': 'ACT001',
@@ -57,17 +97,17 @@ The activity emphasizes both theoretical understanding and practical implementat
                 {'id': 'sys3', 'connection_strength': 70}    # System Architecture
             ],
             'competency_scores': {
-                'problem_solving': 9,
-                'logical_reasoning': 8,
-                'coding': 7,
-                'analysis': 8,
-                'documentation': 7
+                'Problem Solving': 9.0,
+                'Learning Competency': 8.5,
+                'Digital': 8.5,
+                'Work': 8.0,
+                'Communication': 7.5
             },
             'taxonomy': {
                 'processing_levels': [
                     {'level': 'Analysis', 'weight': 0.4},
                     {'level': 'Use of Knowledge', 'weight': 0.4},
-                    {'level': 'Metacognitive', 'weight': 0.2}
+                    {'level': 'Metacognitive System', 'weight': 0.2}
                 ],
                 'knowledge_domains': [
                     {'domain': 'Information', 'weight': 0.3},
@@ -149,11 +189,11 @@ The project emphasizes both technical skills and communication abilities, requir
                 {'id': 'sys2', 'connection_strength': 70}    # Networks
             ],
             'competency_scores': {
-                'data_analysis': 8,
-                'visualization': 9,
-                'communication': 7,
-                'programming': 8,
-                'design': 9
+                'Digital': 9.0,
+                'Communication': 8.5,
+                'Problem Solving': 8.5,
+                'Learning Competency': 8.0,
+                'Cultural Awareness': 7.5
             },
             'taxonomy': {
                 'processing_levels': [
@@ -244,11 +284,11 @@ The workshop emphasizes hands-on learning and practical problem-solving, requiri
                 {'id': 'algo3', 'connection_strength': 75}   # Functions
             ],
             'competency_scores': {
-                'hardware': 8,
-                'programming': 7,
-                'problem_solving': 9,
-                'system_integration': 8,
-                'documentation': 7
+                'Problem Solving': 9.0,
+                'Digital': 8.5,
+                'Work': 8.5,
+                'Learning Competency': 8.0,
+                'Social and Personal': 7.5
             },
             'taxonomy': {
                 'processing_levels': [
@@ -288,45 +328,5 @@ The workshop emphasizes hands-on learning and practical problem-solving, requiri
                 }
             }
         }
-    ],
-    'abilities': {
-        'cognitive': {
-            'pattern_recognition': 92,
-            'processing_speed': 35,
-            'problem_decomposition': 78,
-            'spatial_reasoning': 28,
-            'logical_reasoning': 72,
-            'abstract_thinking': 42,
-            'memory_capacity': 88,
-            'information_organization': 75
-        },
-        'physical': {
-            'hand_eye_coordination': 82,
-            'fine_motor_skills': 32,
-            'typing_speed': 25,
-            'visual_acuity': 75
-        },
-        'social': {
-            'emotional_intelligence': 85,
-            'social_perception': 72,
-            'communication_clarity': 38,
-            'active_listening': 82,
-            'empathy': 78,
-            'stress_management': 30
-        }
-    },
-    'attitudes': {
-        'growth_mindset': 75,
-        'persistence': 82,
-        'curiosity': 90,
-        'initiative': 45,
-        'adaptability': 78,
-        'risk_taking': 28,
-        'self_discipline': 72,
-        'collaboration': 88,
-        'open_mindedness': 80,
-        'responsibility': 85,
-        'attention_to_detail': 35,
-        'innovation_orientation': 70
-    }
+    ]
 } 

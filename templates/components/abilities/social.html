@@ -3,12 +3,9 @@
 <!-- Social-Emotional Abilities -->
 <div class="mb-8">
     <h3 class="text-lg font-medium text-gray-900 mb-4">Social-Emotional Abilities</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {{ progress_bar("Emotional Intelligence", abilities.social.emotional_intelligence) }}
-        {{ progress_bar("Social Perception", abilities.social.social_perception) }}
-        {{ progress_bar("Communication Clarity", abilities.social.communication_clarity) }}
-        {{ progress_bar("Active Listening", abilities.social.active_listening) }}
-        {{ progress_bar("Empathy", abilities.social.empathy) }}
-        {{ progress_bar("Stress Management", abilities.social.stress_management) }}
+    <div id="social-abilities-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Content will be dynamically populated by JavaScript -->
     </div>
-</div> 
+</div>
+
+<script src="{{ url_for('static', filename='js/abilities.js') }}"></script> 

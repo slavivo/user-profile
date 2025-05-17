@@ -65,15 +65,17 @@
             <h4 class="text-sm font-medium text-gray-900">Competency Scores</h4>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {% for competency, score in activity.competency_scores.items() %}
-                <div class="bg-gray-50 p-3 rounded">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-sm text-gray-600">{{ competency|title }}</span>
-                        <span class="text-sm font-medium text-indigo-600">{{ score }}/10</span>
+                    {% if score > 0.0 %}
+                    <div class="bg-gray-50 p-3 rounded">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm text-gray-600">{{ competency|title }}</span>
+                            <span class="text-sm font-medium text-indigo-600">{{ score }}/10</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ score * 10 }}%"></div>
+                        </div>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ score * 10 }}%"></div>
-                    </div>
-                </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>

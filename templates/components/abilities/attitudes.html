@@ -3,18 +3,9 @@
 <!-- Attitudes -->
 <div class="mb-8">
     <h3 class="text-lg font-medium text-gray-900 mb-4">Attitudes</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {{ progress_bar("Growth Mindset", attitudes.growth_mindset) }}
-        {{ progress_bar("Persistence", attitudes.persistence) }}
-        {{ progress_bar("Curiosity", attitudes.curiosity) }}
-        {{ progress_bar("Initiative", attitudes.initiative) }}
-        {{ progress_bar("Adaptability", attitudes.adaptability) }}
-        {{ progress_bar("Risk Taking", attitudes.risk_taking) }}
-        {{ progress_bar("Self Discipline", attitudes.self_discipline) }}
-        {{ progress_bar("Collaboration", attitudes.collaboration) }}
-        {{ progress_bar("Open Mindedness", attitudes.open_mindedness) }}
-        {{ progress_bar("Responsibility", attitudes.responsibility) }}
-        {{ progress_bar("Attention to Detail", attitudes.attention_to_detail) }}
-        {{ progress_bar("Innovation Orientation", attitudes.innovation_orientation) }}
+    <div id="attitudes-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Content will be dynamically populated by JavaScript -->
     </div>
-</div> 
+</div>
+
+<script src="{{ url_for('static', filename='js/abilities.js') }}"></script> 

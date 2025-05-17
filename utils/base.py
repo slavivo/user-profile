@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod
 import asyncio
 from .template_handler import PromptTemplate
+import json
 
 class RateLimiter:
     def __init__(self, interval):
@@ -494,6 +495,88 @@ def get_initial_graph_prompt(concept):
 
 def get_reformatting_prompt(concept, initial_response):
     return PromptTemplate.render('reformatting', concept=concept, initial_response=initial_response)
+
+def validate_and_extract_json(response_text: str, required_keys: Dict[str, type] = None) -> Tuple[bool, Any]:
+    """
+    Validate and extract JSON from AI response.
+    
+    Args:
+        response_text (str): The text response containing JSON
+        required_keys (Dict[str, type], optional): Dictionary of required keys and their expected types
+                                                 Example: {"name": str, "age": int, "scores": list}
+    
+    Returns:
+        Tuple[bool, Any]: (is_valid, extracted_data)
+    """
+    try:
+        response_text = response_text.strip()
+        # Find the first { or [ and last } or ]
+        start_brace = response_text.find('{')
+        start_bracket = response_text.find('[')
+        start = min(start_brace if start_brace != -1 else float('inf'),
+                   start_bracket if start_bracket != -1 else float('inf'))
+        
+        end_brace = response_text.rfind('}')
+        end_bracket = response_text.rfind(']')
+        end = max(end_brace, end_bracket) + 1
+        
+        if start >= 0 and end > start:
+            json_str = response_text[start:end]
+            data = json.loads(json_str)
+            
+            # If schema validation is requested
+            if required_keys:
+                # Validate that all required keys are present with correct types
+                for key, expected_type in required_keys.items():
+                    if key not in data:
+                        print(f"Missing required key: {key}")
+                        return False, None
+                    
+                    # Special handling for lists and dictionaries
+                    if expected_type in (list, dict):
+                        if not isinstance(data[key], expected_type):
+                            print(f"Invalid type for key {key}: expected {expected_type.__name__}, got {type(data[key]).__name__}")
+                            return False, None
+                    # For other types, use isinstance to allow for subclasses
+                    elif not isinstance(data[key], expected_type):
+                        print(f"Invalid type for key {key}: expected {expected_type.__name__}, got {type(data[key]).__name__}")
+                        return False, None
+            
+            return True, data
+        else:
+            print("No JSON structure found in the response")
+            return False, None
+    except Exception as e:
+        print(f"JSON validation failed: {str(e)}")
+        return False, None
+
+async def generate_with_retry(client: Any, provider: str, model: str, messages: List[Dict], max_attempts: int = 3) -> Any:
+    """Generate response with retry logic and JSON validation."""
+    api_client = ApiClientFactory.create_client(provider, client)
+    
+    for attempt in range(max_attempts):
+        try:
+            params = ApiClientFactory.create_params(
+                provider,
+                client=client,
+                model=model,
+                messages=messages
+            )
+            response = await api_client.chat_completion_request(params)
+            is_valid, data = validate_and_extract_json(response.content)
+            
+            if is_valid:
+                return data
+            
+            if attempt == max_attempts - 1:
+                raise ValueError(f"Failed to generate valid JSON after {max_attempts} attempts")
+                
+        except Exception as e:
+            if attempt == max_attempts - 1:
+                raise e
+            continue
+    
+    raise ValueError(f"Failed to generate response after {max_attempts} attempts")
 
 def is_valid_graph_format(response_text):
     """Validate if the response has the correct graph format"""

@@ -7,26 +7,18 @@
         <!-- Top Abilities -->
         <div class="bg-gray-50 p-4 rounded-lg">
             <h4 class="font-medium text-gray-900 mb-3">Top Abilities</h4>
-            <ul class="space-y-3">
-                {% for ability in student.top_abilities %}
-                <li class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600">{{ ability.name }}</span>
-                    <span class="text-sm font-medium text-indigo-600">{{ ability.value }}%</span>
-                </li>
-                {% endfor %}
+            <ul id="top-abilities-container" class="space-y-3">
+                <!-- Content will be dynamically populated by JavaScript -->
             </ul>
         </div>
         <!-- Key Attitudes -->
         <div class="bg-gray-50 p-4 rounded-lg">
             <h4 class="font-medium text-gray-900 mb-3">Key Attitudes</h4>
-            <ul class="space-y-3">
-                {% for attitude in student.top_attitudes %}
-                <li class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600">{{ attitude.name }}</span>
-                    <span class="text-sm font-medium text-indigo-600">{{ attitude.value }}%</span>
-                </li>
-                {% endfor %}
+            <ul id="key-attitudes-container" class="space-y-3">
+                <!-- Content will be dynamically populated by JavaScript -->
             </ul>
         </div>
     </div>
-</div> 
+</div>
+
+<script src="{{ url_for('static', filename='js/key_metrics.js') }}"></script> 

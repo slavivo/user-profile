@@ -6,20 +6,24 @@ Learning Goals:
 ${goals_text}
 
 Evaluate the development of these competencies:
-1. Problem Solving
-2. Critical Thinking
-3. Analytical Skills
-4. Technical Proficiency
-5. Communication
-6. Collaboration
+1. Leagning Competency
+2. Problem Solving
+3. Communication
+4. Social and Personal
+5. Civic
+6. Digital
+7. Work
+8. Cultural Awareness
 
 Format the response as a JSON object with competency scores (0-100).
 Example:
 {
-    "problem_solving": 85,
-    "critical_thinking": 90,
-    "analytical_skills": 75,
-    "technical_proficiency": 80,
-    "communication": 65,
-    "collaboration": 70
+    "learning_competency": 90,
+    "problem_solving": 10,
+    "communication": 10,
+    "social_and_personal": 0,
+    "civic": 0,
+    "digital": 90,
+    "work": 30,
+    "cultural_awareness": 0
 } 

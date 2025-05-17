@@ -300,15 +300,26 @@
 <script>
 // Add this at the top of your script
 let conceptsData = null;
+let competenciesData = null;
+let taxonomyData = null;
 
-async function loadConcepts() {
+async function loadInitialData() {
     try {
-        const response = await fetch('/api/all_nodes');
-        const nodes = await response.json();
-        conceptsData = { nodes };
+        const [conceptsResponse, competenciesResponse, taxonomyResponse] = await Promise.all([
+            fetch('/api/all_nodes'),
+            fetch('/api/competencies'),
+            fetch('/api/taxonomy')
+        ]);
+
+        conceptsData = await conceptsResponse.json();
+        competenciesData = await competenciesResponse.json();
+        taxonomyData = await taxonomyResponse.json();
+
         populateConceptsList();
+        populateCompetenciesList();
+        populateTaxonomyLists();
     } catch (error) {
-        console.error('Error loading concepts:', error);
+        console.error('Error loading initial data:', error);
     }
 }
 
@@ -667,14 +678,13 @@ document.getElementById('new-learning-goal')?.addEventListener('keypress', funct
 });
 
 function getCompetencyLevels() {
-    return {
-        problem_solving: parseInt(document.getElementById('problem-solving-level').value),
-        critical_thinking: parseInt(document.getElementById('critical-thinking-level').value),
-        analysis: parseInt(document.getElementById('analysis-level').value),
-        technical: parseInt(document.getElementById('technical-level').value),
-        communication: parseInt(document.getElementById('communication-level').value),
-        collaboration: parseInt(document.getElementById('collaboration-level').value)
-    };
+    if (!competenciesData) return {};
+    
+    const levels = {};
+    competenciesData.forEach(comp => {
+        levels[comp.id] = parseInt(document.getElementById(`${comp.id}-level`).value);
+    });
+    return levels;
 }
 
 function getSelectedConcepts() {
@@ -694,38 +704,32 @@ function getLearningGoals() {
 }
 
 function getTaxonomyLevels() {
+    if (!taxonomyData) return {};
+
     return {
-        processing_levels: {
-            retrieval: parseInt(document.getElementById('retrieval-level').value),
-            comprehension: parseInt(document.getElementById('comprehension-level').value),
-            analysis: parseInt(document.getElementById('analysis-level').value),
-            knowledge_utilization: parseInt(document.getElementById('knowledge-utilization-level').value),
-            metacognition: parseInt(document.getElementById('metacognition-level').value),
-            self_system_thinking: parseInt(document.getElementById('self-system-thinking-level').value)
-        },
-        knowledge_domains: {
-            information: parseInt(document.getElementById('information-domain-level').value),
-            mental_procedures: parseInt(document.getElementById('mental-procedures-level').value),
-            psychomotor_procedures: parseInt(document.getElementById('psychomotor-procedures-level').value)
-        }
+        processing_levels: taxonomyData.processing_levels.reduce((acc, level) => {
+            acc[level.id] = parseInt(document.getElementById(`${level.id}-level`).value);
+            return acc;
+        }, {}),
+        knowledge_domains: taxonomyData.domain_of_knowledge.reduce((acc, domain) => {
+            acc[domain.id] = parseInt(document.getElementById(`${domain.id}-level`).value);
+            return acc;
+        }, {})
     };
 }
 
 function getCombinedTaxonomyLevels() {
+    if (!taxonomyData) return {};
+
     return {
-        processing_levels: {
-            retrieval: parseInt(document.getElementById('combined-retrieval-level').value),
-            comprehension: parseInt(document.getElementById('combined-comprehension-level').value),
-            analysis: parseInt(document.getElementById('combined-analysis-level').value),
-            knowledge_utilization: parseInt(document.getElementById('combined-knowledge-utilization-level').value),
-            metacognition: parseInt(document.getElementById('combined-metacognition-level').value),
-            self_system_thinking: parseInt(document.getElementById('combined-self-system-thinking-level').value)
-        },
-        knowledge_domains: {
-            information: parseInt(document.getElementById('combined-information-domain-level').value),
-            mental_procedures: parseInt(document.getElementById('combined-mental-procedures-level').value),
-            psychomotor_procedures: parseInt(document.getElementById('combined-psychomotor-procedures-level').value)
-        }
+        processing_levels: taxonomyData.processing_levels.reduce((acc, level) => {
+            acc[level.id] = parseInt(document.getElementById(`combined-${level.id}-level`).value);
+            return acc;
+        }, {}),
+        knowledge_domains: taxonomyData.domain_of_knowledge.reduce((acc, domain) => {
+            acc[domain.id] = parseInt(document.getElementById(`combined-${domain.id}-level`).value);
+            return acc;
+        }, {})
     };
 }
 
@@ -892,38 +896,72 @@ function addCombinedLearningGoal() {
     }
 }
 
+function populateCompetenciesList() {
+    if (!competenciesData) return;
+
+    // Update both regular and combined mode competencies sections
+    const sections = ['', 'combined-'];
+    sections.forEach(prefix => {
+        const container = document.querySelector(`#${prefix}competencies-mode .space-y-4`);
+        if (container) {
+            container.innerHTML = competenciesData.map(comp => `
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">${comp.name}</label>
+                    <input type="range" min="0" max="100" value="50" 
+                           class="w-1/2" 
+                           id="${prefix}${comp.id}-level"
+                           oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+            `).join('');
+        }
+    });
+}
+
+function populateTaxonomyLists() {
+    if (!taxonomyData) return;
+
+    // Update both regular and combined mode taxonomy sections
+    const sections = ['', 'combined-'];
+    sections.forEach(prefix => {
+        // Populate Processing Levels
+        const processingContainer = document.querySelector(`#${prefix}taxonomy-mode .space-y-6 > div:first-child .space-y-4`);
+        if (processingContainer) {
+            processingContainer.innerHTML = taxonomyData.processing_levels.map(level => `
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">${level.name}</label>
+                    <input type="range" min="0" max="100" value="50" 
+                           class="w-1/2" 
+                           id="${prefix}${level.id}-level"
+                           oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+            `).join('');
+        }
+
+        // Populate Knowledge Domains
+        const domainContainer = document.querySelector(`#${prefix}taxonomy-mode .space-y-6 > div:last-child .space-y-4`);
+        if (domainContainer) {
+            domainContainer.innerHTML = taxonomyData.domain_of_knowledge.map(domain => `
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">${domain.name}</label>
+                    <input type="range" min="0" max="100" value="50" 
+                           class="w-1/2" 
+                           id="${prefix}${domain.id}-level"
+                           oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+            `).join('');
+        }
+    });
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     populateModels();
     document.getElementById('activity-api-select').addEventListener('change', populateModels);
     
-    // Load concepts when the page loads
-    loadConcepts();
-    
-    // Set up competency sliders
-    const competencySliders = ['problem-solving', 'critical-thinking', 'analysis', 'technical', 'communication', 'collaboration'];
-    competencySliders.forEach(comp => {
-        const slider = document.getElementById(`${comp}-level`);
-        const value = document.getElementById(`${comp}-value`);
-        slider.addEventListener('input', () => {
-            value.textContent = `${slider.value}%`;
-        });
-    });
-
-    // Set up taxonomy sliders
-    const taxonomySliders = [
-        'retrieval', 'comprehension', 'analysis', 'knowledge-utilization',
-        'metacognition', 'self-system-thinking', 'information-domain', 
-        'mental-procedures', 'psychomotor-procedures'
-    ];
-    taxonomySliders.forEach(tax => {
-        const slider = document.getElementById(`${tax}-level`);
-        const value = document.getElementById(`${tax}-value`);
-        if (slider && value) {
-            slider.addEventListener('input', () => {
-                value.textContent = `${slider.value}%`;
-            });
-        }
-    });
+    // Load all initial data
+    loadInitialData();
 });
 </script> 

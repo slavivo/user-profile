@@ -5,63 +5,11 @@ from .base import (
     get_learning_goals_prompt,
     get_connected_concepts_prompt,
     get_competency_prompt,
-    get_taxonomy_prompt
+    get_taxonomy_prompt,
+    generate_with_retry
 )
 from .template_handler import PromptTemplate
 from graph_data import graph_data
-
-def validate_and_extract_json(response_text: str) -> Tuple[bool, Any]:
-    """Validate and extract JSON from AI response."""
-    try:
-        response_text = response_text.strip()
-        # Find the first { or [ and last } or ]
-        start_brace = response_text.find('{')
-        start_bracket = response_text.find('[')
-        start = min(start_brace if start_brace != -1 else float('inf'),
-                   start_bracket if start_bracket != -1 else float('inf'))
-        
-        end_brace = response_text.rfind('}')
-        end_bracket = response_text.rfind(']')
-        end = max(end_brace, end_bracket) + 1
-        
-        if start >= 0 and end > start:
-            json_str = response_text[start:end]
-            data = json.loads(json_str)
-            return True, data
-        else:
-            print("No JSON structure found in the response")
-            return False, None
-    except Exception as e:
-        print(f"JSON validation failed: {str(e)}")
-        return False, None
-
-async def generate_with_retry(client: Any, provider: str, model: str, messages: List[Dict], max_attempts: int = 3) -> Any:
-    """Generate response with retry logic and JSON validation."""
-    api_client = ApiClientFactory.create_client(provider, client)
-    
-    for attempt in range(max_attempts):
-        try:
-            params = ApiClientFactory.create_params(
-                provider,
-                client=client,
-                model=model,
-                messages=messages
-            )
-            response = await api_client.chat_completion_request(params)
-            is_valid, data = validate_and_extract_json(response.content)
-            
-            if is_valid:
-                return data
-            
-            if attempt == max_attempts - 1:
-                raise ValueError(f"Failed to generate valid JSON after {max_attempts} attempts")
-                
-        except Exception as e:
-            if attempt == max_attempts - 1:
-                raise e
-            continue
-    
-    raise ValueError(f"Failed to generate response after {max_attempts} attempts")
 
 def format_competencies_text(competencies: Dict[str, int]) -> str:
     """Format competencies dictionary into a readable text format."""
@@ -155,7 +103,6 @@ async def generate_full_description(
             "goals_text": "\n".join([f"- {goal}" for goal in learning_goals])
         })
     elif mode == "combined":
-        print(f"Taxonomy: {taxonomy}")
         template_name = "full_description_from_combined"
         template_vars.update({
             "concepts_text": format_concepts_text(concepts) if concepts else "",
@@ -189,6 +136,8 @@ async def generate_full_description(
     
     prompt = PromptTemplate.render(template_name, **template_vars)
     
+    print(f"Prompt: {prompt}")
+
     params = ApiClientFactory.create_params(
         provider,
         client=client,

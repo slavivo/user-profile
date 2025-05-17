@@ -12,8 +12,10 @@ import asyncio
 import uuid
 from datetime import datetime
 from utils.activity_generation import generate_activity_metadata
+from utils.personalization import prepare_personalized_activity_params
 from student_data import student_data
 from graph_data import graph_data
+from meta_data import meta_data
 import json
 
 app = Flask(__name__)
@@ -299,33 +301,35 @@ async def generate_activity():
                 for node_id, strength in generated_data['connected_concepts'].items()
             ],
             'competency_scores': {
-                'problem_solving': int(generated_data['competencies']['problem_solving'] / 10),
-                'critical_thinking': int(generated_data['competencies']['critical_thinking'] / 10),
-                'analysis': int(generated_data['competencies']['analytical_skills'] / 10),
-                'technical': int(generated_data['competencies']['technical_proficiency'] / 10),
-                'communication': int(generated_data['competencies']['communication'] / 10),
-                'collaboration': int(generated_data['competencies']['collaboration'] / 10)
+                'Learning Competency': float(generated_data['competencies'].get('learning_competency', 0)) / 10,
+                'Problem Solving': float(generated_data['competencies'].get('problem_solving', 0)) / 10,
+                'Communication': float(generated_data['competencies'].get('communication', 0)) / 10,
+                'Social and Personal': float(generated_data['competencies'].get('social_and_personal', 0)) / 10,
+                'Civic': float(generated_data['competencies'].get('civic', 0)) / 10,
+                'Digital': float(generated_data['competencies'].get('digital', 0)) / 10,
+                'Work': float(generated_data['competencies'].get('work', 0)) / 10,
+                'Cultural Awareness': float(generated_data['competencies'].get('cultural_awareness', 0)) / 10
             },
             'taxonomy': {
                 'processing_levels': [
-                    {'level': 'Retrieval', 'weight': generated_data['taxonomy']['processing_levels']['retrieval'] / 100},
-                    {'level': 'Comprehension', 'weight': generated_data['taxonomy']['processing_levels']['comprehension'] / 100},
-                    {'level': 'Analysis', 'weight': generated_data['taxonomy']['processing_levels']['analysis'] / 100},
-                    {'level': 'Use of Knowledge', 'weight': generated_data['taxonomy']['processing_levels']['knowledge_utilization'] / 100},
-                    {'level': 'Metacognitive', 'weight': generated_data['taxonomy']['processing_levels']['metacognition'] / 100},
-                    {'level': 'Self-system Thinking', 'weight': generated_data['taxonomy']['processing_levels']['self_system_thinking'] / 100}
+                    {'level': 'Retrieval', 'weight': float(generated_data['taxonomy']['processing_levels'].get('retrieval', 0)) / 100},
+                    {'level': 'Comprehension', 'weight': float(generated_data['taxonomy']['processing_levels'].get('comprehension', 0)) / 100},
+                    {'level': 'Analysis', 'weight': float(generated_data['taxonomy']['processing_levels'].get('analysis', 0)) / 100},
+                    {'level': 'Use of Knowledge', 'weight': float(generated_data['taxonomy']['processing_levels'].get('knowledge_utilization', 0)) / 100},
+                    {'level': 'Metacognitive System', 'weight': float(generated_data['taxonomy']['processing_levels'].get('metacognition', 0)) / 100},
+                    {'level': 'Self-system Thinking', 'weight': float(generated_data['taxonomy']['processing_levels'].get('self_system_thinking', 0)) / 100}
                 ],
                 'knowledge_domains': [
-                    {'domain': 'Information', 'weight': generated_data['taxonomy']['knowledge_domains']['information'] / 100},
-                    {'domain': 'Mental Procedures', 'weight': generated_data['taxonomy']['knowledge_domains']['mental_procedures'] / 100},
-                    {'domain': 'Psychomotor Procedures', 'weight': generated_data['taxonomy']['knowledge_domains']['psychomotor_procedures'] / 100}
+                    {'domain': 'Information', 'weight': float(generated_data['taxonomy']['knowledge_domains'].get('information', 0)) / 100},
+                    {'domain': 'Mental Procedures', 'weight': float(generated_data['taxonomy']['knowledge_domains'].get('mental_procedures', 0)) / 100},
+                    {'domain': 'Psychomotor Procedures', 'weight': float(generated_data['taxonomy']['knowledge_domains'].get('psychomotor_procedures', 0)) / 100}
                 ]
             },
             'student_performance': {
                 'overall_score': 0,  # Initialize with 0
                 'concept_scores': {
                     concept_id: {
-                        'name': concept_id.title(),  # Placeholder name, should be replaced with actual concept names
+                        'name': get_concept_name(concept_id),  # Use the helper function to get proper concept names
                         'score': 0  # Initialize with 0
                     }
                     for concept_id in generated_data['connected_concepts'].keys()
@@ -339,6 +343,26 @@ async def generate_activity():
         
     except Exception as e:
         print(f"Error generating activity: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/prepare_personalized_params', methods=['POST'])
+def prepare_personalized_params():
+    try:
+        data = request.json
+        concept_focus = data.get('concept_focus')
+        competency_focus = data.get('competency_focus')
+
+        if not concept_focus or not competency_focus:
+            return jsonify({'error': 'Missing required parameters'}), 400
+
+        # Get personalized activity parameters
+        try:
+            activity_params = prepare_personalized_activity_params(concept_focus, competency_focus)
+            return jsonify(activity_params)
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 400
+
+    except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/all_nodes')
@@ -358,6 +382,75 @@ def get_concept_graph_data():
     """Return the detailed concept graph data for all categories"""
     try:
         return jsonify(graph_data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/taxonomy')
+def get_taxonomy():
+    """Return the taxonomy data including processing levels and domain of knowledge"""
+    try:
+        return jsonify(meta_data['taxonomy'])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/competencies')
+def get_competencies():
+    """Return the list of competencies with student values if available"""
+    try:
+        competencies = meta_data['competencies']
+        student_competencies = student_data.get('competencies', {})
+        
+        # Merge metadata with student values
+        enriched_competencies = []
+        for comp in competencies:
+            comp_data = comp.copy()
+            comp_data['value'] = student_competencies.get(comp['id'], 0)
+            enriched_competencies.append(comp_data)
+            
+        return jsonify(enriched_competencies)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/abilities')
+def get_abilities():
+    """Return all abilities (cognitive, social, and physical) with student values if available"""
+    try:
+        abilities = meta_data['abilities']
+        student_abilities = student_data.get('abilities', {})
+        
+        # Merge metadata with student values for each ability category
+        enriched_abilities = {}
+        for category in ['cognitive', 'social', 'physical']:
+            category_meta = abilities.get(category, [])
+            student_category = student_abilities.get(category, {})
+            
+            enriched_category = []
+            for ability in category_meta:
+                ability_data = ability.copy()
+                ability_data['value'] = student_category.get(ability['id'], 0)
+                enriched_category.append(ability_data)
+                
+            enriched_abilities[category] = enriched_category
+            
+        return jsonify(enriched_abilities)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/attitudes')
+def get_attitudes():
+    """Return the list of attitudes with student values if available"""
+    try:
+        attitudes = meta_data['attitudes']
+        student_attitudes = student_data.get('attitudes', {})
+        
+        # Merge metadata with student values
+        enriched_attitudes = []
+        for attitude in attitudes:
+            attitude_data = attitude.copy()
+            attitude_data['value'] = student_attitudes.get(attitude['id'], 0)
+            enriched_attitudes.append(attitude_data)
+            
+        return jsonify(enriched_attitudes)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

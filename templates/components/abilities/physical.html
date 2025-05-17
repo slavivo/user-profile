@@ -3,10 +3,9 @@
 <!-- Physical Abilities -->
 <div class="mb-8">
     <h3 class="text-lg font-medium text-gray-900 mb-4">Physical Abilities</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {{ progress_bar("Hand-Eye Coordination", abilities.physical.hand_eye_coordination) }}
-        {{ progress_bar("Fine Motor Skills", abilities.physical.fine_motor_skills) }}
-        {{ progress_bar("Typing Speed", abilities.physical.typing_speed) }}
-        {{ progress_bar("Visual Acuity", abilities.physical.visual_acuity) }}
+    <div id="physical-abilities-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Content will be dynamically populated by JavaScript -->
     </div>
-</div> 
+</div>
+
+<script src="{{ url_for('static', filename='js/abilities.js') }}"></script> 

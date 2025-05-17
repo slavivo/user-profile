@@ -1,0 +1,144 @@
+{% extends "components/base_tab.html" %}
+
+{% block tab_content %}
+<div class="space-y-6">
+    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p class="text-sm text-blue-700">
+                    The current personalization system focuses only on concepts and competencies. Future versions will include personalization based on student attitudes and abilities.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Concept Focus</h3>
+            <p class="mt-1 text-sm text-gray-500">Choose your learning strategy for concepts</p>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+            <div class="max-w-xl">
+                <select id="conceptFocus" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm">
+                    <option value="polish">Polish unmastered concepts (Score 1-9)</option>
+                    <option value="discover">Discover new connected concepts (Score 0)</option>
+                    <option value="broaden">Broaden knowledge of mastered concepts (Score 9-10)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Competency Focus</h3>
+            <p class="mt-1 text-sm text-gray-500">Choose which competencies to emphasize</p>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+            <div class="max-w-xl">
+                <select id="competencyFocus" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm">
+                    <option value="strong">Focus on strong competencies</option>
+                    <option value="weak">Focus on weak competencies</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-end space-x-4 items-center">
+        <!-- Loading indicator (hidden by default) -->
+        <div id="loadingIndicator" class="hidden items-center text-indigo-600">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Generating activity...</span>
+        </div>
+        
+        <!-- Generate button -->
+        <button id="generatePersonalizedActivity" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <svg class="mr-2 -ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Generate Personalized Activity
+        </button>
+    </div>
+</div>
+
+<script>
+document.getElementById('generatePersonalizedActivity').addEventListener('click', function() {
+    const button = this;
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const conceptFocus = document.getElementById('conceptFocus').value;
+    const competencyFocus = document.getElementById('competencyFocus').value;
+
+    // Show loading indicator and disable button
+    loadingIndicator.classList.remove('hidden');
+    loadingIndicator.classList.add('flex');
+    button.disabled = true;
+    button.classList.add('opacity-50', 'cursor-not-allowed');
+
+    // First get the personalized parameters
+    fetch('/prepare_personalized_params', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            concept_focus: conceptFocus,
+            competency_focus: competencyFocus
+        })
+    })
+    .then(response => response.json())
+    .then(params => {
+        if (params.error) {
+            throw new Error(params.error);
+        }
+        
+        // Then use these parameters with the existing generate_activity endpoint
+        return fetch('/generate_activity', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: params.name,
+                provider: 'gemini',
+                model: 'gemini-2.0-flash',
+                mode: params.mode,
+                brief_description: params.brief_description,
+                concepts: params.concepts,
+                competencies: params.competencies
+            })
+        });
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Activity was successfully generated
+            // Switch to the Activities tab to show the new activity
+            document.querySelector('a[href="#activities"]').click();
+            
+            // No need to refresh the activities list, switching tabs will show it
+            // with the new activity already included
+        } else {
+            throw new Error(data.error || 'Failed to generate activity');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error: ' + error.message);
+    })
+    .finally(() => {
+        // Hide loading indicator and re-enable button
+        loadingIndicator.classList.add('hidden');
+        loadingIndicator.classList.remove('flex');
+        button.disabled = false;
+        button.classList.remove('opacity-50', 'cursor-not-allowed');
+    });
+});
+</script>
+{% endblock %} 

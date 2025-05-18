@@ -61,28 +61,56 @@ A Flask-based web application for visualizing student profiles, competencies, an
    cd <repository-name>
    ```
 
-2. Create and activate a virtual environment:
+2. Choose your preferred installation method:
+
+### Option A: Using pip (recommended for most users)
+
+1. Create and activate a virtual environment:
    ```bash
+   # On Linux/macOS:
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate
+
+   # On Windows (Command Prompt):
+   python -m venv venv
+   venv\Scripts\activate.bat
+
+   # On Windows (PowerShell):
+   python -m venv venv
+   venv\Scripts\Activate.ps1
    ```
 
-3. Install dependencies:
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Create a `config.ini` file in the root directory:
-   ```ini
-   [DEFAULT]
-   OPENAI_KEY = your_openai_api_key
-   GENAI_KEY = your_google_gemini_api_key
+### Option B: Using conda
+
+1. Create and activate a conda environment:
+   ```bash
+   # On Linux/macOS/Windows:
+   conda env create -f environment.yml
+   conda activate user-profile
    ```
 
-5. Run the application:
-   ```bash
-   python app.py
-   ```
+### Configuration
+
+After installing dependencies, create a `config.ini` file in the root directory:
+```ini
+[DEFAULT]
+OPENAI_KEY = your_openai_api_key
+GENAI_KEY = your_google_gemini_api_key
+```
+
+### Running the Application
+
+Start the application:
+```bash
+python app.py
+```
+
+The application will be available at `http://localhost:5000` by default.
 
 ## API Configuration
 

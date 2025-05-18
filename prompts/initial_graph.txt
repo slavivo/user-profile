@@ -1,5 +1,13 @@
-Analyze the concept of ${concept} in computer science education and describe a knowledge graph structure.
-List the key nodes (concepts) that should be included and describe how they should be connected.
-Focus on creating a clear hierarchical structure with meaningful relationships.
-You don't need to follow any specific format - just describe the nodes and their connections in natural language.
-Keep the response focused on essential concepts and their direct relationships. 
+Analyze the concept of ${concept} in computer science education and create a knowledge graph structure for 15-year-old students.
+
+List fundamental knowledge units that make up this concept, where each unit:
+- Represents a single, well-defined piece of knowledge
+- Takes roughly similar time/effort to master as other units
+- Is appropriate for a 15-year-old student's understanding level
+- Belongs primarily to this concept (not to other core concepts)
+
+Describe directional connections between these knowledge units that suggest a typical learning progression. While students may learn in different orders and often need to revisit topics, these connections should indicate common prerequisite relationships.
+
+You don't need to follow any specific format - just describe the knowledge units and their directional relationships in natural language.
+
+Keep the response focused and concise. Include only the most essential knowledge units that a 15-year-old should understand, rather than an exhaustive list. 

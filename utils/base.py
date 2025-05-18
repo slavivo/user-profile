@@ -668,15 +668,15 @@ def is_valid_graph_format(response_text):
         return False
     
 def get_full_description_prompt(name: str, brief_description: str) -> str:
-    return PromptTemplate.render('full_description', name=name, brief_description=brief_description)
+    return PromptTemplate.render('get_full_description', name=name, brief_description=brief_description)
 
 def get_learning_goals_prompt(name: str, description: str) -> str:
-    return PromptTemplate.render('learning_goals', name=name, description=description)
+    return PromptTemplate.render('get_learning_goals', name=name, description=description)
 
 def get_connected_concepts_prompt(name: str, description: str, goals_text: str, concepts_list: str) -> str:
     """Get prompt for generating connected concepts."""
     return PromptTemplate.render(
-        'connected_concepts',
+        'get_connected_concepts',
         name=name,
         description=description,
         goals_text=goals_text,
@@ -685,8 +685,8 @@ def get_connected_concepts_prompt(name: str, description: str, goals_text: str, 
 
 def get_competency_prompt(name: str, description: str, learning_goals: List[str]) -> str:
     goals_text = "\n".join([f"- {goal}" for goal in learning_goals])
-    return PromptTemplate.render('competency', name=name, description=description, goals_text=goals_text)
+    return PromptTemplate.render('get_competencies', name=name, description=description, goals_text=goals_text)
 
 def get_taxonomy_prompt(name: str, description: str, learning_goals: List[str]) -> str:
     goals_text = "\n".join([f"- {goal}" for goal in learning_goals])
-    return PromptTemplate.render('taxonomy', name=name, description=description, goals_text=goals_text)
+    return PromptTemplate.render('get_taxonomy', name=name, description=description, goals_text=goals_text)

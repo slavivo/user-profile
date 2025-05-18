@@ -1,6 +1,51 @@
 // Initial concept data for the detailed graphs
 let conceptData = null;
 
+// Function to get color based on progress value
+function getProgressColor(progress) {
+    // Convert progress (0-100) to hue (0-120, red to green)
+    const hue = (120 * progress) / 100;
+    return `hsl(${hue}, 70%, 80%)`;
+}
+
+// Function to create progress legend
+function createProgressLegend(container) {
+    const legend = document.createElement('div');
+    legend.style.position = 'absolute';
+    legend.style.bottom = '20px';
+    legend.style.right = '20px';
+    legend.style.background = 'white';
+    legend.style.padding = '10px';
+    legend.style.borderRadius = '8px';
+    legend.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+    legend.style.zIndex = '10';
+    
+    const title = document.createElement('div');
+    title.textContent = 'Progress Scale';
+    title.style.fontWeight = 'bold';
+    title.style.marginBottom = '8px';
+    title.style.fontSize = '12px';
+    legend.appendChild(title);
+
+    const gradientBar = document.createElement('div');
+    gradientBar.style.height = '20px';
+    gradientBar.style.width = '200px';
+    gradientBar.style.background = 'linear-gradient(to right, hsl(0, 70%, 80%), hsl(60, 70%, 80%), hsl(120, 70%, 80%))';
+    gradientBar.style.borderRadius = '4px';
+    gradientBar.style.marginBottom = '4px';
+    legend.appendChild(gradientBar);
+
+    const labels = document.createElement('div');
+    labels.style.display = 'flex';
+    labels.style.justifyContent = 'space-between';
+    labels.style.fontSize = '10px';
+    labels.style.color = '#666';
+    labels.innerHTML = '<span>0%</span><span>50%</span><span>100%</span>';
+    legend.appendChild(labels);
+
+    container.appendChild(legend);
+}
+
 // Function to fetch concept data from the backend
 async function fetchConceptData() {
     try {
@@ -21,7 +66,9 @@ function initializeCytoscape(container, elements) {
     if (window.cy) {
         window.cy.destroy();
     }
-    return cytoscape({
+
+    // Create the cytoscape instance
+    const cy = cytoscape({
         container: container,
         elements: elements,
         style: [
@@ -29,7 +76,9 @@ function initializeCytoscape(container, elements) {
                 selector: 'node',
                 style: {
                     'label': 'data(label)',
-                    'background-color': '#f8fafc',  // Light gray background
+                    'background-color': function(ele) {
+                        return getProgressColor(ele.data('progress'));
+                    },
                     'border-width': 1,
                     'border-color': '#e2e8f0',     // Subtle border
                     'color': '#334155',            // Darker text for better contrast
@@ -69,6 +118,11 @@ function initializeCytoscape(container, elements) {
             animationDuration: 500
         }
     });
+
+    // Add the legend to the container
+    createProgressLegend(container);
+
+    return cy;
 }
 
 // Function to update model options
@@ -81,8 +135,43 @@ function updateModelOptions(provider) {
     ).join('');
 }
 
+// Function to handle root concepts button click
+function handleRootConceptsClick() {
+    const mainConcepts = document.getElementById('main-concepts');
+    const conceptGraph = document.getElementById('concept-graph');
+    const responseLog = document.getElementById('response-log');
+    
+    mainConcepts.classList.remove('hidden');
+    conceptGraph.classList.add('hidden');
+    responseLog.classList.add('hidden');
+    window.currentConcept = null;
+    
+    if (window.cy) {
+        window.cy.destroy();
+        window.cy = null;
+    }
+    
+    // Reset breadcrumb
+    document.getElementById('concept-breadcrumb').querySelector('ol').innerHTML = `
+        <li class="inline-flex items-center">
+            <button id="root-concepts" class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                Main Concepts
+            </button>
+        </li>
+    `;
+    
+    // Re-attach click handler to the new button
+    document.getElementById('root-concepts').addEventListener('click', handleRootConceptsClick);
+}
+
 // Function to handle concept card clicks
-async function handleConceptCardClick(card, mainConcepts, conceptGraph, responseLog, graphContainer, breadcrumb) {
+async function handleConceptCardClick(card) {
+    const mainConcepts = document.getElementById('main-concepts');
+    const conceptGraph = document.getElementById('concept-graph');
+    const responseLog = document.getElementById('response-log');
+    const graphContainer = document.getElementById('graph-container');
+    const breadcrumb = document.getElementById('concept-breadcrumb');
+    
     const concept = card.getAttribute('data-concept');
     window.currentConcept = concept;
     
@@ -122,26 +211,6 @@ async function handleConceptCardClick(card, mainConcepts, conceptGraph, response
 
     // Initialize graph with fetched data
     window.cy = initializeCytoscape(graphContainer, conceptData[concept]);
-}
-
-// Function to handle root concepts button click
-function handleRootConceptsClick(mainConcepts, conceptGraph, responseLog) {
-    mainConcepts.classList.remove('hidden');
-    conceptGraph.classList.add('hidden');
-    responseLog.classList.add('hidden');
-    window.currentConcept = null;
-    if (window.cy) {
-        window.cy.destroy();
-        window.cy = null;
-    }
-    // Reset breadcrumb
-    document.getElementById('concept-breadcrumb').querySelector('ol').innerHTML = `
-        <li class="inline-flex items-center">
-            <button id="root-concepts" class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-900">
-                Main Concepts
-            </button>
-        </li>
-    `;
 }
 
 // Function to handle graph generation
@@ -229,40 +298,25 @@ async function handleGraphGeneration(generateBtn) {
 }
 
 // Initialize everything when the DOM is loaded
-document.addEventListener('DOMContentLoaded', async function() {
-    // Get DOM elements
-    const mainConcepts = document.getElementById('main-concepts');
-    const conceptGraph = document.getElementById('concept-graph');
-    const graphContainer = document.getElementById('graph-container');
-    const rootConceptsBtn = document.getElementById('root-concepts');
-    const breadcrumb = document.getElementById('concept-breadcrumb');
-    const responseLog = document.getElementById('response-log');
-    const generateBtn = document.getElementById('generate-graph');
+document.addEventListener('DOMContentLoaded', function() {
+    // Attach click handlers to concept cards
+    document.querySelectorAll('.concept-card').forEach(card => {
+        card.addEventListener('click', () => handleConceptCardClick(card));
+    });
     
-    // Fetch initial concept data
-    try {
-        await fetchConceptData();
-    } catch (error) {
-        console.error('Failed to fetch initial concept data:', error);
-    }
+    // Attach click handler to root concepts button
+    document.getElementById('root-concepts').addEventListener('click', handleRootConceptsClick);
     
-    // Initialize model options
-    updateModelOptions('gemini');
-
-    // Set up event listeners
+    // Set up API provider change handler
     document.getElementById('api-select').addEventListener('change', function() {
         updateModelOptions(this.value);
     });
-
-    document.querySelectorAll('.concept-card').forEach(card => {
-        card.addEventListener('click', () => handleConceptCardClick(
-            card, mainConcepts, conceptGraph, responseLog, graphContainer, breadcrumb
-        ));
+    
+    // Set up generate graph button handler
+    document.getElementById('generate-graph').addEventListener('click', function() {
+        handleGraphGeneration(this);
     });
-
-    rootConceptsBtn.addEventListener('click', () => handleRootConceptsClick(
-        mainConcepts, conceptGraph, responseLog
-    ));
-
-    generateBtn.addEventListener('click', () => handleGraphGeneration(generateBtn));
+    
+    // Initialize model options
+    updateModelOptions('gemini');
 }); 

@@ -1,22 +1,20 @@
 from flask import Flask, render_template, jsonify, request
 import configparser
-import google.generativeai as genai
-import openai
-from utils.base import (
-    ApiClientFactory, 
-    get_initial_graph_prompt,
-    get_reformatting_prompt,
-    is_valid_graph_format
-)
 import asyncio
 import uuid
 from datetime import datetime
+import json
 from utils.activity_generation import generate_activity_metadata
 from utils.personalization import prepare_personalized_activity_params
+from utils.graph_generation import (
+    generate_graph_async,
+    get_concept_name,
+    get_all_nodes,
+    format_graph_for_cytoscape
+)
 from student_data import student_data
 from graph_data import graph_data
 from meta_data import meta_data
-import json
 
 app = Flask(__name__)
 
@@ -38,123 +36,12 @@ def get_api_client(provider: str, model: str = None):
     else:
         raise ValueError('Invalid API provider')
 
-def get_concept_name(node_id):
-    """Get concept name from its ID by searching through all graph data."""
-    for category, data in graph_data.items():
-        for node in data['nodes']:
-            if node['data']['id'] == node_id:
-                return node['data']['label']
-    return node_id  # Return ID if name not found
-
 @app.route('/')
 def index():
     return render_template('pages/profile.html', student=student_data, get_concept_name=get_concept_name)
 
-async def get_reformatting_client(provider_preference='gemini'):
-    """Get a client for reformatting, preferring Gemini 2.0 flash or GPT-4O"""
-    try:
-        if provider_preference == 'gemini':
-            genai.configure(api_key=GENAI_KEY)
-            client = genai.GenerativeModel('gemini-2.0-flash')
-            return 'gemini', client
-        else:
-            client = openai.AsyncClient(api_key=OPENAI_KEY)
-            return 'openai', client
-    except Exception:
-        # If preferred provider fails, try the other one
-        try:
-            if provider_preference == 'gemini':
-                client = openai.AsyncClient(api_key=OPENAI_KEY)
-                return 'openai', client
-            else:
-                genai.configure(api_key=GENAI_KEY)
-                client = genai.GenerativeModel('gemini-2.0-flash')
-                return 'gemini', client
-        except Exception as e:
-            raise Exception("Failed to initialize both Gemini and OpenAI clients") from e
-
-async def generate_graph_async(api_provider, model, concept):
-    try:
-        # Step 1: Generate initial graph description
-        try:
-            client = get_api_client(api_provider, model)
-        except ValueError as e:
-            return {'error': str(e)}, 400
-
-        # Create API client for initial description
-        api_client = ApiClientFactory.create_client(api_provider, client)
-
-        # Get initial description
-        initial_messages = [
-            {"role": "system", "content": "You are a helpful AI assistant that generates knowledge graphs for educational concepts."},
-            {"role": "user", "content": get_initial_graph_prompt(concept)}
-        ]
-
-        initial_params = ApiClientFactory.create_params(
-            api_provider,
-            client=client,
-            messages=initial_messages,
-            model=model,
-            temperature=0.7,
-            max_tokens=2000
-        )
-
-        initial_response = await api_client.chat_completion_request(initial_params)
-        initial_description = initial_response.content
-
-        # Step 2: Format the description into proper JSON
-        # Try up to 3 times with validation
-        for attempt in range(3):
-            try:
-                # Get reformatting client (Gemini 2.0 flash or GPT-4O)
-                reformat_provider, reformat_client = await get_reformatting_client()
-                reformat_api_client = ApiClientFactory.create_client(reformat_provider, reformat_client)
-
-                # Prepare reformatting messages
-                reformat_messages = [
-                    {"role": "system", "content": "You are a helpful AI assistant that formats knowledge graph descriptions into JSON."},
-                    {"role": "user", "content": get_reformatting_prompt(concept, initial_description)}
-                ]
-
-                reformat_model = 'gemini-2.0-flash' if reformat_provider == 'gemini' else 'gpt-4o-2024-08-06'
-                reformat_params = ApiClientFactory.create_params(
-                    reformat_provider,
-                    client=reformat_client,
-                    messages=reformat_messages,
-                    model=reformat_model,
-                    temperature=0.2,
-                    max_tokens=2000
-                )
-
-                reformat_response = await reformat_api_client.chat_completion_request(reformat_params)
-                formatted_response = reformat_response.content
-
-                is_valid, formatted_response = is_valid_graph_format(formatted_response)
-                
-                if is_valid:
-                    return {
-                        'response': formatted_response,
-                        'initial_description': initial_description
-                    }
-                
-                if attempt == 2:  # Last attempt failed
-                    return {
-                        'error': 'Failed to generate valid graph format after 3 attempts',
-                        'initial_description': initial_description,
-                        'last_attempt': formatted_response
-                    }, 500
-
-            except Exception as e:
-                if attempt == 2:  # Last attempt failed
-                    raise e
-                continue
-
-    except Exception as e:
-        print(f"Error generating graph: {str(e)}")
-        return {'error': str(e)}, 500
-
 @app.route('/generate_graph', methods=['POST'])
-def generate_graph():
+async def generate_graph():
     data = request.json
     api_provider = data.get('api_provider')
     model = data.get('model')
@@ -163,11 +50,14 @@ def generate_graph():
     if not api_provider or not concept or not model:
         return jsonify({'error': 'Missing required parameters'}), 400
 
-    # Run the async function in the event loop
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
     try:
-        result = loop.run_until_complete(generate_graph_async(api_provider, model, concept))
+        result = await generate_graph_async(
+            api_provider=api_provider,
+            model=model,
+            concept=concept,
+            openai_key=OPENAI_KEY,
+            genai_key=GENAI_KEY
+        )
         
         # If generation was successful, update the stored graph data
         if isinstance(result, dict) and not result.get('error'):
@@ -178,21 +68,7 @@ def generate_graph():
                     graph_json = json.loads(result['response']) if isinstance(result['response'], str) else result['response']
                     
                     # Format the data for Cytoscape
-                    formatted_data = {
-                        "nodes": [
-                            {"data": {
-                                "id": node["id"],
-                                "label": node["label"],
-                                "progress": node["progress"]
-                            }} for node in graph_json["nodes"]
-                        ],
-                        "edges": [
-                            {"data": {
-                                "source": edge["source"],
-                                "target": edge["target"]
-                            }} for edge in graph_json["edges"]
-                        ]
-                    }
+                    formatted_data = format_graph_for_cytoscape(graph_json)
                     
                     # Store the formatted data
                     graph_data[concept] = formatted_data
@@ -210,8 +86,9 @@ def generate_graph():
                     }), 500
         
         return jsonify(result)
-    finally:
-        loop.close()
+    except Exception as e:
+        print(f"Error generating graph: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/activities_content')
 def activities_content():
@@ -371,13 +248,10 @@ def prepare_personalized_params():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/all_nodes')
-def get_all_nodes():
+def get_all_nodes_route():
     """Return all nodes from all concept graphs combined"""
     try:
-        # Get all nodes from all categories in graph_data
-        all_nodes = []
-        for category, data in graph_data.items():
-            all_nodes.extend(data['nodes'])
+        all_nodes = get_all_nodes()
         return jsonify(all_nodes)
     except Exception as e:
         return jsonify({'error': str(e)}), 500

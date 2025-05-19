@@ -19,8 +19,8 @@ Format the response as a JSON object with two arrays: 'nodes' and 'edges' follow
 Example format:
 {
     "nodes": [
-        {"id": "concept1", "label": "Basic Concept", "progress": 85},
-        {"id": "concept2", "label": "Advanced Concept", "progress": 70}
+        {"id": "concept1", "label": "Basic Concept"},
+        {"id": "concept2", "label": "Advanced Concept"}
     ],
     "edges": [
         {"source": "concept1", "target": "concept2"}

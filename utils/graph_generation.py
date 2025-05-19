@@ -43,6 +43,67 @@ async def get_reformatting_client(provider_preference='gemini', openai_key: str 
         except Exception as e:
             raise Exception("Failed to initialize both Gemini and OpenAI clients") from e
 
+async def generate_learning_goals(client, concept: str, nodes: list, provider: str) -> Dict:
+    """Generate learning goals for each node in the graph."""
+    try:
+        # Prepare nodes list for the prompt
+        nodes_text = "\n".join([f"- {node['id']}: {node['label']}" for node in nodes])
+        
+        # Read and format the learning goals prompt
+        with open('prompts/get_learning_goals.txt', 'r') as f:
+            prompt_template = f.read()
+        
+        prompt = prompt_template.replace('${concept}', concept).replace('${nodes}', nodes_text)
+
+        # Create API client
+        api_client = ApiClientFactory.create_client(provider, client)
+        
+        # Prepare messages
+        messages = [
+            {"role": "system", "content": "You are a helpful AI assistant that generates learning goals for educational concepts."},
+            {"role": "user", "content": prompt}
+        ]
+        
+        # Set parameters
+        params = ApiClientFactory.create_params(
+            provider,
+            client=client,
+            messages=messages,
+            model='gemini-2.0-flash' if provider == 'gemini' else 'gpt-4o-2024-08-06',
+            temperature=0.7,
+            max_tokens=2000
+        )
+        
+        # Get response
+        response = await api_client.chat_completion_request(params)
+        # Parse and validate the response
+        try:
+            response_text = response.content
+            response_text = response_text.strip()
+            start = response_text.find('{')
+            end = response_text.rfind('}') + 1
+            if start >= 0 and end > start:
+                response_text = response_text[start:end]
+            else:
+                raise ValueError("Response is not a dictionary")
+            
+            learning_goals = json.loads(response_text)
+            # Validate each node's learning goals
+            for node_id, goals in learning_goals.items():
+                if not isinstance(goals, list):
+                    raise ValueError(f"Learning goals for {node_id} is not a list")
+                for goal in goals:
+                    if not isinstance(goal, dict) or 'name' not in goal or 'mastered' not in goal:
+                        raise ValueError(f"Invalid learning goal format for {node_id}")
+            
+            return learning_goals
+        except json.JSONDecodeError:
+            raise ValueError("Failed to parse learning goals response as JSON")
+            
+    except Exception as e:
+        print(f"Error generating learning goals: {str(e)}")
+        raise
+
 async def generate_graph_async(api_provider: str, model: str, concept: str, openai_key: str = None, genai_key: str = None) -> Dict:
     """Generate a knowledge graph for a given concept using the specified AI provider."""
     try:
@@ -74,7 +135,7 @@ async def generate_graph_async(api_provider: str, model: str, concept: str, open
         initial_description = initial_response.content
 
         # Step 2: Format the description into proper JSON
-        # Try up to 3 times with validation
+        formatted_response = None
         for attempt in range(3):
             try:
                 # Get reformatting client (Gemini 2.0 flash or GPT-4O)
@@ -101,13 +162,9 @@ async def generate_graph_async(api_provider: str, model: str, concept: str, open
                 formatted_response = reformat_response.content
 
                 is_valid, formatted_response = is_valid_graph_format(formatted_response)
-                
                 if is_valid:
-                    return {
-                        'response': formatted_response,
-                        'initial_description': initial_description
-                    }
-                
+                    break
+
                 if attempt == 2:  # Last attempt failed
                     return {
                         'error': 'Failed to generate valid graph format after 3 attempts',
@@ -120,6 +177,44 @@ async def generate_graph_async(api_provider: str, model: str, concept: str, open
                     raise e
                 continue
 
+        if not formatted_response:
+            return {
+                'error': 'Failed to generate valid graph format',
+                'initial_description': initial_description
+            }, 500
+
+        # Step 3: Generate learning goals for each node
+        learning_goals = None
+        formatted_response = json.loads(formatted_response)
+        for attempt in range(3):
+            try:
+                learning_goals = await generate_learning_goals(
+                    reformat_client,
+                    concept,
+                    formatted_response['nodes'],
+                    reformat_provider
+                )
+                break
+            except Exception as e:
+                if attempt == 2:  # Last attempt failed
+                    print(f"Error generating learning goals after 3 attempts: {str(e)}")
+                    # Return graph without learning goals if all attempts fail
+                    return {
+                        'response': formatted_response,
+                        'initial_description': initial_description,
+                        'warning': 'Failed to generate learning goals after 3 attempts'
+                    }
+                continue
+
+        # Add learning goals to each node if generation was successful
+        if learning_goals:
+            for node in formatted_response['nodes']:
+                node['learning_goals'] = learning_goals.get(node['id'], [])
+        return {
+            'response': json.dumps(formatted_response),
+            'initial_description': initial_description
+        }
+
     except Exception as e:
         print(f"Error generating graph: {str(e)}")
         return {'error': str(e)}, 500
@@ -131,7 +226,7 @@ def format_graph_for_cytoscape(graph_json: Dict) -> Dict:
             {"data": {
                 "id": node["id"],
                 "label": node["label"],
-                "progress": node["progress"]
+                "learning_goals": node.get("learning_goals", [])
             }} for node in graph_json["nodes"]
         ],
         "edges": [

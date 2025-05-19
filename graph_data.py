@@ -1,11 +1,31 @@
 graph_data = {
     "data": {
         "nodes": [
-            { "data": { "id": "data1", "label": "Data Types", "progress": 80 } },
-            { "data": { "id": "data2", "label": "Data Structures", "progress": 75 } },
-            { "data": { "id": "data3", "label": "Databases", "progress": 70 } },
-            { "data": { "id": "data4", "label": "Data Modeling", "progress": 65 } },
-            { "data": { "id": "data5", "label": "Information Processing", "progress": 85 } }
+            { "data": { "id": "data1", "label": "Data Types", "learning_goals": [
+                { "name": "Understand fundamental data types and their use cases", "mastered": True },
+                { "name": "Apply type conversion and validation techniques", "mastered": True },
+                { "name": "Implement custom data type definitions", "mastered": False }
+            ] } },
+            { "data": { "id": "data2", "label": "Data Structures", "learning_goals": [
+                { "name": "Implement and use common data structures effectively", "mastered": True },
+                { "name": "Analyze time and space complexity of operations", "mastered": True },
+                { "name": "Design custom data structures for specific use cases", "mastered": False }
+            ] } },
+            { "data": { "id": "data3", "label": "Databases", "learning_goals": [
+                { "name": "Design and query relational databases", "mastered": False },
+                { "name": "Implement NoSQL database solutions", "mastered": False },
+                { "name": "Optimize database performance and indexing", "mastered": False }
+            ] } },
+            { "data": { "id": "data4", "label": "Data Modeling", "learning_goals": [
+                { "name": "Create efficient data models and schemas", "mastered": False },
+                { "name": "Apply normalization techniques", "mastered": False },
+                { "name": "Design data warehouses and data lakes", "mastered": False }
+            ] } },
+            { "data": { "id": "data5", "label": "Information Processing", "learning_goals": [
+                { "name": "Process and transform data efficiently", "mastered": True },
+                { "name": "Implement data validation and cleaning", "mastered": True },
+                { "name": "Apply data compression and optimization", "mastered": False }
+            ] } }
         ],
         "edges": [
             { "data": { "source": "data1", "target": "data2" } },
@@ -16,11 +36,31 @@ graph_data = {
     },
     "algorithms": {
         "nodes": [
-            { "data": { "id": "algo1", "label": "Basic Programming", "progress": 90 } },
-            { "data": { "id": "algo2", "label": "Control Structures", "progress": 85 } },
-            { "data": { "id": "algo3", "label": "Functions", "progress": 80 } },
-            { "data": { "id": "algo4", "label": "Arrays", "progress": 75 } },
-            { "data": { "id": "algo5", "label": "Object-Oriented Programming", "progress": 70 } }
+            { "data": { "id": "algo1", "label": "Basic Programming", "learning_goals": [
+                { "name": "Write clean and efficient basic programs", "mastered": True },
+                { "name": "Debug and troubleshoot code effectively", "mastered": True },
+                { "name": "Apply best coding practices and standards", "mastered": True }
+            ] } },
+            { "data": { "id": "algo2", "label": "Control Structures", "learning_goals": [
+                { "name": "Implement complex control flow patterns", "mastered": True },
+                { "name": "Optimize conditional logic", "mastered": True },
+                { "name": "Design state machines and workflows", "mastered": False }
+            ] } },
+            { "data": { "id": "algo3", "label": "Functions", "learning_goals": [
+                { "name": "Create reusable and modular functions", "mastered": True },
+                { "name": "Implement higher-order functions", "mastered": True },
+                { "name": "Apply functional programming principles", "mastered": False }
+            ] } },
+            { "data": { "id": "algo4", "label": "Arrays", "learning_goals": [
+                { "name": "Manipulate and process array data structures", "mastered": False },
+                { "name": "Implement array-based algorithms", "mastered": False },
+                { "name": "Optimize array operations", "mastered": False }
+            ] } },
+            { "data": { "id": "algo5", "label": "Object-Oriented Programming", "learning_goals": [
+                { "name": "Design and implement OOP principles", "mastered": False },
+                { "name": "Create class hierarchies and interfaces", "mastered": False },
+                { "name": "Apply design patterns effectively", "mastered": False }
+            ] } }
         ],
         "edges": [
             { "data": { "source": "algo1", "target": "algo2" } },
@@ -31,10 +71,26 @@ graph_data = {
     },
     "systems": {
         "nodes": [
-            { "data": { "id": "sys1", "label": "Operating Systems", "progress": 65 } },
-            { "data": { "id": "sys2", "label": "Networks", "progress": 60 } },
-            { "data": { "id": "sys3", "label": "System Architecture", "progress": 55 } },
-            { "data": { "id": "sys4", "label": "Cloud Computing", "progress": 50 } }
+            { "data": { "id": "sys1", "label": "Operating Systems", "learning_goals": [
+                { "name": "Understand OS concepts and process management", "mastered": False },
+                { "name": "Implement system calls and services", "mastered": False },
+                { "name": "Manage system resources effectively", "mastered": False }
+            ] } },
+            { "data": { "id": "sys2", "label": "Networks", "learning_goals": [
+                { "name": "Implement network protocols and security", "mastered": False },
+                { "name": "Design network architectures", "mastered": False },
+                { "name": "Troubleshoot network issues", "mastered": False }
+            ] } },
+            { "data": { "id": "sys3", "label": "System Architecture", "learning_goals": [
+                { "name": "Design scalable system architectures", "mastered": False },
+                { "name": "Implement microservices", "mastered": False },
+                { "name": "Apply system design patterns", "mastered": False }
+            ] } },
+            { "data": { "id": "sys4", "label": "Cloud Computing", "learning_goals": [
+                { "name": "Deploy and manage cloud-based solutions", "mastered": False },
+                { "name": "Implement cloud security measures", "mastered": False },
+                { "name": "Optimize cloud resource usage", "mastered": False }
+            ] } }
         ],
         "edges": [
             { "data": { "source": "sys1", "target": "sys2" } },
@@ -44,10 +100,26 @@ graph_data = {
     },
     "digital": {
         "nodes": [
-            { "data": { "id": "dig1", "label": "Hardware Basics", "progress": 75 } },
-            { "data": { "id": "dig2", "label": "Digital Logic", "progress": 70 } },
-            { "data": { "id": "dig3", "label": "Input/Output Systems", "progress": 65 } },
-            { "data": { "id": "dig4", "label": "Modern Technologies", "progress": 70 } }
+            { "data": { "id": "dig1", "label": "Hardware Basics", "learning_goals": [
+                { "name": "Understand computer hardware components", "mastered": True },
+                { "name": "Troubleshoot hardware issues", "mastered": True },
+                { "name": "Optimize hardware performance", "mastered": False }
+            ] } },
+            { "data": { "id": "dig2", "label": "Digital Logic", "learning_goals": [
+                { "name": "Implement digital logic circuits", "mastered": True },
+                { "name": "Design combinational circuits", "mastered": True },
+                { "name": "Create sequential logic systems", "mastered": False }
+            ] } },
+            { "data": { "id": "dig3", "label": "Input/Output Systems", "learning_goals": [
+                { "name": "Design I/O interfaces and protocols", "mastered": False },
+                { "name": "Implement device drivers", "mastered": False },
+                { "name": "Optimize I/O performance", "mastered": False }
+            ] } },
+            { "data": { "id": "dig4", "label": "Modern Technologies", "learning_goals": [
+                { "name": "Apply modern digital technologies", "mastered": True },
+                { "name": "Implement IoT solutions", "mastered": False },
+                { "name": "Design embedded systems", "mastered": False }
+            ] } }
         ],
         "edges": [
             { "data": { "source": "dig1", "target": "dig2" } },

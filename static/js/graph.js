@@ -1,15 +1,122 @@
 // Initial concept data for the detailed graphs
 let conceptData = null;
 
-// Function to get color based on progress value
-function getProgressColor(progress) {
-    // Convert progress (0-100) to hue (0-120, red to green)
-    const hue = (120 * progress) / 100;
+// Function to get color based on mastery percentage
+function getMasteryColor(masteryPercentage) {
+    // Convert mastery percentage (0-100) to hue (0-120, red to green)
+    const hue = (120 * masteryPercentage) / 100;
     return `hsl(${hue}, 70%, 80%)`;
 }
 
-// Function to create progress legend
-function createProgressLegend(container) {
+// Function to calculate mastery percentage
+function calculateMasteryPercentage(learningGoals) {
+    if (!learningGoals || !Array.isArray(learningGoals)) return 0;
+    const mastered = learningGoals.filter(goal => goal.mastered).length;
+    return (mastered / learningGoals.length) * 100;
+}
+
+// Function to create tooltip element
+function createTooltip(container) {
+    const tooltip = document.createElement('div');
+    tooltip.id = 'node-tooltip';
+    tooltip.style.position = 'absolute';
+    tooltip.style.display = 'none';
+    tooltip.style.background = 'white';
+    tooltip.style.padding = '12px';
+    tooltip.style.borderRadius = '8px';
+    tooltip.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+    tooltip.style.zIndex = '1000';
+    tooltip.style.maxWidth = '300px';
+    tooltip.style.fontSize = '14px';
+    tooltip.style.fontFamily = 'system-ui, -apple-system, sans-serif';
+    tooltip.style.color = '#334155';
+    tooltip.style.pointerEvents = 'none';
+    container.appendChild(tooltip);
+    return tooltip;
+}
+
+// Function to show tooltip with learning goals
+function showTooltip(event, node, container) {
+    const tooltip = document.getElementById('node-tooltip') || createTooltip(container);
+    const learningGoals = node.data('learning_goals');
+    
+    if (!learningGoals || !Array.isArray(learningGoals)) return;
+
+    const masteryPercentage = calculateMasteryPercentage(learningGoals);
+    const title = document.createElement('div');
+    title.style.fontWeight = 'bold';
+    title.style.marginBottom = '8px';
+    title.style.borderBottom = '1px solid #e2e8f0';
+    title.style.paddingBottom = '4px';
+    title.textContent = `${node.data('label')} (${Math.round(masteryPercentage)}% Mastered)`;
+
+    const goalsList = document.createElement('div');
+    goalsList.style.display = 'flex';
+    goalsList.style.flexDirection = 'column';
+    goalsList.style.gap = '8px';
+
+    learningGoals.forEach(goal => {
+        const goalItem = document.createElement('div');
+        goalItem.style.display = 'flex';
+        goalItem.style.alignItems = 'center';
+        goalItem.style.gap = '8px';
+
+        const statusIcon = document.createElement('span');
+        statusIcon.textContent = goal.mastered ? '✓' : '○';
+        statusIcon.style.color = goal.mastered ? '#059669' : '#6B7280';
+        statusIcon.style.fontWeight = 'bold';
+
+        const goalText = document.createElement('span');
+        goalText.textContent = goal.name;
+        goalText.style.flex = '1';
+
+        goalItem.appendChild(statusIcon);
+        goalItem.appendChild(goalText);
+        goalsList.appendChild(goalItem);
+    });
+
+    tooltip.innerHTML = '';
+    tooltip.appendChild(title);
+    tooltip.appendChild(goalsList);
+
+    // Position the tooltip relative to the container
+    const padding = 10;
+    const containerRect = container.getBoundingClientRect();
+    const x = event.renderedPosition.x + padding;
+    const y = event.renderedPosition.y + padding;
+
+    // Ensure tooltip stays within container bounds
+    const tooltipWidth = 300; // max-width of tooltip
+    const tooltipHeight = tooltip.offsetHeight;
+    
+    let finalX = x;
+    let finalY = y;
+
+    // Adjust horizontal position if tooltip would overflow right edge
+    if (x + tooltipWidth > containerRect.width) {
+        finalX = x - tooltipWidth - padding;
+    }
+
+    // Adjust vertical position if tooltip would overflow bottom edge
+    if (y + tooltipHeight > containerRect.height) {
+        finalY = y - tooltipHeight - padding;
+    }
+
+    tooltip.style.left = `${finalX}px`;
+    tooltip.style.top = `${finalY}px`;
+    tooltip.style.display = 'block';
+}
+
+// Function to hide tooltip
+function hideTooltip() {
+    const tooltip = document.getElementById('node-tooltip');
+    if (tooltip) {
+        tooltip.style.display = 'none';
+    }
+}
+
+// Function to create mastery legend
+function createMasteryLegend(container) {
     const legend = document.createElement('div');
     legend.style.position = 'absolute';
     legend.style.bottom = '20px';
@@ -21,7 +128,7 @@ function createProgressLegend(container) {
     legend.style.zIndex = '10';
     
     const title = document.createElement('div');
-    title.textContent = 'Progress Scale';
+    title.textContent = 'Mastery Scale';
     title.style.fontWeight = 'bold';
     title.style.marginBottom = '8px';
     title.style.fontSize = '12px';
@@ -77,11 +184,15 @@ function initializeCytoscape(container, elements) {
                 style: {
                     'label': 'data(label)',
                     'background-color': function(ele) {
-                        return getProgressColor(ele.data('progress'));
+                        const learningGoals = ele.data('learning_goals');
+                        if (!learningGoals) return '#e2e8f0';
+                        
+                        const masteryPercentage = calculateMasteryPercentage(learningGoals);
+                        return getMasteryColor(masteryPercentage);
                     },
                     'border-width': 1,
-                    'border-color': '#e2e8f0',     // Subtle border
-                    'color': '#334155',            // Darker text for better contrast
+                    'border-color': '#e2e8f0',
+                    'color': '#334155',
                     'text-wrap': 'wrap',
                     'text-max-width': 100,
                     'font-size': 12,
@@ -92,15 +203,15 @@ function initializeCytoscape(container, elements) {
                     'width': 130,
                     'height': 45,
                     'padding': 12,
-                    'shape': 'round-rectangle',    // Rounded rectangle shape
+                    'shape': 'round-rectangle',
                     'background-opacity': 0.95
                 }
             },
             {
                 selector: 'edge',
                 style: {
-                    'width': 1.5,                  // Thinner edges
-                    'line-color': '#e2e8f0',       // Lighter edge color
+                    'width': 1.5,
+                    'line-color': '#e2e8f0',
                     'target-arrow-color': '#e2e8f0',
                     'target-arrow-shape': 'vee',
                     'curve-style': 'bezier',
@@ -119,8 +230,17 @@ function initializeCytoscape(container, elements) {
         }
     });
 
+    // Add tooltip event listeners
+    cy.on('mouseover', 'node', function(event) {
+        showTooltip(event, event.target, container);
+    });
+
+    cy.on('mouseout', 'node', function() {
+        hideTooltip();
+    });
+
     // Add the legend to the container
-    createProgressLegend(container);
+    createMasteryLegend(container);
 
     return cy;
 }

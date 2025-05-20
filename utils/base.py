@@ -560,7 +560,8 @@ async def generate_with_retry(client: Any, provider: str, model: str, messages: 
                 provider,
                 client=client,
                 model=model,
-                messages=messages
+                messages=messages,
+                max_tokens=3000,
             )
             response = await api_client.chat_completion_request(params)
             is_valid, data = validate_and_extract_json(response.content)
@@ -569,6 +570,7 @@ async def generate_with_retry(client: Any, provider: str, model: str, messages: 
                 return data
             
             if attempt == max_attempts - 1:
+                print(f"Response: {response.content}")
                 raise ValueError(f"Failed to generate valid JSON after {max_attempts} attempts")
                 
         except Exception as e:

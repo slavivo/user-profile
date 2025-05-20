@@ -1,5 +1,6 @@
 from typing import Dict, List, Any, Tuple
 import json
+import time
 from .base import (
     ApiClientFactory,
     get_learning_goals_prompt,
@@ -47,10 +48,6 @@ def format_taxonomy_text(taxonomy: Dict[str, Any]) -> str:
             
     return result.strip()
 
-def format_concepts_for_prompt(nodes: List[Dict]) -> str:
-    """Format concept nodes into a readable list for the prompt."""
-    return "\n".join([f"- {node['data']['id']}: {node['data']['label']}" for node in nodes])
-
 def get_all_concept_nodes() -> List[Dict]:
     """Get all concept nodes from the graph data."""
     all_nodes = []
@@ -84,12 +81,6 @@ async def generate_full_description(
     if mode == "brief":
         template_name = "full_description_from_brief"
         template_vars["brief_description"] = brief_description
-    elif mode == "concepts":
-        template_name = "full_description_from_concepts"
-        template_vars.update({
-            "brief_description": brief_description,
-            "concepts_text": format_concepts_text(concepts)
-        })
     elif mode == "competencies":
         template_name = "full_description_from_competencies"
         template_vars.update({
@@ -105,7 +96,6 @@ async def generate_full_description(
     elif mode == "combined":
         template_name = "full_description_from_combined"
         template_vars.update({
-            "concepts_text": format_concepts_text(concepts) if concepts else "",
             "competencies_text": format_competencies_text(competencies) if competencies else "",
             "goals_text": format_learning_goals_text(learning_goals) if learning_goals else "",
             "brief_description": "Brief Description: " + brief_description if brief_description else "",
@@ -135,8 +125,6 @@ async def generate_full_description(
         raise ValueError(f"Unsupported mode: {mode}")
     
     prompt = PromptTemplate.render(template_name, **template_vars)
-    
-    print(f"Prompt: {prompt}")
 
     params = ApiClientFactory.create_params(
         provider,
@@ -187,34 +175,83 @@ async def generate_activity_metadata(
             "description": description
         }
         
-        # Generate learning goals if not provided
+        # Get all available learning goals from the graph
+        graph_goals_by_node = {}
+        for category, data in graph_data.items():
+            for node in data['nodes']:
+                if 'learning_goals' in node['data']:
+                    node_label = node['data']['label']
+                    goals = [f"{goal['id']}: {goal['name']}" for goal in node['data']['learning_goals']]
+                    graph_goals_by_node[node_label] = goals
+        
+        # Format graph goals for the prompt
+        graph_goals_text = "\n".join([
+            f"Learning Goals for {node_label}: {', '.join(goals)}"
+            for node_label, goals in graph_goals_by_node.items()
+        ])
+        
+        # If learning goals are not provided, generate them
         if not learning_goals:
+            # Use the template to generate learning goals
+            prompt = PromptTemplate.render(
+                "get_learning_goals",
+                name=name,
+                description=description,
+                graph_goals=graph_goals_text
+            )
+            
+            print(f"Learning Goals Prompt: {prompt}")
             messages = [{
                 "role": "user",
-                "content": get_learning_goals_prompt(name, description)
+                "content": prompt
             }]
-            metadata["learning_goals"] = await generate_with_retry(client, provider, model, messages)
+            
+            goals_data = await generate_with_retry(client, provider, model, messages)
+            
+            # Generate assessment criteria for additional goals if any
+            additional_goals = goals_data.get('additional_goals', [])
+            assessment_criteria = {}
+            if additional_goals:
+                assessment_prompt = PromptTemplate.render(
+                    "get_assessment_criterias",
+                    goals="\n".join([f"- {goal}" for goal in additional_goals])
+                )
+                
+                print(f"Assessment Criteria Prompt: {assessment_prompt}")
+                assessment_messages = [{
+                    "role": "user",
+                    "content": assessment_prompt
+                }]
+                
+                assessment_criteria = await generate_with_retry(client, provider, model, assessment_messages)
+            
+            # Combine selected graph goals and additional goals with their assessment criteria
+            learning_goals = []
+            metadata["learning_goals"] = []
+            for category, data in graph_data.items():
+                for node in data['nodes']:
+                    if 'learning_goals' in node['data']:
+                        learning_goals.extend(node['data']['learning_goals'])
+            for goal in goals_data.get('selected_goals', []):
+                for lg in learning_goals:
+                    if str(lg['id']) == str(goal):
+                        metadata["learning_goals"].append({
+                            'id': lg['id'],
+                            'type': 'graph',
+                            'name': lg['name'],
+                            'learning_goal_id': lg['id']
+                        })
+            
+            metadata["learning_goals"] += [
+                {
+                    'id': str(time.time()),  # Convert timestamp to string
+                    'type': 'regular',
+                    'name': goal,
+                    'assessment_criterias': criteria
+                } for goal, criteria in zip(additional_goals, assessment_criteria)
+            ]
         else:
             metadata["learning_goals"] = learning_goals
-        
-        # Generate connected concepts if not provided
-        if not concepts:
-            # Get all available concept nodes
-            all_nodes = get_all_concept_nodes()
-            concepts_list = format_concepts_for_prompt(all_nodes)
-            
-            messages = [{
-                "role": "user",
-                "content": get_connected_concepts_prompt(
-                    name=name,
-                    description=description,
-                    goals_text="\n".join([f"- {goal}" for goal in metadata["learning_goals"]]),
-                    concepts_list=concepts_list
-                )
-            }]
-            metadata["connected_concepts"] = await generate_with_retry(client, provider, model, messages)
-        else:
-            metadata["connected_concepts"] = {concept: 100 for concept in concepts}  # Assuming max relevance for selected concepts
         
         # Generate competency scores if not provided
         if not competencies:
@@ -272,7 +309,6 @@ async def generate_activity_metadata(
                         "psychomotor_procedures": 20
                     })
                 }
-
         return metadata
         
     except Exception as e:

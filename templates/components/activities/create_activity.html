@@ -236,10 +236,6 @@
                     <label for="include-full" class="text-sm font-medium text-gray-700">Include Full Description</label>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <input type="checkbox" id="include-concepts" class="rounded text-indigo-600 focus:ring-indigo-500" onchange="updateCombinedSections()">
-                    <label for="include-concepts" class="text-sm font-medium text-gray-700">Include Concepts</label>
-                </div>
-                <div class="flex items-center space-x-2">
                     <input type="checkbox" id="include-competencies" class="rounded text-indigo-600 focus:ring-indigo-500" onchange="updateCombinedSections()">
                     <label for="include-competencies" class="text-sm font-medium text-gray-700">Include Competencies</label>
                 </div>
@@ -407,10 +403,12 @@ function switchMode(mode) {
 
 function setupCombinedMode() {
     // Add event listeners to checkboxes
-    const checkboxes = ['brief', 'full', 'concepts', 'competencies', 'learning-goals', 'taxonomy'];
+    const checkboxes = ['brief', 'full', 'competencies', 'learning-goals', 'taxonomy'];
     checkboxes.forEach(type => {
         const checkbox = document.getElementById(`include-${type}`);
-        checkbox.addEventListener('change', () => updateCombinedSections());
+        if (checkbox) {
+            checkbox.addEventListener('change', () => updateCombinedSections());
+        }
     });
 }
 
@@ -426,7 +424,7 @@ function updateCombinedSections() {
     combinedSections.innerHTML = '';
     
     // Check each section and clone if selected
-    if (document.getElementById('include-brief').checked) {
+    if (document.getElementById('include-brief')?.checked) {
         const briefSection = document.createElement('div');
         briefSection.className = 'mb-4';
         briefSection.innerHTML = `
@@ -436,7 +434,7 @@ function updateCombinedSections() {
         combinedSections.appendChild(briefSection);
     }
     
-    if (document.getElementById('include-full').checked) {
+    if (document.getElementById('include-full')?.checked) {
         const fullSection = document.createElement('div');
         fullSection.className = 'mb-4';
         fullSection.innerHTML = `
@@ -446,34 +444,7 @@ function updateCombinedSections() {
         combinedSections.appendChild(fullSection);
     }
     
-    if (document.getElementById('include-concepts').checked) {
-        const conceptsSection = document.createElement('div');
-        conceptsSection.className = 'mb-4';
-        conceptsSection.innerHTML = `
-            <label class="block text-sm font-medium text-gray-700 mb-2">Select Concepts</label>
-            <div class="max-h-60 overflow-y-auto border rounded-md p-4">
-                <div class="grid grid-cols-2 gap-4" id="combined-concepts-list"></div>
-            </div>
-            <div class="mt-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Selected Concepts</label>
-                <div id="combined-selected-concepts" class="flex flex-wrap gap-2"></div>
-            </div>
-        `;
-        combinedSections.appendChild(conceptsSection);
-        // Populate concepts list
-        if (conceptsData && conceptsData.length > 0) {
-            document.getElementById('combined-concepts-list').innerHTML = conceptsData.map((node, index) => `
-                <div class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50">
-                    <input type="checkbox" id="combined-concept-${index}" value="${node.data.label}" 
-                           class="rounded text-indigo-600 focus:ring-indigo-500"
-                           onchange="toggleCombinedConcept(this)">
-                    <label for="combined-concept-${index}" class="text-sm text-gray-700 cursor-pointer flex-grow">${node.data.label}</label>
-                </div>
-            `).join('');
-        }
-    }
-    
-    if (document.getElementById('include-learning-goals').checked) {
+    if (document.getElementById('include-learning-goals')?.checked) {
         const learningGoalsSection = document.createElement('div');
         learningGoalsSection.className = 'mb-4';
         learningGoalsSection.innerHTML = `
@@ -510,34 +481,36 @@ function updateCombinedSections() {
         // Populate graph goals for combined mode
         if (conceptsData && conceptsData.length > 0) {
             const combinedGraphGoalsList = document.getElementById('combined-graph-goals-list');
-            let htmlContent = '';
-            conceptsData.forEach(node => {
-                const goals = node.data.learning_goals || [];
-                goals.forEach(goal => {
-                    htmlContent += `
-                        <div class="flex items-center space-x-2 p-1 rounded-md hover:bg-gray-50">
-                            <input type="checkbox" id="combined-goal-${node.data.id}-${goal.name}" 
-                                   value='${JSON.stringify({
-                                       type: "graph",
-                                       name: goal.name,
-                                       node_id: node.data.id,
-                                       node_label: node.data.label
-                                   })}'
-                                   class="rounded text-indigo-600 focus:ring-indigo-500"
-                                   onchange="toggleCombinedGraphGoal(this)">
-                            <label for="combined-goal-${node.data.id}-${goal.name}" class="text-sm text-gray-700 cursor-pointer flex-grow">
-                                ${goal.name}
-                                <span class="text-xs text-gray-500">(${node.data.label})</span>
-                            </label>
-                        </div>
-                    `;
+            if (combinedGraphGoalsList) {
+                let htmlContent = '';
+                conceptsData.forEach(node => {
+                    const goals = node.data.learning_goals || [];
+                    goals.forEach(goal => {
+                        htmlContent += `
+                            <div class="flex items-center space-x-2 p-1 rounded-md hover:bg-gray-50">
+                                <input type="checkbox" id="combined-goal-${node.data.id}-${goal.name}" 
+                                       value='${JSON.stringify({
+                                           type: "graph",
+                                           name: goal.name,
+                                           learning_goal_id: goal.id,
+                                           node_label: node.data.label
+                                       })}'
+                                       class="rounded text-indigo-600 focus:ring-indigo-500"
+                                       onchange="toggleCombinedGraphGoal(this)">
+                                <label for="combined-goal-${node.data.id}-${goal.name}" class="text-sm text-gray-700 cursor-pointer flex-grow">
+                                    ${goal.name}
+                                    <span class="text-xs text-gray-500">(${node.data.label})</span>
+                                </label>
+                            </div>
+                        `;
+                    });
                 });
-            });
-            combinedGraphGoalsList.innerHTML = htmlContent;
+                combinedGraphGoalsList.innerHTML = htmlContent;
+            }
         }
     }
     
-    if (document.getElementById('include-competencies').checked) {
+    if (document.getElementById('include-competencies')?.checked) {
         const competenciesSection = document.createElement('div');
         competenciesSection.className = 'mb-4';
         competenciesSection.innerHTML = `
@@ -578,7 +551,7 @@ function updateCombinedSections() {
         combinedSections.appendChild(competenciesSection);
     }
     
-    if (document.getElementById('include-taxonomy').checked) {
+    if (document.getElementById('include-taxonomy')?.checked) {
         const taxonomySection = document.createElement('div');
         taxonomySection.className = 'mb-4';
         taxonomySection.innerHTML = `

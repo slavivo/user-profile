@@ -11,7 +11,7 @@
             </div>
             <div class="ml-3">
                 <p class="text-sm text-blue-700">
-                    The current personalization system focuses only on concepts and competencies. Future versions will include personalization based on student attitudes and abilities.
+                    The personalization system focuses on learning goals and competencies. It will generate activities that help you master specific learning goals or broaden your knowledge in areas you've already mastered.
                 </p>
             </div>
         </div>
@@ -25,9 +25,9 @@
         <div class="px-4 py-5 sm:p-6">
             <div class="max-w-xl">
                 <select id="conceptFocus" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm">
-                    <option value="polish">Polish unmastered concepts (Score 1-9)</option>
-                    <option value="discover">Discover new connected concepts (Score 0)</option>
-                    <option value="broaden">Broaden knowledge of mastered concepts (Score 9-10)</option>
+                    <option value="unmastered">Focus on unmastered learning goals</option>
+                    <option value="new">Discover new concepts</option>
+                    <option value="broaden">Broaden knowledge of mastered concepts</option>
                 </select>
             </div>
         </div>
@@ -167,9 +167,9 @@ document.getElementById('generatePersonalizedActivity').addEventListener('click'
                 name: params.name,
                 provider: provider,
                 model: model,
-                mode: params.mode,
+                mode: 'learning-goals',  // Always use learning-goals mode
                 brief_description: params.brief_description,
-                concepts: params.concepts,
+                learning_goals: params.learning_goals,  // Use learning goals instead of concepts
                 competencies: params.competencies
             })
         });

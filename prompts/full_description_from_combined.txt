@@ -3,7 +3,6 @@ ${name}
 ${brief_description}
 ${full_description}
 ${goals_text}
-${concepts_text}
 ${competencies_text}
 ${taxonomy_text}
 

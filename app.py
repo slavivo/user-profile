@@ -165,6 +165,7 @@ async def generate_activity():
         
         # Generate activity metadata
         generated_data = await generate_activity_metadata(**generation_params)
+        print(f"Generated data: {generated_data}")
         
         # Format activity data
         activity_data = {
@@ -172,13 +173,6 @@ async def generate_activity():
             'name': generated_data['name'],
             'description': generated_data['description'],
             'learning_goals': generated_data['learning_goals'],
-            'connected_nodes': [
-                {
-                    'id': node_id,
-                    'connection_strength': strength
-                }
-                for node_id, strength in generated_data['connected_concepts'].items()
-            ],
             'competency_scores': {
                 'Learning Competency': float(generated_data['competencies'].get('learning_competency', 0)) / 10,
                 'Problem Solving': float(generated_data['competencies'].get('problem_solving', 0)) / 10,
@@ -205,13 +199,11 @@ async def generate_activity():
                 ]
             },
             'student_performance': {
-                'overall_score': 0,  # Initialize with 0
-                'concept_scores': {
-                    concept_id: {
-                        'name': get_concept_name(concept_id),  # Use the helper function to get proper concept names
-                        'score': 0  # Initialize with 0
-                    }
-                    for concept_id in generated_data['connected_concepts'].keys()
+                'learning_goals': {
+                    goal['id']: {
+                        'name': goal['name'],
+                        'mastered': False
+                    } for goal in generated_data['learning_goals']
                 }
             }
         }
@@ -236,15 +228,94 @@ def prepare_personalized_params():
         if not concept_focus or not competency_focus:
             return jsonify({'error': 'Missing required parameters'}), 400
 
-        # Get personalized activity parameters
-        try:
-            activity_params = prepare_personalized_activity_params(concept_focus, competency_focus)
-            # Add provider and model to the activity parameters
-            activity_params['provider'] = provider
-            activity_params['model'] = model
-            return jsonify(activity_params)
-        except ValueError as e:
-            return jsonify({'error': str(e)}), 400
+        # Get all nodes from the graph data
+        all_nodes = []
+        for category in graph_data.values():
+            if isinstance(category, dict) and 'nodes' in category:
+                all_nodes.extend(category['nodes'])
+
+        # Collect learning goals based on concept focus
+        selected_learning_goals = []
+        brief_description = ""
+
+        if concept_focus == 'unmastered':
+            # Find concepts with both mastered and unmastered learning goals
+            for node in all_nodes:
+                node_data = node['data']
+                learning_goals = node_data.get('learning_goals', [])
+                mastered_goals = [goal for goal in learning_goals if goal.get('mastered', False)]
+                unmastered_goals = [goal for goal in learning_goals if not goal.get('mastered', False)]
+                
+                if mastered_goals and unmastered_goals:
+                    # Add unmastered goals
+                    selected_learning_goals.extend([
+                        {
+                            'id': goal['id'],
+                            'name': goal['name'],
+                            'node_label': node_data['label']
+                        }
+                        for goal in unmastered_goals
+                    ])
+            
+            brief_description = "Generate an activity that helps master unmastered learning goals while building upon already mastered concepts."
+
+        elif concept_focus == 'new':
+            # Find concepts with no mastered learning goals
+            for node in all_nodes:
+                node_data = node['data']
+                learning_goals = node_data.get('learning_goals', [])
+                if not any(goal.get('mastered', False) for goal in learning_goals):
+                    # Add all goals from this concept
+                    selected_learning_goals.extend([
+                        {
+                            'id': goal['id'],
+                            'name': goal['name'],
+                            'node_label': node_data['label']
+                        }
+                        for goal in learning_goals
+                    ])
+            
+            brief_description = "Generate an activity that introduces new concepts and their learning goals."
+
+        elif concept_focus == 'broaden':
+            # Find concepts where all learning goals are mastered
+            for node in all_nodes:
+                node_data = node['data']
+                learning_goals = node_data.get('learning_goals', [])
+                if all(goal.get('mastered', False) for goal in learning_goals):
+                    brief_description = f"Generate an activity that broadens and deepens knowledge in {node_data['label']}, where all learning goals have been mastered. The activity should explore advanced applications and connections to other concepts."
+                    break  # We only need one concept for broadening
+
+        # Get competency levels based on focus
+        competencies = {}
+        if competency_focus == 'strong':
+            # Focus on competencies with higher scores
+            for comp in meta_data['competencies']:
+                score = student_data.get('competencies', {}).get(comp['id'], 0)
+                if score >= 7:  # Consider scores 7-10 as strong
+                    competencies[comp['id']] = 80  # Set high target for strong competencies
+                else:
+                    competencies[comp['id']] = 50  # Set moderate target for others
+        else:  # weak
+            # Focus on competencies with lower scores
+            for comp in meta_data['competencies']:
+                score = student_data.get('competencies', {}).get(comp['id'], 0)
+                if score <= 3:  # Consider scores 0-3 as weak
+                    competencies[comp['id']] = 80  # Set high target for weak competencies
+                else:
+                    competencies[comp['id']] = 50  # Set moderate target for others
+
+        # Prepare activity parameters
+        activity_params = {
+            'name': f"Personalized Activity - {concept_focus.capitalize()}",
+            'provider': provider,
+            'model': model,
+            'brief_description': brief_description,
+            'learning_goals': selected_learning_goals,
+            'competencies': competencies
+        }
+
+        return jsonify(activity_params)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

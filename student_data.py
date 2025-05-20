@@ -97,19 +97,19 @@ The activity emphasizes both theoretical understanding and practical implementat
                     'id': 'ACT001_GOAL3',
                     'type': 'graph',
                     'name': 'Implement and use common data structures effectively',
-                    'node_id': 'data2'
+                    'learning_goal_id': 'data2_goal1'
                 },
                 {
                     'id': 'ACT001_GOAL4',
                     'type': 'graph',
                     'name': 'Analyze time and space complexity of operations',
-                    'node_id': 'data2'
+                    'learning_goal_id': 'data2_goal2'
                 },
                 {
                     'id': 'ACT001_GOAL5',
                     'type': 'graph',
                     'name': 'Create reusable and modular functions',
-                    'node_id': 'algo3'
+                    'learning_goal_id': 'algo3_goal1'
                 }
             ],
             'competency_scores': {
@@ -204,19 +204,19 @@ The project emphasizes both technical skills and communication abilities, requir
                     'id': 'ACT002_GOAL3',
                     'type': 'graph',
                     'name': 'Understand fundamental data types and their use cases',
-                    'node_id': 'data1'
+                    'learning_goal_id': 'data1_goal1'
                 },
                 {
                     'id': 'ACT002_GOAL4',
                     'type': 'graph',
                     'name': 'Process and transform data efficiently',
-                    'node_id': 'data5'
+                    'learning_goal_id': 'data5_goal1'
                 },
                 {
                     'id': 'ACT002_GOAL5',
                     'type': 'graph',
                     'name': 'Implement data validation and cleaning',
-                    'node_id': 'data5'
+                    'learning_goal_id': 'data5_goal2'
                 }
             ],
             'competency_scores': {
@@ -313,19 +313,19 @@ The workshop emphasizes hands-on learning and practical problem-solving, requiri
                     'id': 'ACT003_GOAL3',
                     'type': 'graph',
                     'name': 'Understand computer hardware components',
-                    'node_id': 'dig1'
+                    'learning_goal_id': 'dig1_goal1'
                 },
                 {
                     'id': 'ACT003_GOAL4',
                     'type': 'graph',
                     'name': 'Troubleshoot hardware issues',
-                    'node_id': 'dig1'
+                    'learning_goal_id': 'dig1_goal2'
                 },
                 {
                     'id': 'ACT003_GOAL5',
                     'type': 'graph',
                     'name': 'Implement digital logic circuits',
-                    'node_id': 'dig2'
+                    'learning_goal_id': 'dig2_goal1'
                 }
             ],
             'competency_scores': {

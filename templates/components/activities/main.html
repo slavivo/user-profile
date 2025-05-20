@@ -41,13 +41,15 @@
                             Knowledge Graph: 
                             {% for category, data in graph_data.items() %}
                                 {% for node in data.nodes %}
-                                    {% if node.data.id == goal.node_id %}
-                                    {{ category|title }}
-                                    <span class="mx-1">→</span>
-                                    {% endif %}
+                                    {% for learning_goal in node.data.learning_goals %}
+                                        {% if learning_goal.id == goal.learning_goal_id %}
+                                        {{ category|title }}
+                                        <span class="mx-1">→</span>
+                                        {{ node.data.label }}
+                                        {% endif %}
+                                    {% endfor %}
                                 {% endfor %}
                             {% endfor %}
-                            {{ get_concept_name(goal.node_id) }}
                         </span>
                     </span>
                     {% endif %}

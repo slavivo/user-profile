@@ -1,0 +1,25 @@
+For each of the following learning goals, generate 2-4 specific assessment criteria that define successful achievement:
+
+Learning Goals:
+${goals}
+
+Each assessment criterion should:
+- Be specific and observable
+- Focus on measurable behaviors or outcomes
+- Be appropriate for 15-year-old students (8th grade)
+- Cover different aspects of the learning goal (understanding, application, explanation)
+
+Format the response as a JSON object where each learning goal maps to an array of assessment criteria.
+
+Example format:
+{   
+    [
+        ["Student correctly identifies appropriate algorithms for different problem types",
+        "Student can explain the key concepts behind each algorithm",
+        "Student successfully implements algorithms to solve practical problems",
+        "Student can compare and contrast different algorithmic approaches"],
+        ["Student accurately calculates time complexity for different algorithms",
+        "Student can explain the trade-offs between different approaches",
+        "Student uses appropriate terminology to describe algorithmic efficiency"]
+    ]
+} 

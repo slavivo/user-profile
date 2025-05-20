@@ -50,7 +50,7 @@ async def generate_learning_goals(client, concept: str, nodes: list, provider: s
         nodes_text = "\n".join([f"- {node['id']}: {node['label']}" for node in nodes])
         
         # Read and format the learning goals prompt
-        with open('prompts/get_learning_goals.txt', 'r') as f:
+        with open('prompts/graph_learning_goals.txt', 'r') as f:
             prompt_template = f.read()
         
         prompt = prompt_template.replace('${concept}', concept).replace('${nodes}', nodes_text)

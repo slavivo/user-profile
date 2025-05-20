@@ -83,18 +83,34 @@ student_data = {
 
 The activity emphasizes both theoretical understanding and practical implementation, requiring students to think critically about algorithm efficiency and real-world applications.''',
             'learning_goals': [
-                'Master fundamental algorithmic concepts and their practical applications in data management',
-                'Develop ability to analyze and compare algorithm efficiency using time and space complexity',
-                'Gain practical experience in implementing and optimizing sorting algorithms',
-                'Learn to evaluate and select appropriate data structures for specific use cases',
-                'Develop technical documentation and analysis skills'
-            ],
-            'connected_nodes': [
-                {'id': 'data2', 'connection_strength': 90},  # Data Structures
-                {'id': 'algo1', 'connection_strength': 85},  # Basic Programming
-                {'id': 'algo2', 'connection_strength': 80},  # Control Structures
-                {'id': 'data3', 'connection_strength': 75},  # Databases
-                {'id': 'sys3', 'connection_strength': 70}    # System Architecture
+                {
+                    'id': 'ACT001_GOAL1',
+                    'type': 'regular',
+                    'name': 'Master fundamental algorithmic concepts and their practical applications in data management'
+                },
+                {
+                    'id': 'ACT001_GOAL2',
+                    'type': 'regular',
+                    'name': 'Develop ability to analyze and compare algorithm efficiency using time and space complexity'
+                },
+                {
+                    'id': 'ACT001_GOAL3',
+                    'type': 'graph',
+                    'name': 'Implement and use common data structures effectively',
+                    'node_id': 'data2'
+                },
+                {
+                    'id': 'ACT001_GOAL4',
+                    'type': 'graph',
+                    'name': 'Analyze time and space complexity of operations',
+                    'node_id': 'data2'
+                },
+                {
+                    'id': 'ACT001_GOAL5',
+                    'type': 'graph',
+                    'name': 'Create reusable and modular functions',
+                    'node_id': 'algo3'
+                }
             ],
             'competency_scores': {
                 'Problem Solving': 9.0,
@@ -115,27 +131,26 @@ The activity emphasizes both theoretical understanding and practical implementat
                 ]
             },
             'student_performance': {
-                'overall_score': 8,
-                'concept_scores': {
-                    'data2': {
-                        'name': 'Data Structures',
-                        'score': 9
+                'learning_goals': {
+                    'ACT001_GOAL1': {
+                        'name': 'Master fundamental algorithmic concepts and their practical applications in data management',
+                        'mastered': True
                     },
-                    'algo1': {
-                        'name': 'Basic Programming',
-                        'score': 8
+                    'ACT001_GOAL2': {
+                        'name': 'Develop ability to analyze and compare algorithm efficiency using time and space complexity',
+                        'mastered': True
                     },
-                    'algo2': {
-                        'name': 'Control Structures',
-                        'score': 7
+                    'ACT001_GOAL3': {
+                        'name': 'Implement and use common data structures effectively',
+                        'mastered': True
                     },
-                    'data3': {
-                        'name': 'Databases',
-                        'score': 8
+                    'ACT001_GOAL4': {
+                        'name': 'Analyze time and space complexity of operations',
+                        'mastered': True
                     },
-                    'sys3': {
-                        'name': 'System Architecture',
-                        'score': 7
+                    'ACT001_GOAL5': {
+                        'name': 'Create reusable and modular functions',
+                        'mastered': False
                     }
                 }
             }
@@ -175,18 +190,34 @@ The activity emphasizes both theoretical understanding and practical implementat
 
 The project emphasizes both technical skills and communication abilities, requiring students to transform complex data into understandable visualizations while maintaining scientific accuracy.''',
             'learning_goals': [
-                'Master data visualization techniques and best practices for scientific data',
-                'Develop proficiency in data cleaning, analysis, and statistical methods',
-                'Learn to create interactive and responsive visualizations using modern tools',
-                'Understand principles of visual storytelling and data narrative',
-                'Gain experience in technical documentation and project presentation'
-            ],
-            'connected_nodes': [
-                {'id': 'data1', 'connection_strength': 90},  # Data Types
-                {'id': 'data2', 'connection_strength': 85},  # Data Structures
-                {'id': 'data5', 'connection_strength': 85},  # Information Processing
-                {'id': 'algo3', 'connection_strength': 75},  # Functions
-                {'id': 'sys2', 'connection_strength': 70}    # Networks
+                {
+                    'id': 'ACT002_GOAL1',
+                    'type': 'regular',
+                    'name': 'Master data visualization techniques and best practices for scientific data'
+                },
+                {
+                    'id': 'ACT002_GOAL2',
+                    'type': 'regular',
+                    'name': 'Develop proficiency in data cleaning, analysis, and statistical methods'
+                },
+                {
+                    'id': 'ACT002_GOAL3',
+                    'type': 'graph',
+                    'name': 'Understand fundamental data types and their use cases',
+                    'node_id': 'data1'
+                },
+                {
+                    'id': 'ACT002_GOAL4',
+                    'type': 'graph',
+                    'name': 'Process and transform data efficiently',
+                    'node_id': 'data5'
+                },
+                {
+                    'id': 'ACT002_GOAL5',
+                    'type': 'graph',
+                    'name': 'Implement data validation and cleaning',
+                    'node_id': 'data5'
+                }
             ],
             'competency_scores': {
                 'Digital': 9.0,
@@ -207,27 +238,26 @@ The project emphasizes both technical skills and communication abilities, requir
                 ]
             },
             'student_performance': {
-                'overall_score': 8,
-                'concept_scores': {
-                    'data1': {
-                        'name': 'Data Types',
-                        'score': 9
+                'learning_goals': {
+                    'ACT002_GOAL1': {
+                        'name': 'Master data visualization techniques and best practices for scientific data',
+                        'mastered': True
                     },
-                    'data2': {
-                        'name': 'Data Structures',
-                        'score': 8
+                    'ACT002_GOAL2': {
+                        'name': 'Develop proficiency in data cleaning, analysis, and statistical methods',
+                        'mastered': True
                     },
-                    'data5': {
-                        'name': 'Information Processing',
-                        'score': 8
+                    'ACT002_GOAL3': {
+                        'name': 'Understand fundamental data types and their use cases',
+                        'mastered': True
                     },
-                    'algo3': {
-                        'name': 'Functions',
-                        'score': 7
+                    'ACT002_GOAL4': {
+                        'name': 'Process and transform data efficiently',
+                        'mastered': True
                     },
-                    'sys2': {
-                        'name': 'Networks',
-                        'score': 7
+                    'ACT002_GOAL5': {
+                        'name': 'Implement data validation and cleaning',
+                        'mastered': False
                     }
                 }
             }
@@ -269,19 +299,34 @@ The project emphasizes both technical skills and communication abilities, requir
 
 The workshop emphasizes hands-on learning and practical problem-solving, requiring students to integrate knowledge from multiple domains including electronics, programming, and mechanical engineering.''',
             'learning_goals': [
-                'Understand fundamental principles of robotics and mechatronics',
-                'Develop practical skills in robot assembly and hardware integration',
-                'Master basic and advanced robotics programming concepts',
-                'Learn sensor integration and real-time data processing',
-                'Gain experience in project documentation and technical presentation',
-                'Develop problem-solving skills in a hardware-software integrated environment'
-            ],
-            'connected_nodes': [
-                {'id': 'sys1', 'connection_strength': 85},   # Operating Systems
-                {'id': 'sys2', 'connection_strength': 80},   # Networks
-                {'id': 'dig1', 'connection_strength': 90},   # Hardware Basics
-                {'id': 'dig2', 'connection_strength': 85},   # Digital Logic
-                {'id': 'algo3', 'connection_strength': 75}   # Functions
+                {
+                    'id': 'ACT003_GOAL1',
+                    'type': 'regular',
+                    'name': 'Understand fundamental principles of robotics and mechatronics'
+                },
+                {
+                    'id': 'ACT003_GOAL2',
+                    'type': 'regular',
+                    'name': 'Develop practical skills in robot assembly and hardware integration'
+                },
+                {
+                    'id': 'ACT003_GOAL3',
+                    'type': 'graph',
+                    'name': 'Understand computer hardware components',
+                    'node_id': 'dig1'
+                },
+                {
+                    'id': 'ACT003_GOAL4',
+                    'type': 'graph',
+                    'name': 'Troubleshoot hardware issues',
+                    'node_id': 'dig1'
+                },
+                {
+                    'id': 'ACT003_GOAL5',
+                    'type': 'graph',
+                    'name': 'Implement digital logic circuits',
+                    'node_id': 'dig2'
+                }
             ],
             'competency_scores': {
                 'Problem Solving': 9.0,
@@ -303,27 +348,26 @@ The workshop emphasizes hands-on learning and practical problem-solving, requiri
                 ]
             },
             'student_performance': {
-                'overall_score': 8,
-                'concept_scores': {
-                    'sys1': {
-                        'name': 'Operating Systems',
-                        'score': 7
+                'learning_goals': {
+                    'ACT003_GOAL1': {
+                        'name': 'Understand fundamental principles of robotics and mechatronics',
+                        'mastered': True
                     },
-                    'sys2': {
-                        'name': 'Networks',
-                        'score': 8
+                    'ACT003_GOAL2': {
+                        'name': 'Develop practical skills in robot assembly and hardware integration',
+                        'mastered': True
                     },
-                    'dig1': {
-                        'name': 'Hardware Basics',
-                        'score': 9
+                    'ACT003_GOAL3': {
+                        'name': 'Understand computer hardware components',
+                        'mastered': True
                     },
-                    'dig2': {
-                        'name': 'Digital Logic',
-                        'score': 8
+                    'ACT003_GOAL4': {
+                        'name': 'Troubleshoot hardware issues',
+                        'mastered': True
                     },
-                    'algo3': {
-                        'name': 'Functions',
-                        'score': 7
+                    'ACT003_GOAL5': {
+                        'name': 'Implement digital logic circuits',
+                        'mastered': False
                     }
                 }
             }

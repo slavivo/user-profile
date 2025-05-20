@@ -39,9 +39,6 @@
                 <button id="full-mode-btn" onclick="switchMode('full')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
                     Full Description
                 </button>
-                <button id="concepts-mode-btn" onclick="switchMode('concepts')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
-                    Select Concepts
-                </button>
                 <button id="competencies-mode-btn" onclick="switchMode('competencies')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
                     Select Competencies
                 </button>
@@ -51,7 +48,7 @@
                 <button id="taxonomy-mode-btn" onclick="switchMode('taxonomy')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
                     Set Taxonomy Levels
                 </button>
-                <button id="combined-mode-btn" onclick="switchMode('combined')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700 col-span-2">
+                <button id="combined-mode-btn" onclick="switchMode('combined')" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700">
                     Combined Options
                 </button>
             </div>
@@ -75,27 +72,6 @@
             <label for="full-description" class="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
             <textarea id="full-description" rows="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Provide a detailed description of the activity..."></textarea>
             <p class="mt-1 text-sm text-gray-500">AI will generate learning goals, taxonomy classification, and other metadata based on this description.</p>
-        </div>
-
-        <!-- Concepts Mode -->
-        <div id="concepts-mode" class="hidden mb-4">
-            <div class="mb-4">
-                <label for="concepts-brief-description" class="block text-sm font-medium text-gray-700 mb-2">Brief Description</label>
-                <textarea id="concepts-brief-description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Briefly describe what you want the activity to accomplish..."></textarea>
-                <p class="mt-1 text-sm text-gray-500">This will help generate a more focused activity around your selected concepts.</p>
-            </div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Select Concepts to Focus On</label>
-            <div class="max-h-60 overflow-y-auto border rounded-md p-4 mb-4">
-                <div class="grid grid-cols-2 gap-4" id="concepts-list">
-                    <!-- Concepts will be populated by JavaScript -->
-                </div>
-            </div>
-            <div class="mt-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Selected Concepts</label>
-                <div id="selected-concepts" class="flex flex-wrap gap-2">
-                    <!-- Selected concepts will appear here -->
-                </div>
-            </div>
         </div>
 
         <!-- Competencies Mode -->
@@ -147,17 +123,33 @@
                 <textarea id="learning-goals-brief-description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Briefly describe what you want the activity to accomplish..."></textarea>
                 <p class="mt-1 text-sm text-gray-500">This will help generate a more focused activity that achieves your learning goals.</p>
             </div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Define Learning Goals</label>
-            <div id="learning-goals-list" class="space-y-2">
-                <div class="flex items-center space-x-2">
-                    <input type="text" id="new-learning-goal" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter a learning goal...">
-                    <button onclick="addLearningGoal()" class="px-3 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Add</button>
+            
+            <!-- Learning Goals Section -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Learning Goals</label>
+                
+                <!-- Add Custom Goal -->
+                <div class="flex items-center space-x-2 mb-4">
+                    <input type="text" id="new-regular-goal" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter a custom learning goal...">
+                    <button onclick="addRegularGoal()" class="px-3 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Add</button>
                 </div>
-            </div>
-            <div class="mt-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Added Learning Goals</label>
-                <div id="added-learning-goals" class="space-y-2">
-                    <!-- Added learning goals will appear here -->
+
+                <!-- Graph Goals Selection -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select from Knowledge Graph</label>
+                    <div class="max-h-60 overflow-y-auto border rounded-md p-4">
+                        <div class="grid grid-cols-1 gap-1" id="graph-goals-list">
+                            <!-- Graph goals will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected Goals List -->
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Selected Learning Goals</label>
+                    <div id="selected-learning-goals" class="space-y-2">
+                        <!-- All selected goals will appear here -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -311,13 +303,18 @@ async function loadInitialData() {
             fetch('/api/taxonomy')
         ]);
 
-        conceptsData = await conceptsResponse.json();
+        const conceptsJson = await conceptsResponse.json();
+        
+        // Check if the response is an array or has a specific structure
+        conceptsData = Array.isArray(conceptsJson) ? conceptsJson : conceptsJson.nodes || [];
+        
         competenciesData = await competenciesResponse.json();
         taxonomyData = await taxonomyResponse.json();
 
         populateConceptsList();
         populateCompetenciesList();
         populateTaxonomyLists();
+        populateGraphGoals();
     } catch (error) {
         console.error('Error loading initial data:', error);
     }
@@ -390,7 +387,7 @@ function populateModels() {
 
 function switchMode(mode) {
     // Hide all mode sections
-    const modes = ['brief', 'full', 'concepts', 'competencies', 'learning-goals', 'taxonomy', 'combined'];
+    const modes = ['brief', 'full', 'competencies', 'learning-goals', 'taxonomy', 'combined'];
     modes.forEach(m => {
         document.getElementById(`${m}-mode`).classList.add('hidden');
         document.getElementById(`${m}-mode-btn`).classList.remove('bg-indigo-600', 'text-white');
@@ -464,8 +461,8 @@ function updateCombinedSections() {
         `;
         combinedSections.appendChild(conceptsSection);
         // Populate concepts list
-        if (conceptsData && conceptsData.nodes) {
-            document.getElementById('combined-concepts-list').innerHTML = conceptsData.nodes.map((node, index) => `
+        if (conceptsData && conceptsData.length > 0) {
+            document.getElementById('combined-concepts-list').innerHTML = conceptsData.map((node, index) => `
                 <div class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50">
                     <input type="checkbox" id="combined-concept-${index}" value="${node.data.label}" 
                            class="rounded text-indigo-600 focus:ring-indigo-500"
@@ -473,6 +470,70 @@ function updateCombinedSections() {
                     <label for="combined-concept-${index}" class="text-sm text-gray-700 cursor-pointer flex-grow">${node.data.label}</label>
                 </div>
             `).join('');
+        }
+    }
+    
+    if (document.getElementById('include-learning-goals').checked) {
+        const learningGoalsSection = document.createElement('div');
+        learningGoalsSection.className = 'mb-4';
+        learningGoalsSection.innerHTML = `
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Learning Goals</label>
+                
+                <!-- Add Custom Goal -->
+                <div class="flex items-center space-x-2 mb-4">
+                    <input type="text" id="combined-new-regular-goal" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter a custom learning goal...">
+                    <button onclick="addCombinedRegularGoal()" class="px-3 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Add</button>
+                </div>
+
+                <!-- Graph Goals Selection -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select from Knowledge Graph</label>
+                    <div class="max-h-60 overflow-y-auto border rounded-md p-4">
+                        <div class="grid grid-cols-1 gap-1" id="combined-graph-goals-list">
+                            <!-- Graph goals will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected Goals List -->
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Selected Learning Goals</label>
+                    <div id="combined-selected-learning-goals" class="space-y-2">
+                        <!-- All selected goals will appear here -->
+                    </div>
+                </div>
+            </div>
+        `;
+        combinedSections.appendChild(learningGoalsSection);
+        
+        // Populate graph goals for combined mode
+        if (conceptsData && conceptsData.length > 0) {
+            const combinedGraphGoalsList = document.getElementById('combined-graph-goals-list');
+            let htmlContent = '';
+            conceptsData.forEach(node => {
+                const goals = node.data.learning_goals || [];
+                goals.forEach(goal => {
+                    htmlContent += `
+                        <div class="flex items-center space-x-2 p-1 rounded-md hover:bg-gray-50">
+                            <input type="checkbox" id="combined-goal-${node.data.id}-${goal.name}" 
+                                   value='${JSON.stringify({
+                                       type: "graph",
+                                       name: goal.name,
+                                       node_id: node.data.id,
+                                       node_label: node.data.label
+                                   })}'
+                                   class="rounded text-indigo-600 focus:ring-indigo-500"
+                                   onchange="toggleCombinedGraphGoal(this)">
+                            <label for="combined-goal-${node.data.id}-${goal.name}" class="text-sm text-gray-700 cursor-pointer flex-grow">
+                                ${goal.name}
+                                <span class="text-xs text-gray-500">(${node.data.label})</span>
+                            </label>
+                        </div>
+                    `;
+                });
+            });
+            combinedGraphGoalsList.innerHTML = htmlContent;
         }
     }
     
@@ -517,35 +578,6 @@ function updateCombinedSections() {
         combinedSections.appendChild(competenciesSection);
     }
     
-    if (document.getElementById('include-learning-goals').checked) {
-        const learningGoalsSection = document.createElement('div');
-        learningGoalsSection.className = 'mb-4';
-        learningGoalsSection.innerHTML = `
-            <label class="block text-sm font-medium text-gray-700 mb-2">Define Learning Goals</label>
-            <div class="space-y-2">
-                <div class="flex items-center space-x-2">
-                    <input type="text" id="combined-new-learning-goal" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter a learning goal...">
-                    <button onclick="addCombinedLearningGoal()" class="px-3 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Add</button>
-                </div>
-            </div>
-            <div class="mt-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Added Learning Goals</label>
-                <div id="combined-added-learning-goals" class="space-y-2">
-                    <!-- Added learning goals will appear here -->
-                </div>
-            </div>
-        `;
-        combinedSections.appendChild(learningGoalsSection);
-        
-        // Add Enter key support for the combined learning goals input
-        document.getElementById('combined-new-learning-goal')?.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addCombinedLearningGoal();
-            }
-        });
-    }
-
     if (document.getElementById('include-taxonomy').checked) {
         const taxonomySection = document.createElement('div');
         taxonomySection.className = 'mb-4';
@@ -648,17 +680,48 @@ function removeCombinedConcept(conceptLabel) {
     }
 }
 
-function addLearningGoal() {
-    const input = document.getElementById('new-learning-goal');
+function toggleGraphGoal(checkbox) {
+    const goalData = JSON.parse(checkbox.value);
+    const selectedGoals = document.getElementById('selected-learning-goals');
+    
+    if (checkbox.checked) {
+        if (!document.querySelector(`[data-goal-id="${goalData.node_id}-${goalData.name}"]`)) {
+            const goalElement = document.createElement('div');
+            goalElement.className = 'flex items-center justify-between p-1 bg-indigo-50 rounded-md';
+            goalElement.dataset.goalId = `${goalData.node_id}-${goalData.name}`;
+            goalElement.innerHTML = `
+                <div class="flex items-center">
+                    <span class="text-indigo-900">${goalData.name}</span>
+                    <span class="ml-2 text-xs text-gray-500">(Graph: ${goalData.node_label})</span>
+                </div>
+                <button onclick="removeGoal('${goalData.node_id}-${goalData.name}')" class="text-indigo-600 hover:text-indigo-800">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            `;
+            selectedGoals.appendChild(goalElement);
+        }
+    } else {
+        removeGoal(`${goalData.node_id}-${goalData.name}`);
+    }
+}
+
+function addRegularGoal() {
+    const input = document.getElementById('new-regular-goal');
     const goal = input.value.trim();
     
     if (goal) {
-        const goalsContainer = document.getElementById('added-learning-goals');
+        const goalsContainer = document.getElementById('selected-learning-goals');
         const goalElement = document.createElement('div');
-        goalElement.className = 'flex items-center justify-between p-2 bg-indigo-50 rounded-md';
+        goalElement.className = 'flex items-center justify-between p-1 bg-indigo-50 rounded-md';
+        goalElement.dataset.goalId = `custom-${goal}`;
         goalElement.innerHTML = `
-            <span class="text-indigo-900">${goal}</span>
-            <button onclick="this.parentElement.remove()" class="text-indigo-600 hover:text-indigo-800">
+            <div class="flex items-center">
+                <span class="text-indigo-900">${goal}</span>
+                <span class="ml-2 text-xs text-gray-500">(Custom)</span>
+            </div>
+            <button onclick="removeGoal('custom-${goal}')" class="text-indigo-600 hover:text-indigo-800">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
@@ -669,13 +732,199 @@ function addLearningGoal() {
     }
 }
 
-// Add event listener for Enter key in learning goals input
-document.getElementById('new-learning-goal')?.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        addLearningGoal();
+function removeGoal(goalId) {
+    const goalElement = document.querySelector(`[data-goal-id="${goalId}"]`);
+    if (goalElement) {
+        goalElement.remove();
+        // If it's a graph goal, uncheck the checkbox
+        if (!goalId.startsWith('custom-')) {
+            const checkbox = document.querySelector(`input[value*="${goalId}"]`);
+            if (checkbox) checkbox.checked = false;
+        }
     }
-});
+}
+
+function getAllLearningGoals() {
+    const goals = [];
+    document.querySelectorAll('#selected-learning-goals > div').forEach(div => {
+        const goalId = div.dataset.goalId;
+        if (goalId.startsWith('custom-')) {
+            goals.push({
+                type: 'regular',
+                name: div.querySelector('span.text-indigo-900').textContent
+            });
+        } else {
+            const checkbox = document.querySelector(`input[value*="${goalId}"]`);
+            if (checkbox) {
+                goals.push(JSON.parse(checkbox.value));
+            }
+        }
+    });
+    return goals;
+}
+
+function toggleCombinedGraphGoal(checkbox) {
+    const goalData = JSON.parse(checkbox.value);
+    const selectedGoals = document.getElementById('combined-selected-learning-goals');
+    
+    if (checkbox.checked) {
+        if (!document.querySelector(`[data-goal-id="combined-${goalData.node_id}-${goalData.name}"]`)) {
+            const goalElement = document.createElement('div');
+            goalElement.className = 'flex items-center justify-between p-1 bg-indigo-50 rounded-md';
+            goalElement.dataset.goalId = `combined-${goalData.node_id}-${goalData.name}`;
+            goalElement.innerHTML = `
+                <div class="flex items-center">
+                    <span class="text-indigo-900">${goalData.name}</span>
+                    <span class="ml-2 text-xs text-gray-500">(Graph: ${goalData.node_label})</span>
+                </div>
+                <button onclick="removeCombinedGoal('${goalData.node_id}-${goalData.name}')" class="text-indigo-600 hover:text-indigo-800">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            `;
+            selectedGoals.appendChild(goalElement);
+        }
+    } else {
+        removeCombinedGoal(`${goalData.node_id}-${goalData.name}`);
+    }
+}
+
+function addCombinedRegularGoal() {
+    const input = document.getElementById('combined-new-regular-goal');
+    const goal = input.value.trim();
+    
+    if (goal) {
+        const goalsContainer = document.getElementById('combined-selected-learning-goals');
+        const goalElement = document.createElement('div');
+        goalElement.className = 'flex items-center justify-between p-1 bg-indigo-50 rounded-md';
+        goalElement.dataset.goalId = `combined-custom-${goal}`;
+        goalElement.innerHTML = `
+            <div class="flex items-center">
+                <span class="text-indigo-900">${goal}</span>
+                <span class="ml-2 text-xs text-gray-500">(Custom)</span>
+            </div>
+            <button onclick="removeCombinedGoal('custom-${goal}')" class="text-indigo-600 hover:text-indigo-800">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        `;
+        goalsContainer.appendChild(goalElement);
+        input.value = '';
+    }
+}
+
+function removeCombinedGoal(goalId) {
+    const goalElement = document.querySelector(`[data-goal-id="combined-${goalId}"]`);
+    if (goalElement) {
+        goalElement.remove();
+        // If it's a graph goal, uncheck the checkbox
+        if (!goalId.startsWith('custom-')) {
+            const checkbox = document.querySelector(`input[value*="${goalId}"]`);
+            if (checkbox) checkbox.checked = false;
+        }
+    }
+}
+
+function populateCompetenciesList() {
+    if (!competenciesData) return;
+
+    // Update both regular and combined mode competencies sections
+    const sections = ['', 'combined-'];
+    sections.forEach(prefix => {
+        const container = document.querySelector(`#${prefix}competencies-mode .space-y-4`);
+        if (container) {
+            container.innerHTML = competenciesData.map(comp => `
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">${comp.name}</label>
+                    <input type="range" min="0" max="100" value="50" 
+                           class="w-1/2" 
+                           id="${prefix}${comp.id}-level"
+                           oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+            `).join('');
+        }
+    });
+}
+
+function populateTaxonomyLists() {
+    if (!taxonomyData) return;
+
+    // Update both regular and combined mode taxonomy sections
+    const sections = ['', 'combined-'];
+    sections.forEach(prefix => {
+        // Populate Processing Levels
+        const processingContainer = document.querySelector(`#${prefix}taxonomy-mode .space-y-6 > div:first-child .space-y-4`);
+        if (processingContainer) {
+            processingContainer.innerHTML = taxonomyData.processing_levels.map(level => `
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">${level.name}</label>
+                    <input type="range" min="0" max="100" value="50" 
+                           class="w-1/2" 
+                           id="${prefix}${level.id}-level"
+                           oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+            `).join('');
+        }
+
+        // Populate Knowledge Domains
+        const domainContainer = document.querySelector(`#${prefix}taxonomy-mode .space-y-6 > div:last-child .space-y-4`);
+        if (domainContainer) {
+            domainContainer.innerHTML = taxonomyData.domain_of_knowledge.map(domain => `
+                <div class="flex items-center space-x-4">
+                    <label class="w-1/3">${domain.name}</label>
+                    <input type="range" min="0" max="100" value="50" 
+                           class="w-1/2" 
+                           id="${prefix}${domain.id}-level"
+                           oninput="this.nextElementSibling.textContent = this.value + '%'">
+                    <span class="w-16">50%</span>
+                </div>
+            `).join('');
+        }
+    });
+}
+
+function populateGraphGoals() {
+    if (!conceptsData || conceptsData.length === 0) {
+        console.log('No concepts data available');
+        return;
+    }
+    
+    const graphGoalsList = document.getElementById('graph-goals-list');
+    if (!graphGoalsList) {
+        console.log('Graph goals list element not found');
+        return;
+    }
+
+    let htmlContent = '';
+    conceptsData.forEach(node => {
+        const goals = node.data.learning_goals || [];
+        goals.forEach(goal => {
+            htmlContent += `
+                <div class="flex items-center space-x-2 p-1 rounded-md hover:bg-gray-50">
+                    <input type="checkbox" id="goal-${node.data.id}-${goal.name}" 
+                           value='${JSON.stringify({
+                               type: "graph",
+                               name: goal.name,
+                               node_id: node.data.id,
+                               node_label: node.data.label
+                           })}'
+                           class="rounded text-indigo-600 focus:ring-indigo-500"
+                           onchange="toggleGraphGoal(this)">
+                    <label for="goal-${node.data.id}-${goal.name}" class="text-sm text-gray-700 cursor-pointer flex-grow">
+                        ${goal.name}
+                        <span class="text-xs text-gray-500">(${node.data.label})</span>
+                    </label>
+                </div>
+            `;
+        });
+    });
+    
+    graphGoalsList.innerHTML = htmlContent;
+}
 
 function getCompetencyLevels() {
     if (!competenciesData) return {};
@@ -693,14 +942,6 @@ function getSelectedConcepts() {
         concepts.push(span.textContent);
     });
     return concepts;
-}
-
-function getLearningGoals() {
-    const goals = [];
-    document.querySelectorAll('#added-learning-goals > div > span').forEach(span => {
-        goals.push(span.textContent);
-    });
-    return goals;
 }
 
 function getTaxonomyLevels() {
@@ -732,6 +973,31 @@ function getCombinedTaxonomyLevels() {
         }, {})
     };
 }
+
+// Add event listener for Enter key in regular goals input
+document.getElementById('new-regular-goal')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        addRegularGoal();
+    }
+});
+
+// Add event listener for Enter key in combined regular goals input
+document.getElementById('combined-new-regular-goal')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        addCombinedRegularGoal();
+    }
+});
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    populateModels();
+    document.getElementById('activity-api-select').addEventListener('change', populateModels);
+    
+    // Load all initial data
+    loadInitialData();
+});
 
 async function generateActivity() {
     // Show progress indicator
@@ -797,12 +1063,8 @@ async function generateActivity() {
         }
         
         if (document.getElementById('include-learning-goals').checked) {
-            // Get learning goals from the combined-added-learning-goals container
-            const goals = [];
-            document.querySelectorAll('#combined-added-learning-goals > div > span').forEach(span => {
-                goals.push(span.textContent);
-            });
-            requestData.learning_goals = goals;
+            // Get learning goals from the combined-selected-learning-goals container
+            requestData.learning_goals = getAllLearningGoals();
             console.log('Learning goals:', requestData.learning_goals);
         }
         
@@ -829,7 +1091,7 @@ async function generateActivity() {
         } else if (!document.getElementById('learning-goals-mode').classList.contains('hidden')) {
             requestData.mode = 'learning-goals';
             requestData.brief_description = document.getElementById('learning-goals-brief-description').value;
-            requestData.learning_goals = getLearningGoals();
+            requestData.learning_goals = getAllLearningGoals();
         } else if (!document.getElementById('taxonomy-mode').classList.contains('hidden')) {
             requestData.mode = 'taxonomy';
             requestData.brief_description = document.getElementById('taxonomy-brief-description').value;
@@ -874,94 +1136,4 @@ async function generateActivity() {
         console.error('Error:', error);
     }
 }
-
-function addCombinedLearningGoal() {
-    const input = document.getElementById('combined-new-learning-goal');
-    const goal = input.value.trim();
-    
-    if (goal) {
-        const goalsContainer = document.getElementById('combined-added-learning-goals');
-        const goalElement = document.createElement('div');
-        goalElement.className = 'flex items-center justify-between p-2 bg-indigo-50 rounded-md';
-        goalElement.innerHTML = `
-            <span class="text-indigo-900">${goal}</span>
-            <button onclick="this.parentElement.remove()" class="text-indigo-600 hover:text-indigo-800">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        `;
-        goalsContainer.appendChild(goalElement);
-        input.value = '';
-    }
-}
-
-function populateCompetenciesList() {
-    if (!competenciesData) return;
-
-    // Update both regular and combined mode competencies sections
-    const sections = ['', 'combined-'];
-    sections.forEach(prefix => {
-        const container = document.querySelector(`#${prefix}competencies-mode .space-y-4`);
-        if (container) {
-            container.innerHTML = competenciesData.map(comp => `
-                <div class="flex items-center space-x-4">
-                    <label class="w-1/3">${comp.name}</label>
-                    <input type="range" min="0" max="100" value="50" 
-                           class="w-1/2" 
-                           id="${prefix}${comp.id}-level"
-                           oninput="this.nextElementSibling.textContent = this.value + '%'">
-                    <span class="w-16">50%</span>
-                </div>
-            `).join('');
-        }
-    });
-}
-
-function populateTaxonomyLists() {
-    if (!taxonomyData) return;
-
-    // Update both regular and combined mode taxonomy sections
-    const sections = ['', 'combined-'];
-    sections.forEach(prefix => {
-        // Populate Processing Levels
-        const processingContainer = document.querySelector(`#${prefix}taxonomy-mode .space-y-6 > div:first-child .space-y-4`);
-        if (processingContainer) {
-            processingContainer.innerHTML = taxonomyData.processing_levels.map(level => `
-                <div class="flex items-center space-x-4">
-                    <label class="w-1/3">${level.name}</label>
-                    <input type="range" min="0" max="100" value="50" 
-                           class="w-1/2" 
-                           id="${prefix}${level.id}-level"
-                           oninput="this.nextElementSibling.textContent = this.value + '%'">
-                    <span class="w-16">50%</span>
-                </div>
-            `).join('');
-        }
-
-        // Populate Knowledge Domains
-        const domainContainer = document.querySelector(`#${prefix}taxonomy-mode .space-y-6 > div:last-child .space-y-4`);
-        if (domainContainer) {
-            domainContainer.innerHTML = taxonomyData.domain_of_knowledge.map(domain => `
-                <div class="flex items-center space-x-4">
-                    <label class="w-1/3">${domain.name}</label>
-                    <input type="range" min="0" max="100" value="50" 
-                           class="w-1/2" 
-                           id="${prefix}${domain.id}-level"
-                           oninput="this.nextElementSibling.textContent = this.value + '%'">
-                    <span class="w-16">50%</span>
-                </div>
-            `).join('');
-        }
-    });
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    populateModels();
-    document.getElementById('activity-api-select').addEventListener('change', populateModels);
-    
-    // Load all initial data
-    loadInitialData();
-});
 </script> 

@@ -15,6 +15,8 @@ from utils.graph_generation import (
 from student_data import student_data
 from graph_data import graph_data
 from meta_data import meta_data
+import google.generativeai as genai
+import openai
 
 app = Flask(__name__)
 
@@ -38,7 +40,7 @@ def get_api_client(provider: str, model: str = None):
 
 @app.route('/')
 def index():
-    return render_template('pages/profile.html', student=student_data, get_concept_name=get_concept_name)
+    return render_template('pages/profile.html', student=student_data, get_concept_name=get_concept_name, graph_data=graph_data)
 
 @app.route('/generate_graph', methods=['POST'])
 async def generate_graph():

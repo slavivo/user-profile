@@ -1,21 +1,18 @@
-For the concept of ${concept}, generate 2-3 specific learning goals for each of the following knowledge units. Each learning goal should:
-- Be clear and measurable
-- Be appropriate for a 15-year-old student
-- Focus on a single, well-defined skill or understanding
-- Include a mastery indicator (true/false)
+Based on the following activity, identify 3-5 specific learning goals:
+Activity Name: ${name}
+Description: ${description}
 
-Knowledge units:
-${nodes}
 
-Format the response as a JSON object where each node ID maps to an array of learning goals. Each learning goal should have a "name" and "mastered" field.
+Each learning goal should:
+1. Be specific and measurable
+2. Start with an action verb
+3. Focus on a single outcome
+4. Be aligned with computer science education principles
 
-Example format:
-{
-    "node1": [
-        { "name": "Understand and apply basic concept X", "mastered": false },
-        { "name": "Demonstrate practical usage of concept Y", "mastered": true }
-    ],
-    "node2": [
-        { "name": "Explain the relationship between X and Y", "mastered": false }
-    ]
-} 
+Format the response as a JSON array of strings, each representing a learning goal.
+Example:
+[
+    "Implement basic sorting algorithms to solve practical problems",
+    "Analyze algorithm efficiency using Big O notation",
+    "Design test cases to validate algorithm correctness"
+] 

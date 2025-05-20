@@ -30,17 +30,132 @@ function createTooltip(container) {
     tooltip.style.fontSize = '14px';
     tooltip.style.fontFamily = 'system-ui, -apple-system, sans-serif';
     tooltip.style.color = '#334155';
-    tooltip.style.pointerEvents = 'none';
+    // Add a small invisible padding around the tooltip to make it easier to hover
+    tooltip.style.margin = '-10px';
+    tooltip.style.padding = '22px';
     container.appendChild(tooltip);
     return tooltip;
 }
 
+// Add a variable to track the hide timeout
+let tooltipHideTimeout = null;
+
+// Add a variable to track if a tooltip is currently being shown
+let isTooltipActive = false;
+
+// Function to create and show assessment criteria modal
+function showAssessmentCriteriaModal(goal) {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('assessment-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // Create modal container
+    const modal = document.createElement('div');
+    modal.id = 'assessment-modal';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    modal.style.display = 'flex';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
+    modal.style.zIndex = '2000';
+
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.style.background = 'white';
+    modalContent.style.padding = '20px';
+    modalContent.style.borderRadius = '8px';
+    modalContent.style.maxWidth = '500px';
+    modalContent.style.width = '90%';
+    modalContent.style.maxHeight = '80vh';
+    modalContent.style.overflowY = 'auto';
+
+    // Add title
+    const title = document.createElement('h3');
+    title.textContent = goal.name;
+    title.style.fontSize = '18px';
+    title.style.fontWeight = 'bold';
+    title.style.marginBottom = '16px';
+    title.style.color = '#1f2937';
+
+    // Add criteria list
+    const criteriaList = document.createElement('div');
+    criteriaList.style.display = 'flex';
+    criteriaList.style.flexDirection = 'column';
+    criteriaList.style.gap = '12px';
+
+    goal.assessment_criterias.forEach(criteria => {
+        const criteriaItem = document.createElement('div');
+        criteriaItem.style.display = 'flex';
+        criteriaItem.style.alignItems = 'flex-start';
+        criteriaItem.style.gap = '8px';
+        criteriaItem.style.padding = '8px';
+        criteriaItem.style.background = '#f9fafb';
+        criteriaItem.style.borderRadius = '4px';
+
+        const bullet = document.createElement('span');
+        bullet.textContent = '•';
+        bullet.style.color = '#6b7280';
+        bullet.style.fontWeight = 'bold';
+
+        const criteriaText = document.createElement('span');
+        criteriaText.textContent = criteria;
+        criteriaText.style.color = '#4b5563';
+
+        criteriaItem.appendChild(bullet);
+        criteriaItem.appendChild(criteriaText);
+        criteriaList.appendChild(criteriaItem);
+    });
+
+    // Add close button
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Close';
+    closeButton.style.marginTop = '20px';
+    closeButton.style.padding = '8px 16px';
+    closeButton.style.background = '#4f46e5';
+    closeButton.style.color = 'white';
+    closeButton.style.border = 'none';
+    closeButton.style.borderRadius = '4px';
+    closeButton.style.cursor = 'pointer';
+    closeButton.onclick = () => modal.remove();
+
+    // Assemble modal
+    modalContent.appendChild(title);
+    modalContent.appendChild(criteriaList);
+    modalContent.appendChild(closeButton);
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    // Close modal when clicking outside
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    };
+}
+
 // Function to show tooltip with learning goals
 function showTooltip(event, node, container) {
+    // If a tooltip is already being shown, don't show another one
+    if (isTooltipActive) return;
+
     const tooltip = document.getElementById('node-tooltip') || createTooltip(container);
     const learningGoals = node.data('learning_goals');
     
     if (!learningGoals || !Array.isArray(learningGoals)) return;
+
+    // Clear any existing hide timeout
+    if (tooltipHideTimeout) {
+        clearTimeout(tooltipHideTimeout);
+        tooltipHideTimeout = null;
+    }
+
+    isTooltipActive = true;
 
     const masteryPercentage = calculateMasteryPercentage(learningGoals);
     const title = document.createElement('div');
@@ -60,6 +175,13 @@ function showTooltip(event, node, container) {
         goalItem.style.display = 'flex';
         goalItem.style.alignItems = 'center';
         goalItem.style.gap = '8px';
+        goalItem.style.cursor = 'pointer';
+        goalItem.style.padding = '4px';
+        goalItem.style.borderRadius = '4px';
+        goalItem.style.transition = 'background-color 0.2s';
+        goalItem.onmouseover = () => goalItem.style.backgroundColor = '#f3f4f6';
+        goalItem.onmouseout = () => goalItem.style.backgroundColor = 'transparent';
+        goalItem.onclick = () => showAssessmentCriteriaModal(goal);
 
         const statusIcon = document.createElement('span');
         statusIcon.textContent = goal.mastered ? '✓' : '○';
@@ -70,8 +192,14 @@ function showTooltip(event, node, container) {
         goalText.textContent = goal.name;
         goalText.style.flex = '1';
 
+        const infoIcon = document.createElement('span');
+        infoIcon.textContent = 'ℹ️';
+        infoIcon.style.fontSize = '12px';
+        infoIcon.style.opacity = '0.7';
+
         goalItem.appendChild(statusIcon);
         goalItem.appendChild(goalText);
+        goalItem.appendChild(infoIcon);
         goalsList.appendChild(goalItem);
     });
 
@@ -105,13 +233,31 @@ function showTooltip(event, node, container) {
     tooltip.style.left = `${finalX}px`;
     tooltip.style.top = `${finalY}px`;
     tooltip.style.display = 'block';
+
+    // Add hover events to the tooltip itself
+    tooltip.onmouseover = () => {
+        if (tooltipHideTimeout) {
+            clearTimeout(tooltipHideTimeout);
+            tooltipHideTimeout = null;
+        }
+    };
+
+    tooltip.onmouseout = () => {
+        tooltipHideTimeout = setTimeout(() => {
+            tooltip.style.display = 'none';
+            isTooltipActive = false;
+        }, 300);
+    };
 }
 
 // Function to hide tooltip
 function hideTooltip() {
     const tooltip = document.getElementById('node-tooltip');
     if (tooltip) {
-        tooltip.style.display = 'none';
+        tooltipHideTimeout = setTimeout(() => {
+            tooltip.style.display = 'none';
+            isTooltipActive = false;
+        }, 300);
     }
 }
 

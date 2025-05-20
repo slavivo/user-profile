@@ -71,7 +71,7 @@ async def generate_learning_goals(client, concept: str, nodes: list, provider: s
             messages=messages,
             model='gemini-2.0-flash' if provider == 'gemini' else 'gpt-4o-2024-08-06',
             temperature=0.7,
-            max_tokens=2000
+            max_tokens=5000
         )
         
         # Get response
@@ -93,7 +93,7 @@ async def generate_learning_goals(client, concept: str, nodes: list, provider: s
                 if not isinstance(goals, list):
                     raise ValueError(f"Learning goals for {node_id} is not a list")
                 for goal in goals:
-                    if not isinstance(goal, dict) or 'name' not in goal or 'mastered' not in goal:
+                    if not isinstance(goal, dict) or 'name' not in goal or 'mastered' not in goal or 'assessment_criterias' not in goal:
                         raise ValueError(f"Invalid learning goal format for {node_id}")
             
             return learning_goals

@@ -1,0 +1,57 @@
+For the concept node "${node_label}" in the section "${section_name}", generate comprehensive learning goals organized by grade level.
+
+Current section's related nodes:
+${other_nodes}
+
+Other main sections and their key concepts:
+${other_sections}
+
+Each learning goal should:
+- Be clear and measurable
+- Have moderate granularity (not too specific to particular implementations)
+- Focus on core conceptual understanding or skill application
+- Be distinct from and not overlap with topics covered by:
+  a) Other nodes in the current section (listed above)
+  b) Related concepts in other main sections (listed above)
+- Focus specifically on the unique aspects of "${node_label}" within the context of "${section_name}"
+
+For example, if generating goals for a programming concept that involves data types:
+- AVOID: "Explain different variable types" (this belongs in Data Types section)
+- BETTER: "Apply appropriate variable types in program implementation"
+
+Generate multiple learning goals for each grade level, ensuring proper progression and complexity:
+- 5th grade: Foundational concepts and basic understanding
+- 6th grade: Basic application and initial problem-solving
+- 7th grade: Intermediate concepts and practical application
+- 8th grade: Advanced application and problem-solving
+- 9th grade: Complex concepts and real-world applications
+- Extra: Additional challenging goals for advanced students
+
+Format the response as a JSON object with grade levels and their respective learning goals:
+
+{
+    "5th_grade": [
+        "Identify basic programming structures in simple code examples",
+        "Write simple sequential programs using basic commands"
+    ],
+    "6th_grade": [
+        "Create basic programs using variables and simple operations",
+        "Debug simple programs by identifying common errors"
+    ],
+    "7th_grade": [
+        "Implement programs using multiple control structures",
+        "Develop programs that process user input effectively"
+    ],
+    "8th_grade": [
+        "Design modular programs using functions and parameters",
+        "Create programs that handle different types of errors gracefully"
+    ],
+    "9th_grade": [
+        "Develop complex programs using multiple programming concepts",
+        "Optimize code for better performance and readability"
+    ],
+    "extra": [
+        "Implement advanced algorithms with multiple approaches",
+        "Create programs that use advanced error handling and logging"
+    ]
+}

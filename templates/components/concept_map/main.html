@@ -66,6 +66,32 @@
     </button>
 </div>
 
+<!-- Learning Goals View -->
+<div id="learning-goals-view" class="hidden mb-6">
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 id="learning-goals-title" class="text-lg leading-6 font-medium text-gray-900"></h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">Learning goals and mastery status by grade level</p>
+        </div>
+        <div class="border-t border-gray-200">
+            <div class="px-4 py-5 sm:px-6">
+                <div class="flex space-x-2 mb-4" id="grade-filters">
+                    <button data-grade="all" class="grade-filter px-3 py-1 text-sm font-medium rounded-full bg-indigo-100 text-indigo-800 hover:bg-indigo-200">All Grades</button>
+                    <button data-grade="5th_grade" class="grade-filter px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200">5th Grade</button>
+                    <button data-grade="6th_grade" class="grade-filter px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200">6th Grade</button>
+                    <button data-grade="7th_grade" class="grade-filter px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200">7th Grade</button>
+                    <button data-grade="8th_grade" class="grade-filter px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200">8th Grade</button>
+                    <button data-grade="9th_grade" class="grade-filter px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200">9th Grade</button>
+                    <button data-grade="extra" class="grade-filter px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200">Extra</button>
+                </div>
+            </div>
+            <ul id="learning-goals-list" class="divide-y divide-gray-200">
+                <!-- Learning goals will be populated here -->
+            </ul>
+        </div>
+    </div>
+</div>
+
 <!-- API Controls -->
 <div id="concept-graph" class="hidden">
     <div class="mb-6 p-4 bg-white border rounded-lg shadow-sm">
@@ -83,9 +109,12 @@
                     <!-- Models will be populated by JavaScript -->
                 </select>
             </div>
-            <div>
+            <div class="flex space-x-2">
                 <button id="generate-graph" class="mt-7 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Generate New Graph
+                </button>
+                <button id="save-graph" class="mt-7 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Save Graph
                 </button>
             </div>
         </div>
@@ -100,4 +129,7 @@
 
     <!-- Graph Container -->
     <div class="h-[600px] border rounded-lg" id="graph-container"></div>
-</div> 
+</div>
+
+<!-- Add script for concept map functionality -->
+<script src="{{ url_for('static', filename='js/concept_map.js') }}" defer></script> 

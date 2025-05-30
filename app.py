@@ -406,5 +406,28 @@ def get_attitudes():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/save_graph_data', methods=['POST'])
+def save_graph_data():
+    """Save the current graph data to graph_data.py file"""
+    try:
+        # Convert the graph data to a JSON string
+        graph_data_str = json.dumps(graph_data, indent=2)
+        
+        # Replace JSON booleans with Python booleans
+        graph_data_str = graph_data_str.replace('"mastered": false', '"mastered": False')
+        graph_data_str = graph_data_str.replace('"mastered": true', '"mastered": True')
+        
+        # Format as a Python variable assignment
+        graph_data_str = "graph_data = " + graph_data_str
+        
+        # Write to the file
+        with open('graph_data.py', 'w') as f:
+            f.write(graph_data_str)
+            
+        return jsonify({'success': True, 'message': 'Graph data saved successfully'})
+    except Exception as e:
+        print(f"Error saving graph data: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True) 

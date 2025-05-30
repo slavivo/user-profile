@@ -1,14 +1,10 @@
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, List
 import json
-from .base import (
-    ApiClientFactory,
-    get_initial_graph_prompt,
-    get_reformatting_prompt,
-    is_valid_graph_format
-)
+from .base import ApiClientFactory
 import google.generativeai as genai
 import openai
 from graph_data import graph_data
+from .template_handler import PromptTemplate
 
 def get_api_client(provider: str, model: str = None, openai_key: str = None, genai_key: str = None):
     """Initialize and return appropriate API client based on provider."""
@@ -20,48 +16,45 @@ def get_api_client(provider: str, model: str = None, openai_key: str = None, gen
     else:
         raise ValueError('Invalid API provider')
 
-async def get_reformatting_client(provider_preference='gemini', openai_key: str = None, genai_key: str = None):
-    """Get a client for reformatting, preferring Gemini 2.0 flash or GPT-4O"""
+async def generate_learning_goals_for_node(client, node_label: str, other_nodes: List[str], section_name: str, provider: str) -> List[Dict]:
+    """Generate learning goals for a single node.
+    
+    Args:
+        client: The API client to use
+        node_label: The label of the current node
+        other_nodes: List of labels of other nodes in the current section
+        section_name: Name of the current main section
+        provider: The API provider to use
+    """
     try:
-        if provider_preference == 'gemini':
-            genai.configure(api_key=genai_key)
-            client = genai.GenerativeModel('gemini-2.0-flash')
-            return 'gemini', client
-        else:
-            client = openai.AsyncClient(api_key=openai_key)
-            return 'openai', client
-    except Exception:
-        # If preferred provider fails, try the other one
-        try:
-            if provider_preference == 'gemini':
-                client = openai.AsyncClient(api_key=openai_key)
-                return 'openai', client
-            else:
-                genai.configure(api_key=genai_key)
-                client = genai.GenerativeModel('gemini-2.0-flash')
-                return 'gemini', client
-        except Exception as e:
-            raise Exception("Failed to initialize both Gemini and OpenAI clients") from e
-
-async def generate_learning_goals(client, concept: str, nodes: list, provider: str) -> Dict:
-    """Generate learning goals for each node in the graph."""
-    try:
-        # Prepare nodes list for the prompt
-        nodes_text = "\n".join([f"- {node['id']}: {node['label']}" for node in nodes])
+        # Format the other nodes as a bullet list
+        other_nodes_text = "\n".join([f"- {node}" for node in other_nodes if node != node_label])
         
-        # Read and format the learning goals prompt
-        with open('prompts/graph_learning_goals.txt', 'r') as f:
-            prompt_template = f.read()
+        # Get information about other main sections
+        other_sections_info = []
+        for section, data in graph_data.items():
+            if section != section_name:  # Skip current section
+                section_nodes = [node['data']['label'] for node in data['nodes']]
+                other_sections_info.append(f"{section}:\n" + "\n".join([f"- {node}" for node in section_nodes]))
         
-        prompt = prompt_template.replace('${concept}', concept).replace('${nodes}', nodes_text)
+        other_sections_text = "\n\n".join(other_sections_info)
+        template_vars = {}
+        system_prompt = PromptTemplate.render('graph_learning_goals_system', **template_vars)
+        template_vars = {
+            "node_label": node_label,
+            "section_name": section_name,
+            "other_nodes": other_nodes_text,
+            "other_sections": other_sections_text
+        }
+        user_prompt = PromptTemplate.render('graph_learning_goals_user', **template_vars)
 
         # Create API client
         api_client = ApiClientFactory.create_client(provider, client)
         
         # Prepare messages
         messages = [
-            {"role": "system", "content": "You are a helpful AI assistant that generates learning goals for educational concepts."},
-            {"role": "user", "content": prompt}
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
         ]
         
         # Set parameters
@@ -71,11 +64,12 @@ async def generate_learning_goals(client, concept: str, nodes: list, provider: s
             messages=messages,
             model='gemini-2.0-flash' if provider == 'gemini' else 'gpt-4o-2024-08-06',
             temperature=0.7,
-            max_tokens=5000
+            max_tokens=2000
         )
         
         # Get response
         response = await api_client.chat_completion_request(params)
+        
         # Parse and validate the response
         try:
             response_text = response.content
@@ -88,135 +82,90 @@ async def generate_learning_goals(client, concept: str, nodes: list, provider: s
                 raise ValueError("Response is not a dictionary")
             
             learning_goals = json.loads(response_text)
-            # Validate each node's learning goals
-            for node_id, goals in learning_goals.items():
-                if not isinstance(goals, list):
-                    raise ValueError(f"Learning goals for {node_id} is not a list")
-                for goal in goals:
-                    if not isinstance(goal, dict) or 'name' not in goal or 'mastered' not in goal or 'assessment_criterias' not in goal:
-                        raise ValueError(f"Invalid learning goal format for {node_id}")
+            print(f"Learning goals: {learning_goals}")
             
-            return learning_goals
+            # Validate learning goals format and convert to required structure
+            if not isinstance(learning_goals, dict):
+                raise ValueError("Response is not a dictionary of grade levels")
+            
+            # Expected grade levels
+            expected_grades = ['5th_grade', '6th_grade', '7th_grade', '8th_grade', '9th_grade', 'extra']
+            
+            # Convert grade-based goals to objects with name, grade, and mastered fields
+            formatted_goals = []
+            for grade, goals in learning_goals.items():
+                if grade not in expected_grades:
+                    print(f"Warning: Unexpected grade level {grade}")
+                    continue
+                    
+                if not isinstance(goals, list):
+                    print(f"Warning: Goals for grade {grade} is not a list")
+                    continue
+                
+                for goal in goals:
+                    if isinstance(goal, str):
+                        formatted_goals.append({
+                            "name": goal,
+                            "grade": grade,
+                            "mastered": False
+                        })
+            
+            if not formatted_goals:
+                raise ValueError("No valid learning goals found in response")
+            
+            return formatted_goals
+            
         except json.JSONDecodeError:
             raise ValueError("Failed to parse learning goals response as JSON")
             
     except Exception as e:
-        print(f"Error generating learning goals: {str(e)}")
+        print(f"Error generating learning goals for node {node_label}: {str(e)}")
         raise
 
 async def generate_graph_async(api_provider: str, model: str, concept: str, openai_key: str = None, genai_key: str = None) -> Dict:
-    """Generate a knowledge graph for a given concept using the specified AI provider."""
+    """Generate learning goals for all nodes in a given concept's graph."""
     try:
-        # Step 1: Generate initial graph description
+        # Validate concept exists in graph_data
+        if concept not in graph_data:
+            return {'error': f'Concept {concept} not found in graph data'}, 400
+
+        # Get client
         try:
             client = get_api_client(api_provider, model, openai_key, genai_key)
         except ValueError as e:
             return {'error': str(e)}, 400
 
-        # Create API client for initial description
-        api_client = ApiClientFactory.create_client(api_provider, client)
-
-        # Get initial description
-        initial_messages = [
-            {"role": "system", "content": "You are a helpful AI assistant that generates knowledge graphs for educational concepts."},
-            {"role": "user", "content": get_initial_graph_prompt(concept)}
-        ]
-
-        initial_params = ApiClientFactory.create_params(
-            api_provider,
-            client=client,
-            messages=initial_messages,
-            model=model,
-            temperature=0.7,
-            max_tokens=2000
-        )
-
-        initial_response = await api_client.chat_completion_request(initial_params)
-        initial_description = initial_response.content
-
-        # Step 2: Format the description into proper JSON
-        formatted_response = None
-        for attempt in range(3):
+        # Get the graph structure for the concept
+        graph = graph_data[concept]
+        
+        # Get all node labels from the graph
+        all_node_labels = [node['data']['label'] for node in graph['nodes']]
+        
+        # Generate learning goals for each node
+        for node in graph['nodes']:
             try:
-                # Get reformatting client (Gemini 2.0 flash or GPT-4O)
-                reformat_provider, reformat_client = await get_reformatting_client(openai_key=openai_key, genai_key=genai_key)
-                reformat_api_client = ApiClientFactory.create_client(reformat_provider, reformat_client)
-
-                # Prepare reformatting messages
-                reformat_messages = [
-                    {"role": "system", "content": "You are a helpful AI assistant that formats knowledge graph descriptions into JSON."},
-                    {"role": "user", "content": get_reformatting_prompt(concept, initial_description)}
-                ]
-
-                reformat_model = 'gemini-2.0-flash' if reformat_provider == 'gemini' else 'gpt-4o-2024-08-06'
-                reformat_params = ApiClientFactory.create_params(
-                    reformat_provider,
-                    client=reformat_client,
-                    messages=reformat_messages,
-                    model=reformat_model,
-                    temperature=0.2,
-                    max_tokens=2000
-                )
-
-                reformat_response = await reformat_api_client.chat_completion_request(reformat_params)
-                formatted_response = reformat_response.content
-
-                is_valid, formatted_response = is_valid_graph_format(formatted_response)
-                if is_valid:
-                    break
-
-                if attempt == 2:  # Last attempt failed
-                    return {
-                        'error': 'Failed to generate valid graph format after 3 attempts',
-                        'initial_description': initial_description,
-                        'last_attempt': formatted_response
-                    }, 500
-
-            except Exception as e:
-                if attempt == 2:  # Last attempt failed
-                    raise e
-                continue
-
-        if not formatted_response:
-            return {
-                'error': 'Failed to generate valid graph format',
-                'initial_description': initial_description
-            }, 500
-
-        # Step 3: Generate learning goals for each node
-        learning_goals = None
-        formatted_response = json.loads(formatted_response)
-        for attempt in range(3):
-            try:
-                learning_goals = await generate_learning_goals(
-                    reformat_client,
+                node_label = node['data']['label']
+                learning_goals = await generate_learning_goals_for_node(
+                    client,
+                    node_label,
+                    all_node_labels,
                     concept,
-                    formatted_response['nodes'],
-                    reformat_provider
+                    api_provider
                 )
-                break
+                # Update the node with new learning goals
+                node['data']['learning_goals'] = learning_goals
             except Exception as e:
-                if attempt == 2:  # Last attempt failed
-                    print(f"Error generating learning goals after 3 attempts: {str(e)}")
-                    # Return graph without learning goals if all attempts fail
-                    return {
-                        'response': formatted_response,
-                        'initial_description': initial_description,
-                        'warning': 'Failed to generate learning goals after 3 attempts'
-                    }
+                print(f"Error processing node {node_label}: {str(e)}")
+                # Continue with other nodes even if one fails
                 continue
 
-        # Add learning goals to each node if generation was successful
-        if learning_goals:
-            for node in formatted_response['nodes']:
-                node['learning_goals'] = learning_goals.get(node['id'], [])
         return {
-            'response': json.dumps(formatted_response),
-            'initial_description': initial_description
+            'response': graph,
+            'message': 'Learning goals generated successfully'
         }
 
     except Exception as e:
-        print(f"Error generating graph: {str(e)}")
+        print(f"Error generating learning goals: {str(e)}")
         return {'error': str(e)}, 500
 
 def format_graph_for_cytoscape(graph_json: Dict) -> Dict:
@@ -224,15 +173,15 @@ def format_graph_for_cytoscape(graph_json: Dict) -> Dict:
     return {
         "nodes": [
             {"data": {
-                "id": node["id"],
-                "label": node["label"],
-                "learning_goals": node.get("learning_goals", [])
+                "id": node["data"]["id"],
+                "label": node["data"]["label"],
+                "learning_goals": node["data"].get("learning_goals", [])
             }} for node in graph_json["nodes"]
         ],
         "edges": [
             {"data": {
-                "source": edge["source"],
-                "target": edge["target"]
+                "source": edge["data"]["source"],
+                "target": edge["data"]["target"]
             }} for edge in graph_json["edges"]
         ]
     }

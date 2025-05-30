@@ -15,252 +15,6 @@ function calculateMasteryPercentage(learningGoals) {
     return (mastered / learningGoals.length) * 100;
 }
 
-// Function to create tooltip element
-function createTooltip(container) {
-    const tooltip = document.createElement('div');
-    tooltip.id = 'node-tooltip';
-    tooltip.style.position = 'absolute';
-    tooltip.style.display = 'none';
-    tooltip.style.background = 'white';
-    tooltip.style.padding = '12px';
-    tooltip.style.borderRadius = '8px';
-    tooltip.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-    tooltip.style.zIndex = '1000';
-    tooltip.style.maxWidth = '300px';
-    tooltip.style.fontSize = '14px';
-    tooltip.style.fontFamily = 'system-ui, -apple-system, sans-serif';
-    tooltip.style.color = '#334155';
-    // Add a small invisible padding around the tooltip to make it easier to hover
-    tooltip.style.margin = '-10px';
-    tooltip.style.padding = '22px';
-    container.appendChild(tooltip);
-    return tooltip;
-}
-
-// Add a variable to track the hide timeout
-let tooltipHideTimeout = null;
-
-// Add a variable to track if a tooltip is currently being shown
-let isTooltipActive = false;
-
-// Function to create and show assessment criteria modal
-function showAssessmentCriteriaModal(goal) {
-    // Remove existing modal if any
-    const existingModal = document.getElementById('assessment-modal');
-    if (existingModal) {
-        existingModal.remove();
-    }
-
-    // Create modal container
-    const modal = document.createElement('div');
-    modal.id = 'assessment-modal';
-    modal.style.position = 'fixed';
-    modal.style.top = '0';
-    modal.style.left = '0';
-    modal.style.width = '100%';
-    modal.style.height = '100%';
-    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-    modal.style.display = 'flex';
-    modal.style.justifyContent = 'center';
-    modal.style.alignItems = 'center';
-    modal.style.zIndex = '2000';
-
-    // Create modal content
-    const modalContent = document.createElement('div');
-    modalContent.style.background = 'white';
-    modalContent.style.padding = '20px';
-    modalContent.style.borderRadius = '8px';
-    modalContent.style.maxWidth = '500px';
-    modalContent.style.width = '90%';
-    modalContent.style.maxHeight = '80vh';
-    modalContent.style.overflowY = 'auto';
-
-    // Add title
-    const title = document.createElement('h3');
-    title.textContent = goal.name;
-    title.style.fontSize = '18px';
-    title.style.fontWeight = 'bold';
-    title.style.marginBottom = '16px';
-    title.style.color = '#1f2937';
-
-    // Add criteria list
-    const criteriaList = document.createElement('div');
-    criteriaList.style.display = 'flex';
-    criteriaList.style.flexDirection = 'column';
-    criteriaList.style.gap = '12px';
-
-    goal.assessment_criterias.forEach(criteria => {
-        const criteriaItem = document.createElement('div');
-        criteriaItem.style.display = 'flex';
-        criteriaItem.style.alignItems = 'flex-start';
-        criteriaItem.style.gap = '8px';
-        criteriaItem.style.padding = '8px';
-        criteriaItem.style.background = '#f9fafb';
-        criteriaItem.style.borderRadius = '4px';
-
-        const bullet = document.createElement('span');
-        bullet.textContent = '•';
-        bullet.style.color = '#6b7280';
-        bullet.style.fontWeight = 'bold';
-
-        const criteriaText = document.createElement('span');
-        criteriaText.textContent = criteria;
-        criteriaText.style.color = '#4b5563';
-
-        criteriaItem.appendChild(bullet);
-        criteriaItem.appendChild(criteriaText);
-        criteriaList.appendChild(criteriaItem);
-    });
-
-    // Add close button
-    const closeButton = document.createElement('button');
-    closeButton.textContent = 'Close';
-    closeButton.style.marginTop = '20px';
-    closeButton.style.padding = '8px 16px';
-    closeButton.style.background = '#4f46e5';
-    closeButton.style.color = 'white';
-    closeButton.style.border = 'none';
-    closeButton.style.borderRadius = '4px';
-    closeButton.style.cursor = 'pointer';
-    closeButton.onclick = () => modal.remove();
-
-    // Assemble modal
-    modalContent.appendChild(title);
-    modalContent.appendChild(criteriaList);
-    modalContent.appendChild(closeButton);
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-
-    // Close modal when clicking outside
-    modal.onclick = (e) => {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    };
-}
-
-// Function to show tooltip with learning goals
-function showTooltip(event, node, container) {
-    // If a tooltip is already being shown, don't show another one
-    if (isTooltipActive) return;
-
-    const tooltip = document.getElementById('node-tooltip') || createTooltip(container);
-    const learningGoals = node.data('learning_goals');
-    
-    if (!learningGoals || !Array.isArray(learningGoals)) return;
-
-    // Clear any existing hide timeout
-    if (tooltipHideTimeout) {
-        clearTimeout(tooltipHideTimeout);
-        tooltipHideTimeout = null;
-    }
-
-    isTooltipActive = true;
-
-    const masteryPercentage = calculateMasteryPercentage(learningGoals);
-    const title = document.createElement('div');
-    title.style.fontWeight = 'bold';
-    title.style.marginBottom = '8px';
-    title.style.borderBottom = '1px solid #e2e8f0';
-    title.style.paddingBottom = '4px';
-    title.textContent = `${node.data('label')} (${Math.round(masteryPercentage)}% Mastered)`;
-
-    const goalsList = document.createElement('div');
-    goalsList.style.display = 'flex';
-    goalsList.style.flexDirection = 'column';
-    goalsList.style.gap = '8px';
-
-    learningGoals.forEach(goal => {
-        const goalItem = document.createElement('div');
-        goalItem.style.display = 'flex';
-        goalItem.style.alignItems = 'center';
-        goalItem.style.gap = '8px';
-        goalItem.style.cursor = 'pointer';
-        goalItem.style.padding = '4px';
-        goalItem.style.borderRadius = '4px';
-        goalItem.style.transition = 'background-color 0.2s';
-        goalItem.onmouseover = () => goalItem.style.backgroundColor = '#f3f4f6';
-        goalItem.onmouseout = () => goalItem.style.backgroundColor = 'transparent';
-        goalItem.onclick = () => showAssessmentCriteriaModal(goal);
-
-        const statusIcon = document.createElement('span');
-        statusIcon.textContent = goal.mastered ? '✓' : '○';
-        statusIcon.style.color = goal.mastered ? '#059669' : '#6B7280';
-        statusIcon.style.fontWeight = 'bold';
-
-        const goalText = document.createElement('span');
-        goalText.textContent = goal.name;
-        goalText.style.flex = '1';
-
-        const infoIcon = document.createElement('span');
-        infoIcon.textContent = 'ℹ️';
-        infoIcon.style.fontSize = '12px';
-        infoIcon.style.opacity = '0.7';
-
-        goalItem.appendChild(statusIcon);
-        goalItem.appendChild(goalText);
-        goalItem.appendChild(infoIcon);
-        goalsList.appendChild(goalItem);
-    });
-
-    tooltip.innerHTML = '';
-    tooltip.appendChild(title);
-    tooltip.appendChild(goalsList);
-
-    // Position the tooltip relative to the container
-    const padding = 10;
-    const containerRect = container.getBoundingClientRect();
-    const x = event.renderedPosition.x + padding;
-    const y = event.renderedPosition.y + padding;
-
-    // Ensure tooltip stays within container bounds
-    const tooltipWidth = 300; // max-width of tooltip
-    const tooltipHeight = tooltip.offsetHeight;
-    
-    let finalX = x;
-    let finalY = y;
-
-    // Adjust horizontal position if tooltip would overflow right edge
-    if (x + tooltipWidth > containerRect.width) {
-        finalX = x - tooltipWidth - padding;
-    }
-
-    // Adjust vertical position if tooltip would overflow bottom edge
-    if (y + tooltipHeight > containerRect.height) {
-        finalY = y - tooltipHeight - padding;
-    }
-
-    tooltip.style.left = `${finalX}px`;
-    tooltip.style.top = `${finalY}px`;
-    tooltip.style.display = 'block';
-
-    // Add hover events to the tooltip itself
-    tooltip.onmouseover = () => {
-        if (tooltipHideTimeout) {
-            clearTimeout(tooltipHideTimeout);
-            tooltipHideTimeout = null;
-        }
-    };
-
-    tooltip.onmouseout = () => {
-        tooltipHideTimeout = setTimeout(() => {
-            tooltip.style.display = 'none';
-            isTooltipActive = false;
-        }, 300);
-    };
-}
-
-// Function to hide tooltip
-function hideTooltip() {
-    const tooltip = document.getElementById('node-tooltip');
-    if (tooltip) {
-        tooltipHideTimeout = setTimeout(() => {
-            tooltip.style.display = 'none';
-            isTooltipActive = false;
-        }, 300);
-    }
-}
-
 // Function to create mastery legend
 function createMasteryLegend(container) {
     const legend = document.createElement('div');
@@ -314,7 +68,274 @@ async function fetchConceptData() {
     }
 }
 
-// Initialize cytoscape instance
+// Function to format grade level for display
+function formatGradeLevel(grade) {
+    switch(grade) {
+        case '5th_grade': return '5th Grade';
+        case '6th_grade': return '6th Grade';
+        case '7th_grade': return '7th Grade';
+        case '8th_grade': return '8th Grade';
+        case '9th_grade': return '9th Grade';
+        case 'extra': return 'Extra';
+        default: return grade;
+    }
+}
+
+// Function to show learning goals view
+function showLearningGoals(node) {
+    const mainConcepts = document.getElementById('main-concepts');
+    const conceptGraph = document.getElementById('concept-graph');
+    const learningGoalsView = document.getElementById('learning-goals-view');
+    const learningGoalsList = document.getElementById('learning-goals-list');
+    const learningGoalsTitle = document.getElementById('learning-goals-title');
+    const breadcrumb = document.getElementById('concept-breadcrumb').querySelector('ol');
+    
+    // Store the current node's data globally for filtering
+    window.currentNodeData = node.data();
+    
+    // Hide graph, show learning goals
+    conceptGraph.classList.add('hidden');
+    learningGoalsView.classList.remove('hidden');
+    
+    // Update title
+    learningGoalsTitle.textContent = node.data('label');
+    
+    // Update breadcrumb - make previous items clickable and current item gray
+    const breadcrumbItem = document.createElement('li');
+    breadcrumbItem.className = 'inline-flex items-center';
+    breadcrumbItem.innerHTML = `
+        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+        </svg>
+        <span class="ml-1 text-sm font-medium text-gray-500">${node.data('label')}</span>
+    `;
+    
+    // Update previous breadcrumb items to be clickable
+    Array.from(breadcrumb.children).forEach(item => {
+        const span = item.querySelector('span');
+        if (span) {
+            span.className = 'ml-1 text-sm font-medium text-indigo-600 hover:text-indigo-900 cursor-pointer';
+        }
+    });
+    
+    breadcrumb.appendChild(breadcrumbItem);
+    
+    // Set up grade filter event listeners
+    setupGradeFilters();
+    
+    // Display all goals initially
+    filterGoalsByGrade('all');
+}
+
+// Function to set up grade filter event listeners
+function setupGradeFilters() {
+    const gradeFilters = document.querySelectorAll('.grade-filter');
+    gradeFilters.forEach(button => {
+        // Remove existing listeners
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+        
+        // Add new listener
+        newButton.addEventListener('click', () => {
+            const grade = newButton.getAttribute('data-grade');
+            filterGoalsByGrade(grade);
+        });
+    });
+}
+
+// Function to filter learning goals by grade
+function filterGoalsByGrade(selectedGrade) {
+    if (!window.currentNodeData) return;
+    
+    const learningGoalsList = document.getElementById('learning-goals-list');
+    const learningGoals = window.currentNodeData.learning_goals || [];
+    
+    // Update filter button styles
+    document.querySelectorAll('.grade-filter').forEach(button => {
+        const grade = button.getAttribute('data-grade');
+        if (grade === selectedGrade) {
+            button.className = 'grade-filter px-3 py-1 text-sm font-medium rounded-full bg-indigo-100 text-indigo-800 hover:bg-indigo-200';
+        } else {
+            button.className = 'grade-filter px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200';
+        }
+    });
+    
+    // Clear and populate learning goals list
+    learningGoalsList.innerHTML = '';
+    
+    // Filter and sort goals
+    const filteredGoals = learningGoals.filter(goal => 
+        selectedGrade === 'all' || goal.grade === selectedGrade
+    ).sort((a, b) => {
+        const gradeOrder = {
+            '5th_grade': 1,
+            '6th_grade': 2,
+            '7th_grade': 3,
+            '8th_grade': 4,
+            '9th_grade': 5,
+            'extra': 6
+        };
+        return gradeOrder[a.grade] - gradeOrder[b.grade];
+    });
+    
+    // Group goals by grade if showing all
+    const groupedGoals = selectedGrade === 'all' 
+        ? filteredGoals.reduce((acc, goal) => {
+            if (!acc[goal.grade]) acc[goal.grade] = [];
+            acc[goal.grade].push(goal);
+            return acc;
+        }, {})
+        : { [selectedGrade]: filteredGoals };
+    
+    // Display goals
+    Object.entries(groupedGoals).forEach(([grade, goals]) => {
+        if (goals.length === 0) return;
+        
+        if (selectedGrade === 'all') {
+            // Add grade header
+            const gradeHeader = document.createElement('li');
+            gradeHeader.className = 'px-4 py-2 bg-gray-50';
+            gradeHeader.innerHTML = `<h4 class="text-sm font-medium text-gray-900">${formatGradeLevel(grade)}</h4>`;
+            learningGoalsList.appendChild(gradeHeader);
+        }
+        
+        goals.forEach(goal => {
+            const li = document.createElement('li');
+            li.className = 'px-4 py-4 sm:px-6';
+            li.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span class="flex-shrink-0 h-5 w-5 text-${goal.mastered ? 'green' : 'gray'}-500">
+                            ${goal.mastered ? '✓' : '○'}
+                        </span>
+                        <p class="ml-3 text-sm text-gray-900">${goal.name}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        ${selectedGrade === 'all' ? 
+                            `<span class="text-xs font-medium text-gray-500">${formatGradeLevel(goal.grade)}</span>` : 
+                            ''
+                        }
+                        <button class="toggle-mastery ml-4 px-3 py-1 text-xs font-medium rounded-full ${
+                            goal.mastered 
+                                ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                        }">
+                            ${goal.mastered ? 'Mastered' : 'Not Mastered'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add click handler for the mastery toggle button
+            const toggleButton = li.querySelector('.toggle-mastery');
+            toggleButton.addEventListener('click', () => {
+                goal.mastered = !goal.mastered;
+                // Update the button appearance
+                toggleButton.className = `toggle-mastery ml-4 px-3 py-1 text-xs font-medium rounded-full ${
+                    goal.mastered 
+                        ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                        : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                }`;
+                toggleButton.textContent = goal.mastered ? 'Mastered' : 'Not Mastered';
+                // Update the status icon
+                const statusIcon = li.querySelector('.flex-shrink-0');
+                statusIcon.textContent = goal.mastered ? '✓' : '○';
+                statusIcon.className = `flex-shrink-0 h-5 w-5 text-${goal.mastered ? 'green' : 'gray'}-500`;
+                
+                // Update node color in the graph
+                if (window.cy) {
+                    const node = window.cy.$(`#${window.currentNodeData.id}`);
+                    if (node) {
+                        node.style('background-color', getMasteryColor(calculateMasteryPercentage(window.currentNodeData.learning_goals)));
+                    }
+                }
+            });
+            
+            learningGoalsList.appendChild(li);
+        });
+    });
+}
+
+// Function to handle root concepts button click
+function handleRootConceptsClick() {
+    const mainConcepts = document.getElementById('main-concepts');
+    const conceptGraph = document.getElementById('concept-graph');
+    const learningGoalsView = document.getElementById('learning-goals-view');
+    const responseLog = document.getElementById('response-log');
+    
+    // Hide all other views
+    mainConcepts.classList.remove('hidden');
+    conceptGraph.classList.add('hidden');
+    learningGoalsView.classList.add('hidden');
+    responseLog.classList.add('hidden');
+    window.currentConcept = null;
+    
+    if (window.cy) {
+        window.cy.destroy();
+        window.cy = null;
+    }
+    
+    // Reset breadcrumb
+    const breadcrumb = document.getElementById('concept-breadcrumb');
+    breadcrumb.querySelector('ol').innerHTML = `
+        <li class="inline-flex items-center">
+            <button id="root-concepts" class="inline-flex items-center text-sm font-medium text-gray-500">
+                Main Concepts
+            </button>
+        </li>
+    `;
+    
+    // Re-attach click handler to the new button
+    document.getElementById('root-concepts').addEventListener('click', handleRootConceptsClick);
+}
+
+// Function to handle breadcrumb navigation
+function handleBreadcrumbClick(index) {
+    const breadcrumb = document.getElementById('concept-breadcrumb').querySelector('ol');
+    const mainConcepts = document.getElementById('main-concepts');
+    const conceptGraph = document.getElementById('concept-graph');
+    const learningGoalsView = document.getElementById('learning-goals-view');
+    const responseLog = document.getElementById('response-log');
+    
+    // Remove all items after the clicked index
+    while (breadcrumb.children.length > index + 1) {
+        breadcrumb.removeChild(breadcrumb.lastChild);
+    }
+    
+    // Update styles for breadcrumb items
+    Array.from(breadcrumb.children).forEach((item, i) => {
+        const span = item.querySelector('span');
+        if (span) {
+            if (i === index) {
+                span.className = 'ml-1 text-sm font-medium text-gray-500';
+            } else {
+                span.className = 'ml-1 text-sm font-medium text-indigo-600 hover:text-indigo-900 cursor-pointer';
+            }
+        }
+    });
+    
+    // Hide all views first
+    mainConcepts.classList.add('hidden');
+    conceptGraph.classList.add('hidden');
+    learningGoalsView.classList.add('hidden');
+    responseLog.classList.add('hidden');
+    
+    // Show appropriate view based on index
+    if (index === 0) {
+        // Main Concepts view
+        mainConcepts.classList.remove('hidden');
+        window.currentConcept = null;
+    } else if (index === 1) {
+        // Graph view
+        conceptGraph.classList.remove('hidden');
+    } else if (index === 2) {
+        // Learning goals view
+        conceptGraph.classList.add('hidden');
+        learningGoalsView.classList.remove('hidden');
+    }
+}
+
+// Function to create cytoscape instance
 function initializeCytoscape(container, elements) {
     if (window.cy) {
         window.cy.destroy();
@@ -358,31 +379,26 @@ function initializeCytoscape(container, elements) {
                 style: {
                     'width': 1.5,
                     'line-color': '#e2e8f0',
-                    'target-arrow-color': '#e2e8f0',
-                    'target-arrow-shape': 'vee',
-                    'curve-style': 'bezier',
-                    'arrow-scale': 1.2,
-                    'line-style': 'solid'
+                    'curve-style': 'bezier'
                 }
             }
         ],
         layout: {
-            name: 'dagre',
-            rankDir: 'TB',
-            padding: 50,
-            spacingFactor: 1.5,
+            name: 'fcose',
             animate: true,
-            animationDuration: 500
+            animationDuration: 500,
+            nodeRepulsion: 8000,
+            nodeOverlap: 20,
+            idealEdgeLength: 100,
+            padding: 50,
+            componentSpacing: 100,
+            randomize: true
         }
     });
 
-    // Add tooltip event listeners
-    cy.on('mouseover', 'node', function(event) {
-        showTooltip(event, event.target, container);
-    });
-
-    cy.on('mouseout', 'node', function() {
-        hideTooltip();
+    // Add node click event
+    cy.on('tap', 'node', function(event) {
+        showLearningGoals(event.target);
     });
 
     // Add the legend to the container
@@ -399,35 +415,6 @@ function updateModelOptions(provider) {
     modelSelect.innerHTML = models.map(model => 
         `<option value="${model.id}" ${model.default ? 'selected' : ''}>${model.name}</option>`
     ).join('');
-}
-
-// Function to handle root concepts button click
-function handleRootConceptsClick() {
-    const mainConcepts = document.getElementById('main-concepts');
-    const conceptGraph = document.getElementById('concept-graph');
-    const responseLog = document.getElementById('response-log');
-    
-    mainConcepts.classList.remove('hidden');
-    conceptGraph.classList.add('hidden');
-    responseLog.classList.add('hidden');
-    window.currentConcept = null;
-    
-    if (window.cy) {
-        window.cy.destroy();
-        window.cy = null;
-    }
-    
-    // Reset breadcrumb
-    document.getElementById('concept-breadcrumb').querySelector('ol').innerHTML = `
-        <li class="inline-flex items-center">
-            <button id="root-concepts" class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-900">
-                Main Concepts
-            </button>
-        </li>
-    `;
-    
-    // Re-attach click handler to the new button
-    document.getElementById('root-concepts').addEventListener('click', handleRootConceptsClick);
 }
 
 // Function to handle concept card clicks
@@ -565,13 +552,24 @@ async function handleGraphGeneration(generateBtn) {
 
 // Initialize everything when the DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Remove any existing event listeners
+    const breadcrumb = document.getElementById('concept-breadcrumb');
+    const newBreadcrumb = breadcrumb.cloneNode(true);
+    breadcrumb.parentNode.replaceChild(newBreadcrumb, breadcrumb);
+    
     // Attach click handlers to concept cards
     document.querySelectorAll('.concept-card').forEach(card => {
         card.addEventListener('click', () => handleConceptCardClick(card));
     });
     
-    // Attach click handler to root concepts button
-    document.getElementById('root-concepts').addEventListener('click', handleRootConceptsClick);
+    // Attach click handler to breadcrumb navigation
+    newBreadcrumb.addEventListener('click', function(e) {
+        const breadcrumbItem = e.target.closest('li');
+        if (breadcrumbItem) {
+            const index = Array.from(breadcrumbItem.parentNode.children).indexOf(breadcrumbItem);
+            handleBreadcrumbClick(index);
+        }
+    });
     
     // Set up API provider change handler
     document.getElementById('api-select').addEventListener('change', function() {

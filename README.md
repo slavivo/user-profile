@@ -2,45 +2,6 @@
 
 A Flask-based web application for visualizing student profiles, competencies, and generating AI-powered concept maps for educational topics.
 
-## Features
-
-- **Student Profile Dashboard**: View and manage student information and academic progress
-- **Interactive Concept Maps**: 
-  - Visualize educational concepts using Cytoscape.js
-  - AI-powered graph generation using OpenAI or Google Gemini
-  - Hierarchical concept visualization with progress tracking
-- **Competency Tracking**: 
-  - Monitor progress across 8 key competency areas:
-    - Learning Competency
-    - Problem Solving
-    - Communication
-    - Social and Personal
-    - Civic
-    - Digital
-    - Work
-    - Cultural Awareness
-  - Dynamic UI that displays only active competencies (scores > 0)
-- **Activity Management**:
-  - AI-powered activity generation with multiple creation modes
-  - Structured activity data with learning goals, competencies, and taxonomy
-  - Integrated student performance tracking
-- **Personalization**:
-  - Concept focus selection (polish, discover, or broaden)
-  - Competency focus selection (target strong or weak areas)
-  - AI-driven activity generation based on focus areas
-
-## Technology Stack
-
-- **Backend**: Python/Flask
-- **Frontend**: 
-  - HTML/JavaScript
-  - TailwindCSS for styling
-  - Cytoscape.js for graph visualization
-- **AI Integration**:
-  - Google Gemini API
-  - OpenAI API
-  - Support for multiple model variants
-
 ## Core Directory Structure
 
 ```
@@ -128,7 +89,39 @@ The application supports two AI providers:
 
 ## Prompt System
 
-The application uses a template-based prompt system for AI interactions. All prompts are stored as text files in the `prompts/` directory, making them easy to edit without touching the code.
+The application uses a template-based prompt system for AI interactions. All prompts are stored as text files in the `prompts/` directory. Here's a detailed overview of each prompt and its purpose:
+
+### Activity Creation Prompts
+
+The activity creation process is two-phased:
+
+1. **Full Description Generation**
+   - Located in `full_description_from_*.txt` files
+   - Different modes based on input metadata:
+     - `full_description_from_brief.txt`: Generates from brief description
+     - `full_description_from_combined.txt`: Uses combined metadata (concepts, competencies, etc.)
+     - `full_description_from_competencies.txt`: Focuses on specific competencies
+     - `full_description_from_concepts.txt`: Based on selected concepts
+     - `full_description_from_learning_goals.txt`: Uses existing learning goals
+     - `full_description_from_taxonomy.txt`: Based on taxonomy classification
+
+2. **Metadata Generation**
+   - After full description is created, these prompts generate specific metadata:
+     - `get_competencies.txt`: Extracts and scores relevant competencies
+     - `get_taxonomy.txt`: Determines processing levels and knowledge domains
+     - `get_learning_goals.txt`: Identifies learning goals from knowledge graph
+
+### Learning Goals Generation
+
+Used for generating learning goals in the knowledge graph:
+- `graph_learning_goals_system.txt`: System prompt providing context and guidelines
+- `graph_learning_goals_user.txt`: User prompt specifying the task and requirements
+- These work together to ensure learning goals are properly integrated with the knowledge graph
+
+### Methodology Processing
+
+- `methodology_decompose.txt`: Used to break down teaching methodologies into individual activities
+- Helps create structured activity sequences from higher-level pedagogical approaches
 
 ### Editing Prompts
 

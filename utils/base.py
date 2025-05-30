@@ -669,9 +669,6 @@ def is_valid_graph_format(response_text):
         print("Response text:", repr(response_text))
         return False
     
-def get_full_description_prompt(name: str, brief_description: str) -> str:
-    return PromptTemplate.render('get_full_description', name=name, brief_description=brief_description)
-
 def get_learning_goals_prompt(name: str, description: str) -> str:
     return PromptTemplate.render('get_learning_goals', name=name, description=description)
 

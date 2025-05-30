@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime
 import json
 from utils.activity_generation import generate_activity_metadata
+from utils.methodology_decomposition import decompose_methodology
 from utils.personalization import prepare_personalized_activity_params
 from utils.graph_generation import (
     generate_graph_async,
@@ -95,7 +96,7 @@ async def generate_graph():
 @app.route('/activities_content')
 def activities_content():
     """Return just the activities section HTML"""
-    return render_template('components/activities/activities_list.html', activities=student_data['activities'], get_concept_name=get_concept_name)
+    return render_template('components/activities/main.html', student=student_data, get_concept_name=get_concept_name, graph_data=graph_data)
 
 @app.route('/generate_activity', methods=['POST'])
 async def generate_activity():
@@ -427,6 +428,97 @@ def save_graph_data():
         return jsonify({'success': True, 'message': 'Graph data saved successfully'})
     except Exception as e:
         print(f"Error saving graph data: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/save_student_data', methods=['POST'])
+def save_student_data():
+    """Save the current student data to student_data.py file"""
+    try:
+        # Convert the student data to a JSON string
+        student_data_str = json.dumps(student_data, indent=2)
+        
+        # Replace JSON booleans with Python booleans
+        student_data_str = student_data_str.replace('"mastered": false', '"mastered": False')
+        student_data_str = student_data_str.replace('"mastered": true', '"mastered": True')
+        
+        # Format as a Python variable assignment
+        student_data_str = "student_data = " + student_data_str
+        
+        # Write to the file
+        with open('student_data.py', 'w') as f:
+            f.write(student_data_str)
+            
+        return jsonify({'success': True, 'message': 'Student data saved successfully'})
+    except Exception as e:
+        print(f"Error saving student data: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/import_methodology', methods=['POST'])
+async def import_methodology():
+    """Import a methodology by decomposing it into activities and generating metadata"""
+    try:
+        data = request.json
+        methodology_description = data.get('methodology_description')
+        provider = data.get('provider', 'gemini')  # Default to gemini if not provided
+        model = data.get('model', 'gemini-2.0-flash')  # Default model
+
+        if not methodology_description:
+            return jsonify({'error': 'Missing methodology description'}), 400
+
+        try:
+            client = get_api_client(provider, model)
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 400
+
+        # First, decompose the methodology into activities
+        decomposed_activities = await decompose_methodology(
+            client=client,
+            provider=provider,
+            model=model,
+            methodology_description=methodology_description
+        )
+
+        # Generate activities for each decomposed activity
+        generated_activities = []
+        for idx, single_activity_data in enumerate(decomposed_activities):
+            activity_full_desc = single_activity_data.get("full_description")
+            activity_name = single_activity_data.get("name", single_activity_data.get("title", f"Activity {idx + 1}"))
+
+            if not activity_full_desc:
+                print(f"Skipping activity generation for {activity_name} due to missing full_description")
+                continue
+
+            # Prepare activity generation request
+            activity_request = {
+                'name': activity_name,
+                'provider': provider,
+                'model': model,
+                'mode': 'full',
+                'full_description': activity_full_desc
+            }
+
+            try:
+                # Create a request context and call generate_activity
+                with app.test_request_context(method='POST', json=activity_request):
+                    activity_result = await generate_activity()
+                    if isinstance(activity_result, tuple):
+                        response_data, status_code = activity_result
+                        if status_code == 200 and 'activity' in response_data:
+                            generated_activities.append(response_data['activity'])
+                    elif isinstance(activity_result, dict) and 'activity' in activity_result:
+                        generated_activities.append(activity_result['activity'])
+            except Exception as e:
+                print(f"Error generating activity {activity_name}: {str(e)}")
+                continue
+
+        return jsonify({
+            'success': True,
+            'message': f'Successfully generated {len(generated_activities)} activities',
+            'activities': generated_activities
+        })
+
+    except Exception as e:
+        print(f"Error importing methodology: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

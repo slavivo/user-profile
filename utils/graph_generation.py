@@ -93,6 +93,7 @@ async def generate_learning_goals_for_node(client, node_label: str, other_nodes:
             
             # Convert grade-based goals to objects with name, grade, and mastered fields
             formatted_goals = []
+            idx = 0
             for grade, goals in learning_goals.items():
                 if grade not in expected_grades:
                     print(f"Warning: Unexpected grade level {grade}")
@@ -106,10 +107,11 @@ async def generate_learning_goals_for_node(client, node_label: str, other_nodes:
                     if isinstance(goal, str):
                         formatted_goals.append({
                             "name": goal,
+                            "id": f"{node_label.lower().replace(' ', '_')}_{idx}",
                             "grade": grade,
                             "mastered": False
                         })
-            
+                    idx += 1
             if not formatted_goals:
                 raise ValueError("No valid learning goals found in response")
             

@@ -200,30 +200,12 @@ async def generate_activity_metadata(
                 graph_goals=graph_goals_text
             )
             
-            print(f"Learning Goals Prompt: {prompt}")
             messages = [{
                 "role": "user",
                 "content": prompt
             }]
             
             goals_data = await generate_with_retry(client, provider, model, messages)
-            
-            # Generate assessment criteria for additional goals if any
-            additional_goals = goals_data.get('additional_goals', [])
-            assessment_criteria = {}
-            if additional_goals:
-                assessment_prompt = PromptTemplate.render(
-                    "get_assessment_criterias",
-                    goals="\n".join([f"- {goal}" for goal in additional_goals])
-                )
-                
-                print(f"Assessment Criteria Prompt: {assessment_prompt}")
-                assessment_messages = [{
-                    "role": "user",
-                    "content": assessment_prompt
-                }]
-                
-                assessment_criteria = await generate_with_retry(client, provider, model, assessment_messages)
             
             # Combine selected graph goals and additional goals with their assessment criteria
             learning_goals = []
@@ -241,15 +223,6 @@ async def generate_activity_metadata(
                             'name': lg['name'],
                             'learning_goal_id': lg['id']
                         })
-            
-            metadata["learning_goals"] += [
-                {
-                    'id': str(time.time()),  # Convert timestamp to string
-                    'type': 'regular',
-                    'name': goal,
-                    'assessment_criterias': criteria
-                } for goal, criteria in zip(additional_goals, assessment_criteria)
-            ]
         else:
             metadata["learning_goals"] = learning_goals
         

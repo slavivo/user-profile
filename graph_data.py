@@ -7,92 +7,74 @@ graph_data = {
           "label": "Data Types",
           "learning_goals": [
             {
-              "name": "Identify different types of data (numbers, text, images, sounds) and their basic characteristics.",
+              "name": "Identify common data types such as integers, decimals, and strings in given examples.",
+              "id": "data_types_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Classify real-world objects based on the type of data they represent (e.g., a photo is image data, a name is text data).",
+              "name": "Classify data into appropriate types based on simple descriptions.",
+              "id": "data_types_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Describe how data is used to represent information in simple digital devices (e.g., a digital clock, a calculator).",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Distinguish between different data types in a given context (e.g., integers vs. decimals for age vs. height).",
+              "name": "Explain the purpose of different data types in storing information accurately.",
+              "id": "data_types_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Explain why different data types are needed to represent different kinds of information.",
+              "name": "Convert data between basic types, such as integers to strings, using simple examples.",
+              "id": "data_types_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Convert simple data from one form to another (e.g., representing a number as text).",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Compare and contrast different data types used in programming (e.g., integers, floating-point numbers, strings, booleans).",
+              "name": "Compare different data types and their suitability for various applications.",
+              "id": "data_types_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Select appropriate data types for storing specific information in a program.",
+              "name": "Apply appropriate data types in simple problem-solving scenarios, considering efficiency and accuracy.",
+              "id": "data_types_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how the choice of data type affects the way information is stored and processed.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Analyze the memory usage and performance implications of different data types.",
+              "name": "Analyze the impact of choosing specific data types on memory usage and performance.",
+              "id": "data_types_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Design data structures using appropriate data types to efficiently store and retrieve information.",
+              "name": "Develop small programs that demonstrate the use of composite data types like arrays and lists.",
+              "id": "data_types_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Implement data validation techniques to ensure that data is stored in the correct format.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Evaluate the trade-offs between different data types in terms of storage, precision, and performance.",
+              "name": "Evaluate the trade-offs between using different data types in complex data models.",
+              "id": "data_types_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Develop abstract data types (ADTs) with defined behaviors and interfaces.",
+              "name": "Design data structures that efficiently use a combination of different data types for specific applications.",
+              "id": "data_types_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Apply data types to create solutions for complex data processing problems.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design custom data types to represent specialized information domains.",
+              "name": "Integrate custom data types in program development to solve advanced computational problems.",
+              "id": "data_types_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Implement advanced data structures and algorithms that optimize data type usage for specific applications.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Analyze and compare the data type systems of different programming languages, considering their strengths and weaknesses.",
+              "name": "Critically assess and optimize the use of data types in large-scale data processing systems.",
+              "id": "data_types_11",
               "grade": "extra",
               "mastered": False
             }
@@ -105,62 +87,74 @@ graph_data = {
           "label": "Data Structures",
           "learning_goals": [
             {
-              "name": "Define what a data structure is and its basic purpose.",
+              "name": "Identify common data structures such as arrays and lists in simple examples",
+              "id": "data_structures_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Identify real-world examples of how data is organized (e.g., a list of names, a stack of books).",
+              "name": "Explain the purpose of using data structures to organize information",
+              "id": "data_structures_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Distinguish between different ways to organize data (e.g., lists vs. tables).",
+              "name": "Demonstrate the use of arrays to store and retrieve multiple data items",
+              "id": "data_structures_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Describe the advantages and disadvantages of organizing data in a specific way for simple tasks.",
+              "name": "Construct simple data structures to represent basic real-world scenarios",
+              "id": "data_structures_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the concept of an array and how it stores data.",
+              "name": "Compare the efficiency of different data structures for storing and accessing data",
+              "id": "data_structures_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Use arrays to store and retrieve data in a simple program.",
+              "name": "Apply lists and dictionaries to solve practical problems in programming tasks",
+              "id": "data_structures_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Compare and contrast different data structures, such as arrays and lists, in terms of their efficiency for specific tasks.",
+              "name": "Analyze the advantages and disadvantages of using various data structures for specific applications",
+              "id": "data_structures_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Implement a basic program that uses a data structure to solve a problem (e.g., storing a list of scores and finding the highest score).",
+              "name": "Implement stacks and queues to manage data flow in program simulations",
+              "id": "data_structures_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Analyze the time and space complexity of different data structures for common operations (e.g., searching, inserting, deleting).",
+              "name": "Design and implement complex data structures such as trees and graphs to model hierarchical relationships",
+              "id": "data_structures_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Design and implement data structures to efficiently solve complex problems (e.g., managing a queue of tasks, storing hierarchical data).",
+              "name": "Evaluate and optimize data structure choices for complex software applications",
+              "id": "data_structures_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Develop and implement advanced data structures, such as self-balancing trees or hash tables.",
+              "name": "Develop custom data structures to solve unique computational problems",
+              "id": "data_structures_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Evaluate and compare the performance of different data structure implementations for a given problem and justify the choice of implementation.",
+              "name": "Integrate multiple data structures in a single application to enhance performance and scalability",
+              "id": "data_structures_11",
               "grade": "extra",
               "mastered": False
             }
@@ -173,112 +167,74 @@ graph_data = {
           "label": "Information Encoding",
           "learning_goals": [
             {
-              "name": "Define information encoding as representing data in a specific format.",
+              "name": "Recognize different types of information that can be encoded, such as text, numbers, and basic images.",
+              "id": "information_encoding_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Identify different forms of encoding used in everyday life (e.g., Morse code, Braille).",
+              "name": "Explain why information needs to be encoded for use in computers.",
+              "id": "information_encoding_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Recognize that the same information can be encoded in different ways.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Explain why information encoding is necessary for computers to process data.",
+              "name": "Illustrate how text can be encoded using simple character sets like ASCII.",
+              "id": "information_encoding_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Describe how numbers, text, and images can be represented using binary code.",
+              "name": "Describe the basic concept of binary code as a method for encoding information.",
+              "id": "information_encoding_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Convert simple decimal numbers to binary and vice versa.",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Compare different encoding schemes for text (e.g., ASCII, Unicode) and explain their advantages and disadvantages.",
+              "name": "Compare and contrast different text encoding systems, such as ASCII and Unicode.",
+              "id": "information_encoding_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how image resolution and color depth affect the file size and quality of encoded images.",
+              "name": "Explain how images can be represented as data using pixels and color values.",
+              "id": "information_encoding_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Describe the basic principles of data compression and its role in efficient information encoding.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Identify the difference between lossy and lossless compression methods.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Analyze the trade-offs between different encoding methods in terms of storage space, transmission speed, and data integrity.",
+              "name": "Analyze how different encoding methods affect the size and quality of digital images and sounds.",
+              "id": "information_encoding_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Evaluate the efficiency of different compression algorithms for various types of data.",
+              "name": "Demonstrate how number systems like binary and hexadecimal are used to encode various types of data.",
+              "id": "information_encoding_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Design a simple encoding scheme for a specific type of information (e.g., representing letters using a custom binary code).",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Explain the concept of data integrity and how encoding schemes can help ensure it.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Investigate the mathematical principles underlying advanced encoding techniques (e.g., Huffman coding, run-length encoding).",
+              "name": "Evaluate the efficiency of different encoding schemes in terms of storage and transmission costs.",
+              "id": "information_encoding_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Compare and contrast different audio and video encoding formats (e.g., MP3, AAC, MP4, AVI) in terms of compression ratio, quality, and compatibility.",
+              "name": "Apply knowledge of encoding to transform data from one format to another, such as converting text to binary.",
+              "id": "information_encoding_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Analyze the impact of encoding choices on the performance of data transmission and storage systems.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Evaluate the security implications of different encoding methods, including their vulnerability to attacks.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Implement and evaluate custom encoding algorithms for specific data types, optimizing for compression ratio and processing speed.",
+              "name": "Design a custom encoding scheme for a specific type of data and justify its efficiency and effectiveness.",
+              "id": "information_encoding_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Research and present on the evolution of encoding standards for a particular type of media (e.g., video, audio, text).",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Design and implement a system for error detection and correction in encoded data.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Analyze the use of encoding techniques in cryptography and data security.",
+              "name": "Critically assess the impact of encoding choices on data security and privacy.",
+              "id": "information_encoding_11",
               "grade": "extra",
               "mastered": False
             }
@@ -291,122 +247,74 @@ graph_data = {
           "label": "Text Encoding and Encryption",
           "learning_goals": [
             {
-              "name": "Define text encoding as a way to represent letters and symbols as numbers.",
+              "name": "Define basic text encoding concepts such as ASCII and Unicode.",
+              "id": "text_encoding_and_encryption_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Identify common text encoding methods, such as representing letters with numbers.",
+              "name": "Recognize examples of encoded text in everyday technology.",
+              "id": "text_encoding_and_encryption_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the basic concept of encryption as a method to keep messages secret.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Recognize that encrypted messages require a key to be read.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Describe how different text encodings (e.g., ASCII, Unicode) represent characters.",
+              "name": "Explain the purpose of text encoding and its importance in digital communication.",
+              "id": "text_encoding_and_encryption_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the need for standardized text encodings when sharing digital information.",
+              "name": "Convert simple text messages between ASCII and Unicode values.",
+              "id": "text_encoding_and_encryption_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Use a simple substitution cipher to encrypt and decrypt short messages.",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Identify situations where encrypting information is important (e.g., passwords, personal details).",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Compare and contrast different text encoding schemes and their limitations.",
+              "name": "Illustrate how text encoding enables different languages and symbols to be represented in computers.",
+              "id": "text_encoding_and_encryption_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how character sets and code points relate to text encoding.",
+              "name": "Apply basic cipher techniques, like Caesar cipher, to encode and decode messages.",
+              "id": "text_encoding_and_encryption_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Apply a Caesar cipher with varying shift values to encrypt and decrypt messages.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Discuss the role of encryption in protecting data during transmission.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Analyze the advantages and disadvantages of different text encoding methods in terms of storage space and character support.",
+              "name": "Analyze the differences between various text encoding schemes, such as UTF-8 and UTF-16.",
+              "id": "text_encoding_and_encryption_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Demonstrate how to convert text between different encodings using appropriate tools or algorithms.",
+              "name": "Implement simple encryption techniques to secure text data.",
+              "id": "text_encoding_and_encryption_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Implement a basic symmetric encryption algorithm (e.g., XOR cipher) in code.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Evaluate the strength of simple encryption methods and their vulnerabilities to attack.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Evaluate the impact of different text encodings on data storage, transmission, and internationalization.",
+              "name": "Evaluate the effectiveness of different text encryption methods in protecting information.",
+              "id": "text_encoding_and_encryption_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Design and implement a program that automatically detects and converts between different text encodings.",
+              "name": "Create algorithms that use symmetric encryption to encrypt and decrypt text data.",
+              "id": "text_encoding_and_encryption_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the principles of modern encryption algorithms (e.g., AES, RSA) and their applications.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Analyze the security implications of weak encryption and the importance of strong cryptographic protocols.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Research and present on the history and evolution of text encoding standards.",
+              "name": "Design and implement a custom encoding scheme for a specific set of characters.",
+              "id": "text_encoding_and_encryption_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Develop a tool that visualizes the character sets of different text encodings.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Implement a public-key encryption system and demonstrate its use in secure communication.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Investigate the use of cryptography in blockchain technology and cryptocurrencies.",
+              "name": "Develop a program that integrates both text encoding and encryption to ensure data security.",
+              "id": "text_encoding_and_encryption_11",
               "grade": "extra",
               "mastered": False
             }
@@ -419,92 +327,74 @@ graph_data = {
           "label": "Image and Sound Encoding",
           "learning_goals": [
             {
-              "name": "Identify examples of digital images and sound and explain they are represented as data.",
+              "name": "Identify basic components of images such as pixels and colors.",
+              "id": "image_and_sound_encoding_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Describe how images are broken down into pixels and sounds into samples.",
+              "name": "Recognize different types of sounds and how they can be represented digitally.",
+              "id": "image_and_sound_encoding_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Recognize that different image and sound formats exist (e.g., JPG, MP3).",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Explain the concept of resolution in images and sample rate in sound and how they affect quality.",
+              "name": "Explain how images are composed of pixels and how each pixel represents color using numbers.",
+              "id": "image_and_sound_encoding_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Compare and contrast different image resolutions (e.g., low, medium, high).",
+              "name": "Describe how sound is represented through digital signals and basic waveforms.",
+              "id": "image_and_sound_encoding_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Compare and contrast different audio sample rates (e.g., low, medium, high).",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Describe how color is represented in digital images using RGB values.",
+              "name": "Demonstrate how to convert simple images into digital formats using pixel grids and color codes.",
+              "id": "image_and_sound_encoding_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how sound amplitude is represented numerically in digital audio.",
+              "name": "Create simple sound patterns using basic digital encoding principles.",
+              "id": "image_and_sound_encoding_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the relationship between file size and quality for both images and sounds.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Analyze the impact of compression on image and sound quality.",
+              "name": "Analyze how image resolution affects the quality and size of digital images.",
+              "id": "image_and_sound_encoding_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Compare lossless and lossy compression techniques for images and audio.",
+              "name": "Interpret sound wave properties such as frequency and amplitude in digital sound files.",
+              "id": "image_and_sound_encoding_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how different encoding methods (e.g., bit depth) affect the range of colors or sounds that can be represented.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Evaluate the efficiency of different image and sound encoding formats for specific applications.",
+              "name": "Compare different image encoding formats (e.g., JPEG, PNG) and their impact on file size and quality.",
+              "id": "image_and_sound_encoding_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Investigate the mathematical principles behind common compression algorithms (e.g., JPEG, MP3).",
+              "name": "Evaluate different audio encoding formats (e.g., MP3, WAV) for quality and compression efficiency.",
+              "id": "image_and_sound_encoding_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Apply knowledge of image and sound encoding to optimize media files for storage and transmission.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design a custom image or sound encoding scheme and analyze its performance characteristics.",
+              "name": "Design a simple algorithm to compress an image without significant loss of quality.",
+              "id": "image_and_sound_encoding_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Implement a basic image or audio compression algorithm from scratch.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Research and present on emerging trends in image and sound encoding technologies (e.g., advanced codecs, AI-powered compression).",
+              "name": "Develop a method to encode and decode sound using binary representation.",
+              "id": "image_and_sound_encoding_11",
               "grade": "extra",
               "mastered": False
             }
@@ -517,122 +407,74 @@ graph_data = {
           "label": "Number Systems and Encoding",
           "learning_goals": [
             {
-              "name": "Recognize that numbers can be represented in different ways (e.g., tally marks, Roman numerals, base-10).",
+              "name": "Identify different number systems such as binary, decimal, and hexadecimal.",
+              "id": "number_systems_and_encoding_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Identify the digits 0-9 as symbols used in the base-10 number system.",
+              "name": "Recognize the use of base-10 number system in everyday counting.",
+              "id": "number_systems_and_encoding_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Explain that computers use a different number system (binary) and that it only uses two digits.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Convert small whole numbers (less than 10) between base-10 and a visual binary representation (e.g., using blocks or dots).",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Describe the concept of a base and its role in representing numbers.",
+              "name": "Convert numbers between binary and decimal systems.",
+              "id": "number_systems_and_encoding_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Compare and contrast the base-10 (decimal) and base-2 (binary) number systems.",
+              "name": "Explain the significance of the binary number system in computer operations.",
+              "id": "number_systems_and_encoding_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Convert small whole numbers (less than 32) between base-10 and base-2 (binary) using place value.",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Represent simple data (e.g., on/off, yes/no) using binary digits (bits).",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Explain the concept of encoding and its importance in representing information in computers.",
+              "name": "Perform addition and subtraction with binary numbers.",
+              "id": "number_systems_and_encoding_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Convert numbers between base-10, base-2 (binary), and base-16 (hexadecimal).",
+              "name": "Use hexadecimal numbers to represent colors and memory addresses.",
+              "id": "number_systems_and_encoding_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Describe how numbers, text, images and sound must be encoded to be processed by computers.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Use binary encoding to represent simple characters (e.g., using ASCII table excerpts).",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Analyze the relationship between the number of bits and the number of possible values that can be represented.",
+              "name": "Analyze the efficiency of different encoding systems in representing data.",
+              "id": "number_systems_and_encoding_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the purpose of character encoding standards like ASCII and Unicode.",
+              "name": "Convert numbers between binary, decimal, and hexadecimal systems.",
+              "id": "number_systems_and_encoding_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Convert between different units of data storage (bits, bytes, kilobytes, megabytes, gigabytes).",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Apply different number systems to represent color (e.g., RGB using hexadecimal).",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Evaluate the trade-offs between different encoding schemes in terms of storage space and complexity.",
+              "name": "Explain the role of number systems in data encoding and storage.",
+              "id": "number_systems_and_encoding_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Design a simple encoding scheme for a specific type of data (e.g., representing days of the week using binary).",
+              "name": "Evaluate different encoding methods for text, such as ASCII and Unicode, in data representation.",
+              "id": "number_systems_and_encoding_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how data compression techniques relate to efficient encoding.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Describe how number systems and encoding are used in data transmission to ensure accurate data transfer.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Research and present on the history and evolution of number systems and data encoding.",
+              "name": "Design and implement a simple encoding scheme for custom data representation.",
+              "id": "number_systems_and_encoding_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Implement a program to convert between arbitrary number systems.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Analyze the security implications of different encoding methods.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Compare and contrast different floating-point number representations and their limitations.",
+              "name": "Analyze the impact of different number systems on data compression techniques.",
+              "id": "number_systems_and_encoding_11",
               "grade": "extra",
               "mastered": False
             }
@@ -645,92 +487,74 @@ graph_data = {
           "label": "Data Collection and Recording",
           "learning_goals": [
             {
-              "name": "Identify different methods of data collection (e.g., surveys, observations).",
+              "name": "Identify different methods of collecting data, such as surveys, observations, and experiments.",
+              "id": "data_collection_and_recording_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Record simple data using tally marks, charts, and basic tables.",
+              "name": "List common tools and devices used for data collection, like cameras, thermometers, and tally charts.",
+              "id": "data_collection_and_recording_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Understand the importance of accurate data recording.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Collect data using structured methods (e.g., questionnaires with defined answer choices).",
+              "name": "Explain the importance of accurately recording data for different purposes.",
+              "id": "data_collection_and_recording_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Organize collected data into tables and simple graphs (e.g., bar graphs, pie charts).",
+              "name": "Collect and record data using simple methods such as surveys or observations.",
+              "id": "data_collection_and_recording_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Explain why consistent units of measurement are important when collecting data.",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design and implement data collection plans for specific questions or problems.",
+              "name": "Compare and contrast different data recording techniques and their effectiveness.",
+              "id": "data_collection_and_recording_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Use digital tools (e.g., spreadsheets) to record and organize data efficiently.",
+              "name": "Organize collected data into basic tables and charts for easy interpretation.",
+              "id": "data_collection_and_recording_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Identify potential sources of bias in data collection methods.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Develop data collection strategies that minimize errors and ensure data quality.",
+              "name": "Design a simple data collection plan, including the selection of appropriate tools and methods.",
+              "id": "data_collection_and_recording_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Apply appropriate data collection techniques for different types of data (e.g., quantitative, qualitative).",
+              "name": "Analyze recorded data to identify trends or patterns relevant to a given hypothesis.",
+              "id": "data_collection_and_recording_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Evaluate the effectiveness of different data collection methods in addressing a research question.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design and implement complex data collection protocols for real-world scenarios.",
+              "name": "Develop comprehensive data collection and recording strategies for real-world research scenarios.",
+              "id": "data_collection_and_recording_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Utilize data logging and monitoring tools to automatically record data from sensors or other sources.",
+              "name": "Evaluate the reliability and validity of recorded data in a given study, considering potential biases or errors.",
+              "id": "data_collection_and_recording_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Assess the ethical considerations involved in data collection, including privacy and security.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Develop automated data collection systems for large-scale data analysis.",
+              "name": "Integrate advanced technologies, such as sensors and IoT devices, into data collection strategies for enhanced accuracy.",
+              "id": "data_collection_and_recording_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Implement advanced data validation and cleaning techniques to ensure data integrity during collection and recording.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Design data collection methodologies that adhere to FAIR data principles (Findable, Accessible, Interoperable, Reusable).",
+              "name": "Propose innovative solutions to improve data recording processes in specific fields, such as environmental science or market research.",
+              "id": "data_collection_and_recording_11",
               "grade": "extra",
               "mastered": False
             }
@@ -743,92 +567,74 @@ graph_data = {
           "label": "Data Visualization",
           "learning_goals": [
             {
-              "name": "Identify different types of charts and graphs (e.g., bar graphs, pie charts, line graphs).",
+              "name": "Identify basic types of data visualizations such as bar graphs, line graphs, and pie charts.",
+              "id": "data_visualization_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Describe what information is conveyed by a simple chart or graph.",
+              "name": "Recognize common elements of data visualizations like titles, labels, and legends.",
+              "id": "data_visualization_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Create a simple bar graph or pie chart to represent a small data set (e.g., favorite colors, types of pets).",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Interpret data presented in various chart formats (e.g., scatter plots, histograms).",
+              "name": "Interpret simple data visualizations to extract key information.",
+              "id": "data_visualization_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how different chart types are suitable for representing different types of data.",
+              "name": "Create basic data visualizations using simple datasets and predefined tools.",
+              "id": "data_visualization_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Construct charts and graphs using digital tools to represent data sets with multiple categories.",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Analyze the effectiveness of different data visualizations in communicating specific information.",
+              "name": "Compare different types of data visualizations to determine the most effective format for specific data sets.",
+              "id": "data_visualization_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Identify potential biases or misrepresentations in data visualizations.",
+              "name": "Construct data visualizations using software tools to represent collected data accurately.",
+              "id": "data_visualization_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Create interactive dashboards using software tools to visualize data and allow for user exploration.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design data visualizations to highlight trends and patterns in complex data sets.",
+              "name": "Analyze the effectiveness of various data visualizations in communicating specific trends or patterns.",
+              "id": "data_visualization_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Evaluate the ethical considerations of data visualization, including potential for manipulation or misinterpretation.",
+              "name": "Design and create data visualizations that effectively communicate complex data sets and findings.",
+              "id": "data_visualization_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Develop data visualizations using programming languages to automate the creation of charts and graphs from data sources.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Apply advanced data visualization techniques (e.g., heatmaps, network graphs) to uncover insights from large datasets.",
+              "name": "Evaluate data visualizations for accuracy and clarity, providing suggestions for improvement.",
+              "id": "data_visualization_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Critically assess the impact of data visualization design choices on audience understanding and decision-making.",
+              "name": "Develop interactive data visualizations that allow users to explore data dynamically.",
+              "id": "data_visualization_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Develop interactive and dynamic data visualizations that integrate with databases and real-time data streams.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design and implement novel data visualization techniques to address specific data analysis challenges.",
+              "name": "Integrate multiple data sets into a cohesive visualization to reveal insights and correlations.",
+              "id": "data_visualization_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Conduct user testing to evaluate the effectiveness and usability of data visualizations.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Develop data visualization tools and libraries that can be used by others to create effective visualizations.",
+              "name": "Critically assess the ethical implications of data visualization choices and their potential impact on interpretation.",
+              "id": "data_visualization_11",
               "grade": "extra",
               "mastered": False
             }
@@ -841,102 +647,74 @@ graph_data = {
           "label": "Databases",
           "learning_goals": [
             {
-              "name": "Define what a database is and its purpose.",
+              "name": "Identify basic components of a database, such as tables and records.",
+              "id": "databases_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Identify examples of databases used in everyday life (e.g., phone contacts, library catalog).",
+              "name": "Define common database terms such as 'field' and 'record'.",
+              "id": "databases_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Differentiate between a physical record (e.g., a book) and a digital record in a database.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Describe the basic components of a simple database table (e.g., fields, records).",
+              "name": "Explain the purpose of a database and give examples of its use in everyday life.",
+              "id": "databases_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how data is organized within a database (rows and columns).",
+              "name": "Describe the difference between structured and unstructured data in databases.",
+              "id": "databases_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Use a simple interface to search for specific information in a pre-existing database.",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design a simple database table to store information about a specific topic (e.g., favorite books, sports teams).",
+              "name": "Create a simple database table and insert data into it using a database management tool.",
+              "id": "databases_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Create a simple database using a user-friendly tool or software.",
+              "name": "Explain the importance of data integrity and how databases maintain it.",
+              "id": "databases_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the importance of data integrity and accuracy in a database.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Distinguish between different types of databases (e.g., flat-file, relational).",
+              "name": "Design a basic relational database schema with multiple tables and relationships.",
+              "id": "databases_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Formulate simple queries to retrieve specific data from a database.",
+              "name": "Demonstrate how to use basic SQL commands to query data from a database.",
+              "id": "databases_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Describe the concept of a primary key and its role in a database table.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Model real-world scenarios using relational database concepts.",
+              "name": "Develop a relational database that supports complex queries and joins between tables.",
+              "id": "databases_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Design and implement databases with multiple tables and relationships.",
+              "name": "Analyze the efficiency of database queries and suggest optimizations.",
+              "id": "databases_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Write SQL queries to perform complex data retrieval and manipulation tasks.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Explain the importance of database security and access control.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Analyze and optimize SQL queries for performance.",
+              "name": "Design and implement a normalized database schema to minimize redundancy.",
+              "id": "databases_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Design and implement a database-driven application with a user interface.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Compare and contrast different database management systems (DBMS) and their features.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Implement data validation techniques to ensure data quality and consistency.",
+              "name": "Evaluate the trade-offs between relational databases and NoSQL databases for specific applications.",
+              "id": "databases_11",
               "grade": "extra",
               "mastered": False
             }
@@ -949,67 +727,74 @@ graph_data = {
           "label": "Data Modeling",
           "learning_goals": [
             {
-              "name": "Recognize that data can be organized in different ways to represent information.",
+              "name": "Identify key components of a data model such as entities and attributes.",
+              "id": "data_modeling_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Distinguish between real-world objects/scenarios and their simplified representations (models).",
+              "name": "Explain the purpose of data modeling in organizing information.",
+              "id": "data_modeling_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Describe how a simple table can be used to model relationships between data elements.",
+              "name": "Classify different types of data models such as hierarchical, network, and relational.",
+              "id": "data_modeling_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Create a basic diagram to represent a real-world scenario, using labeled shapes to represent entities and lines to represent relationships.",
+              "name": "Describe how data models represent real-world objects and their relationships.",
+              "id": "data_modeling_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the purpose of data modeling in organizing and structuring information.",
+              "name": "Create simple data models to represent everyday scenarios, using appropriate entities and relationships.",
+              "id": "data_modeling_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Compare and contrast different data models (e.g., hierarchical, relational) in terms of their structure and suitability for different scenarios.",
+              "name": "Analyze existing data models to identify entities, attributes, and relationships.",
+              "id": "data_modeling_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Design a relational data model for a simple application, identifying entities, attributes, and relationships.",
+              "name": "Design a relational data model for a given scenario, including tables, fields, and primary keys.",
+              "id": "data_modeling_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Translate a real-world problem into a conceptual data model, using appropriate notation (e.g., ER diagrams).",
+              "name": "Evaluate different data modeling techniques for effectiveness in representing complex data.",
+              "id": "data_modeling_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Evaluate different data modeling techniques based on factors such as scalability, flexibility, and performance.",
+              "name": "Develop a comprehensive data model using advanced concepts such as normalization to eliminate redundancy.",
+              "id": "data_modeling_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Develop a comprehensive data model for a complex system, considering data integrity constraints and normalization principles.",
+              "name": "Integrate graph-based modeling techniques to represent complex relationships between data entities.",
+              "id": "data_modeling_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Apply advanced data modeling techniques (e.g., dimensional modeling, NoSQL data models) to address specific requirements of large-scale data analytics.",
+              "name": "Apply data modeling principles to design a scalable database system for a real-world application.",
+              "id": "data_modeling_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Design and implement data models that support efficient data integration and interoperability across disparate systems.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Critically analyze the trade-offs between different data modeling approaches in the context of a specific business problem, justifying the chosen approach.",
+              "name": "Critically assess data models for potential improvements in efficiency and accuracy of data representation.",
+              "id": "data_modeling_11",
               "grade": "extra",
               "mastered": False
             }
@@ -1022,92 +807,74 @@ graph_data = {
           "label": "Graph-Based Modeling",
           "learning_goals": [
             {
-              "name": "Define what a graph is using real-world examples (e.g., friends in a social network, connections between cities).",
+              "name": "Recognize graphs as a way to represent relationships between different pieces of data.",
+              "id": "graph-based_modeling_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Identify the nodes and edges in a simple graph diagram.",
+              "name": "Identify nodes and edges in simple graph examples.",
+              "id": "graph-based_modeling_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Describe how graphs can be used to represent relationships between objects.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Represent simple relationships using graph diagrams.",
+              "name": "Explain the concept of a graph and how it can model simple relationships between data.",
+              "id": "graph-based_modeling_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the difference between directed and undirected graphs with examples.",
+              "name": "Classify different types of graphs such as directed and undirected graphs.",
+              "id": "graph-based_modeling_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Use graph diagrams to answer basic questions about relationships (e.g., 'Who is connected to X?').",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Construct a graph model from a given dataset (e.g., representing family relationships or product recommendations).",
+              "name": "Interpret data from simple graph models to understand relationships and connections.",
+              "id": "graph-based_modeling_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the concepts of paths and connectivity in graphs.",
+              "name": "Construct basic graph models to represent simple real-life scenarios, such as social networks or transportation maps.",
+              "id": "graph-based_modeling_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Use graph-based models to identify patterns and relationships in simple datasets.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Compare and contrast different types of graphs (e.g., social networks, transportation networks).",
+              "name": "Analyze graph models to identify patterns and connections within data sets.",
+              "id": "graph-based_modeling_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Apply graph traversal algorithms (e.g., breadth-first search) to solve simple problems.",
+              "name": "Develop graph-based models to solve problems involving network or relationship data.",
+              "id": "graph-based_modeling_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Evaluate the effectiveness of graph-based models for representing different types of data.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design and implement graph-based models for complex datasets (e.g., representing dependencies in a project or relationships between biological entities).",
+              "name": "Evaluate the efficiency of different graph algorithms, such as searching and traversing within graph models.",
+              "id": "graph-based_modeling_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Analyze the properties of different graph structures and their impact on modeling effectiveness.",
+              "name": "Apply graph-based modeling to complex real-world problems, such as optimizing network connections or analyzing social media interactions.",
+              "id": "graph-based_modeling_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Apply graph algorithms to solve real-world problems (e.g., finding the shortest path, identifying influential nodes).",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Develop and implement custom graph algorithms for specific data modeling tasks.",
+              "name": "Design and implement algorithms for advanced graph problems, such as shortest path or network flow.",
+              "id": "graph-based_modeling_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Critically evaluate the limitations of graph-based models and propose alternative approaches.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Research and present on advanced topics in graph theory and their applications to data modeling (e.g., community detection, network analysis).",
+              "name": "Critically assess the applicability of graph-based modeling in various fields, such as biology, computer science, and social sciences.",
+              "id": "graph-based_modeling_11",
               "grade": "extra",
               "mastered": False
             }
@@ -1120,127 +887,74 @@ graph_data = {
           "label": "Modeling and Simulation",
           "learning_goals": [
             {
-              "name": "Define what a model is and provide examples of models used in everyday life (e.g., a toy car, a map).",
+              "name": "Identify key components of a simple model or simulation.",
+              "id": "modeling_and_simulation_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Distinguish between a real object or system and a simplified representation (model) of it.",
+              "name": "Describe how models can represent real-world phenomena.",
+              "id": "modeling_and_simulation_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the purpose of using models to represent real-world things.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Identify a simulation as a way to use a model to test or predict outcomes.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Describe how different models can represent the same thing with varying levels of detail.",
+              "name": "Construct basic data models to represent simple real-life scenarios.",
+              "id": "modeling_and_simulation_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how changing a parameter in a simple model can affect the outcome of a simulation.",
+              "name": "Simulate simple processes using digital tools and describe outcomes.",
+              "id": "modeling_and_simulation_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Create a simple model using physical objects or a basic software tool, and use it to simulate a real-world scenario (e.g., traffic flow, plant growth).",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Identify limitations of a simplified model in representing more complex real-world systems.",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Explain the difference between a physical model and a computational model.",
+              "name": "Analyze the effectiveness of different models in representing the same data.",
+              "id": "modeling_and_simulation_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Describe how data is used to build and validate models.",
+              "name": "Develop simple simulations to explore data patterns and predict outcomes.",
+              "id": "modeling_and_simulation_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Use a computational model to simulate a system and analyze the results.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Identify potential sources of error in a model and how they can affect the accuracy of a simulation.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design a computational model to represent a real-world system with multiple interacting components.",
+              "name": "Design and implement data models to represent complex real-world scenarios.",
+              "id": "modeling_and_simulation_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Use data to calibrate and validate a computational model.",
+              "name": "Create simulations that incorporate multiple variables to predict possible outcomes.",
+              "id": "modeling_and_simulation_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Interpret the results of a simulation and draw conclusions about the behavior of the system being modeled.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Evaluate the strengths and weaknesses of different modeling approaches for a given problem.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Develop a sophisticated computational model using appropriate software tools and programming techniques.",
+              "name": "Evaluate the accuracy and limitations of models in representing complex systems.",
+              "id": "modeling_and_simulation_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Apply statistical methods to analyze the results of a simulation and assess the uncertainty in the predictions.",
+              "name": "Develop and refine simulations to solve real-world problems and test hypotheses.",
+              "id": "modeling_and_simulation_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Communicate the results of a modeling and simulation project effectively to a non-technical audience.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Evaluate the ethical implications of using models and simulations to make decisions in real-world contexts.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Compare and contrast different types of models (e.g., agent-based, system dynamics, discrete event) and their suitability for different problems.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Develop a model that integrates data from multiple sources and uses advanced statistical techniques to improve accuracy.",
+              "name": "Integrate advanced data sets into models to enhance simulation accuracy.",
+              "id": "modeling_and_simulation_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Design and implement a simulation that allows for real-time interaction and visualization of results.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Conduct a sensitivity analysis to identify the key parameters that drive the behavior of a model.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Apply machine learning techniques to automatically calibrate and improve the accuracy of a computational model.",
+              "name": "Design simulations that incorporate user input to explore various scenarios dynamically.",
+              "id": "modeling_and_simulation_11",
               "grade": "extra",
               "mastered": False
             }
@@ -1253,62 +967,74 @@ graph_data = {
           "label": "Regular Expressions",
           "learning_goals": [
             {
-              "name": "Recognize patterns in text strings (e.g., identifying all words starting with a specific letter).",
+              "name": "Recognize patterns in text strings that can be used to create simple regular expressions",
+              "id": "regular_expressions_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Differentiate between literal characters and simple wildcard symbols (e.g., understanding that '?' can stand for any single character in a specific context).",
+              "name": "Identify common symbols used in regular expressions for matching characters",
+              "id": "regular_expressions_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Use simple regular expressions to find specific words or phrases in a given text.",
+              "name": "Construct simple regular expressions to match specific words or characters in a text",
+              "id": "regular_expressions_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Apply basic regular expression syntax to filter data (e.g., extracting phone numbers from a list).",
+              "name": "Use basic regular expressions to find and replace text patterns in simple examples",
+              "id": "regular_expressions_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Construct regular expressions to match specific patterns in text, including character classes (e.g., digits, letters).",
+              "name": "Apply regular expressions to validate simple input formats, such as email addresses or phone numbers",
+              "id": "regular_expressions_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how quantifiers (e.g., *, +, ?) affect the matching behavior of regular expressions.",
+              "name": "Analyze text to identify patterns that can be expressed using regular expressions",
+              "id": "regular_expressions_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Develop regular expressions for data validation (e.g., verifying email address format).",
+              "name": "Design regular expressions to extract specific data from structured text such as CSV files",
+              "id": "regular_expressions_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Utilize regular expressions to extract specific data elements from structured text formats (e.g., parsing log files).",
+              "name": "Create and test regular expressions to filter and clean data in datasets",
+              "id": "regular_expressions_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Design and implement complex regular expressions involving grouping and backreferences.",
+              "name": "Develop complex regular expressions to solve real-world data processing tasks",
+              "id": "regular_expressions_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Evaluate the efficiency of different regular expression patterns for the same task, considering factors like execution time and memory usage.",
+              "name": "Integrate regular expressions into data processing scripts to automate pattern recognition and text transformation",
+              "id": "regular_expressions_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Apply regular expressions in conjunction with programming languages for advanced text processing and data manipulation tasks.",
+              "name": "Optimize regular expressions for performance and readability in large datasets",
+              "id": "regular_expressions_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Develop regular expressions for handling complex data formats, such as JSON or XML, to extract and validate specific information.",
+              "name": "Create nested and recursive regular expressions for advanced text processing challenges",
+              "id": "regular_expressions_11",
               "grade": "extra",
               "mastered": False
             }
@@ -1321,97 +1047,110 @@ graph_data = {
           "label": "Data Transmission and Compression",
           "learning_goals": [
             {
-              "name": "Define data transmission as the movement of data from one place to another.",
+              "name": "Identify different methods of data transmission and provide examples.",
+              "id": "data_transmission_and_compression_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Recognize the need for data compression by observing file sizes and download times.",
+              "name": "Explain what data compression means and why it is important.",
+              "id": "data_transmission_and_compression_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Identify examples of common data transmission methods, such as wired and wireless connections.",
+              "name": "Recognize basic compressed file formats and their uses.",
+              "id": "data_transmission_and_compression_2",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the basic concept of data compression as reducing the size of data.",
+              "name": "Describe the differences between lossy and lossless compression.",
+              "id": "data_transmission_and_compression_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Describe different methods of data transmission, including wired and wireless.",
+              "name": "Demonstrate understanding of simple data transmission concepts such as bandwidth and latency.",
+              "id": "data_transmission_and_compression_4",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Compare and contrast the size of compressed and uncompressed files (e.g., images, audio).",
+              "name": "Identify the purpose of data compression in reducing file sizes and transmission times.",
+              "id": "data_transmission_and_compression_5",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Distinguish between lossy and lossless data compression techniques.",
+              "name": "Compare different data compression techniques and their appropriate use cases.",
+              "id": "data_transmission_and_compression_6",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how bandwidth affects data transmission speed.",
+              "name": "Explain how data is transmitted over a network using packets.",
+              "id": "data_transmission_and_compression_7",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Calculate the compression ratio of a file after compression.",
+              "name": "Analyze the impact of compression on data quality and file size.",
+              "id": "data_transmission_and_compression_8",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Analyze the impact of different compression algorithms on image and audio quality.",
+              "name": "Evaluate the efficiency of different compression algorithms for various data types.",
+              "id": "data_transmission_and_compression_9",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Evaluate the efficiency of different data transmission protocols (e.g., TCP/IP).",
+              "name": "Illustrate the process of encoding and decoding data for transmission.",
+              "id": "data_transmission_and_compression_10",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Design a simple data transmission system considering bandwidth limitations and data size.",
+              "name": "Explain the role of data transmission protocols in ensuring reliable communication.",
+              "id": "data_transmission_and_compression_11",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Compare and contrast different data compression algorithms based on their efficiency and suitability for different data types.",
+              "name": "Design a basic experiment to measure the effects of compression on data transmission speed and quality.",
+              "id": "data_transmission_and_compression_12",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Explain the role of error detection and correction in reliable data transmission.",
+              "name": "Integrate knowledge of data compression with data encryption to secure transmitted data.",
+              "id": "data_transmission_and_compression_13",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Analyze the security implications of data transmission and compression techniques, including encryption.",
+              "name": "Critically evaluate the trade-offs between compression efficiency and computational cost.",
+              "id": "data_transmission_and_compression_14",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Implement a basic data compression or decompression algorithm using a programming language.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Research and present on advanced data compression techniques, such as wavelet compression or fractal compression.",
+              "name": "Propose innovative solutions for optimizing data compression in emerging technologies.",
+              "id": "data_transmission_and_compression_15",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Design and implement a secure data transmission protocol using encryption and error correction.",
+              "name": "Develop a project that simulates data transmission over a network, incorporating compression techniques.",
+              "id": "data_transmission_and_compression_16",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Evaluate the performance of different data compression algorithms on large datasets using appropriate metrics.",
+              "name": "Research and present on future trends in data transmission and compression technologies.",
+              "id": "data_transmission_and_compression_17",
               "grade": "extra",
               "mastered": False
             }
@@ -1424,152 +1163,74 @@ graph_data = {
           "label": "Information Processing",
           "learning_goals": [
             {
-              "name": "Define information as data with context and meaning.",
+              "name": "Identify different types of data that can be processed by computers.",
+              "id": "information_processing_0",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Describe the basic steps of how data is transformed into information (e.g., collection, organization, analysis).",
+              "name": "Describe the steps involved in processing information from input to output.",
+              "id": "information_processing_1",
               "grade": "5th_grade",
               "mastered": False
             },
             {
-              "name": "Identify examples of information processing in everyday life (e.g., reading a book, following a recipe).",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Explain how different forms of data (text, images, sounds) can represent the same information.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Recognize that information can be useful or not useful depending on the context.",
-              "grade": "5th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Explain the difference between raw data and processed information.",
+              "name": "Explain how data is transformed into information through processing.",
+              "id": "information_processing_2",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Describe how organizing data makes it easier to access and understand.",
+              "name": "Classify examples of processed information based on data types.",
+              "id": "information_processing_3",
               "grade": "6th_grade",
               "mastered": False
             },
             {
-              "name": "Illustrate how simple computations (e.g., averages, totals) transform data into information.",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Identify potential biases that can affect the interpretation of information.",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Describe how information can be used to make simple decisions.",
-              "grade": "6th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Analyze how different methods of data collection influence the quality and type of information obtained.",
+              "name": "Analyze simple data processing tasks and describe how data flows through a system.",
+              "id": "information_processing_4",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how algorithms are used to process data and generate information.",
+              "name": "Develop basic flowcharts to represent information processing steps.",
+              "id": "information_processing_5",
               "grade": "7th_grade",
               "mastered": False
             },
             {
-              "name": "Compare and contrast different ways to present information (e.g., charts, graphs, tables) and their effectiveness.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Evaluate the reliability and validity of information sources.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Apply information processing techniques to solve simple problems.",
-              "grade": "7th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design a system for collecting, processing, and presenting information for a specific purpose.",
+              "name": "Design small-scale projects that demonstrate the flow of data through processing systems.",
+              "id": "information_processing_6",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Explain how data models are used to represent information and relationships between data elements.",
+              "name": "Evaluate the effectiveness of different data processing methods for specific tasks.",
+              "id": "information_processing_7",
               "grade": "8th_grade",
               "mastered": False
             },
             {
-              "name": "Analyze the impact of data quality on the accuracy and usefulness of processed information.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Critique the effectiveness of different information visualization techniques.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Apply critical thinking skills to evaluate the credibility and potential biases in information presented.",
-              "grade": "8th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Design and implement a data processing pipeline to extract meaningful information from a complex dataset.",
+              "name": "Integrate multiple data processing techniques to solve complex problems.",
+              "id": "information_processing_8",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Evaluate the ethical implications of information processing, including privacy and security concerns.",
+              "name": "Critically assess the impact of data processing decisions on the quality of information produced.",
+              "id": "information_processing_9",
               "grade": "9th_grade",
               "mastered": False
             },
             {
-              "name": "Compare and contrast different information retrieval techniques and their effectiveness in different contexts.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Analyze how information overload can affect decision-making and develop strategies for managing it.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Apply data analysis techniques to identify trends and patterns in information.",
-              "grade": "9th_grade",
-              "mastered": False
-            },
-            {
-              "name": "Develop an intelligent system that automatically extracts and summarizes key information from unstructured data (e.g., text documents, social media posts).",
+              "name": "Propose innovative solutions to enhance data processing efficiency in a given scenario.",
+              "id": "information_processing_10",
               "grade": "extra",
               "mastered": False
             },
             {
-              "name": "Design and implement a secure information processing system that protects sensitive data from unauthorized access and manipulation.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Research and evaluate the impact of emerging technologies (e.g., AI, blockchain) on information processing.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Develop a framework for assessing the trustworthiness and reliability of information in the age of misinformation.",
-              "grade": "extra",
-              "mastered": False
-            },
-            {
-              "name": "Create a predictive model based on historical information to forecast future trends and outcomes.",
+              "name": "Analyze the ethical implications of data processing choices in real-world applications.",
+              "id": "information_processing_11",
               "grade": "extra",
               "mastered": False
             }

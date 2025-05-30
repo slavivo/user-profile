@@ -1,6 +1,7 @@
 You are given a methodology composing of different activities. Your task is to extract the various activities. For each activity you will be required to retype the full description of it as well as all the question that were asked in it.
-1. A detailed `full_description` of the activity.
-2. A list of `questions_asked` during this activity to engage learners and assess understanding.
+1. Name of the activity
+2. A detailed `full_description` of the activity.
+3. A list of `questions_asked` during this activity to engage learners and assess understanding.
 
 Methodology Description:
 ${methodology_description}
@@ -10,17 +11,19 @@ Please provide the output in a valid JSON format, as a list of objects. Each obj
 Example JSON output:
 [
   {
-    "full_description": "Activity 1: Introduction to the core concepts. This involves a lecture and a group discussion.",
+    "name": "...",
+    "full_description": "...",
     "questions_asked": [
-      "What are the key takeaways from the introduction?",
-      "Can you explain concept X in your own words?"
+      "...",
+      "..."
     ]
   },
   {
-    "full_description": "Activity 2: Hands-on practice. Learners will work on a small project applying the concepts.",
+    "name": "...",
+    "full_description": "...",
     "questions_asked": [
-      "What challenges did you face during the project?",
-      "How can you apply what you learned to a real-world scenario?"
+      "...",
+      "..."
     ]
   }
 ]

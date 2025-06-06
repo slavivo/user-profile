@@ -34,7 +34,12 @@
             <div class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
                 {% set mastered_goals = activity.student_performance.learning_goals.values()|selectattr('mastered', 'equalto', true)|list|length %}
                 {% set total_goals = activity.student_performance.learning_goals|length %}
-                {% set overall_score = (mastered_goals / total_goals * 10)|round(1) %}
+                {% if total_goals > 0 %}
+                  {% set overall_score = (mastered_goals / total_goals * 10) | round(1) %}
+                {% else %}
+                  {% set overall_score = 0 %}
+                {% endif %}
+
                 Score: {{ overall_score }}/10
             </div>
         </div>

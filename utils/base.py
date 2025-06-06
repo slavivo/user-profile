@@ -137,7 +137,7 @@ class BaseRequestParams:
         client,
         messages=None,
         model=None,
-        max_tokens=300,
+        max_tokens=3000,
         temperature=0.7,
         top_p=1.0,
         frequency_penalty=0.0,
@@ -175,7 +175,7 @@ class OpenAIRequestParams(BaseRequestParams):
         tools=openai.NOT_GIVEN,
         tool_choice=openai.NOT_GIVEN,
         model='gpt-4o-2024-08-06',
-        max_tokens=300,
+        max_tokens=3000,
         temperature=0.7,
         top_p=1.0,
         frequency_penalty=0.0,
@@ -212,7 +212,7 @@ class OpenAIRequestParams(BaseRequestParams):
             "tools": self.tools,
             "tool_choice": self.tool_choice,
             "model": self.model,
-            "max_tokens": self.max_tokens,
+            "max_completion_tokens": self.max_tokens,
             "temperature": self.temperature,
             "top_p": self.top_p,
             "frequency_penalty": self.frequency_penalty,
@@ -234,7 +234,7 @@ class GeminiRequestParams(BaseRequestParams):
         client,
         messages=None,
         model='gemini-2.0-flash',
-        max_tokens=300,
+        max_tokens=3000,
         temperature=0.7,
         top_p=1.0,
         frequency_penalty=0.0,
@@ -324,7 +324,7 @@ class DeepSeekRequestParams(BaseRequestParams):
         client,
         messages=openai.NOT_GIVEN,
         model='deepseek-chat',
-        max_tokens=300,
+        max_tokens=3000,
         temperature=0.7,
         top_p=1.0,
         frequency_penalty=0.0,
@@ -380,6 +380,8 @@ class OpenAIClient(ApiClient):
     async def chat_completion_request(self, params: OpenAIRequestParams):
         """Send a chat completion request to OpenAI API"""
         try:
+            if 'o4-mini' in params.model or 'o3-mini' in params.model:
+                params.temperature = 1.0
             response = await params.client.beta.chat.completions.parse(**params.get_params())
             return normalize_response(response, params.provider)
         except Exception as e:

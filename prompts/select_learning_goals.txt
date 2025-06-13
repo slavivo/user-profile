@@ -1,0 +1,23 @@
+Based on the following activity and the previously selected topics, analyze which learning goals would be most appropriate:
+
+Activity Name: ${name}
+Description: ${description}
+
+Selected Topics and their Available Learning Goals:
+${available_goals}
+
+Please select the most relevant learning goals from the provided list that this activity directly supports.
+
+Each selected learning goal should:
+- Be clearly achievable through this activity
+- Be appropriate for 15-year-old students (8th grade)
+- Have measurable outcomes
+- Focus on core conceptual understanding or skill application
+
+Format the response as a JSON object with:
+"selected_goals": array of learning goal ids
+
+Example format:
+{
+    "selected_goals": ["goal_id1", "goal_id2", "goal_id3"]
+} 

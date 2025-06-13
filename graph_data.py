@@ -1,5 +1,21 @@
 graph_data = {
   "data": {
+    "ovu": [{
+        "id": "I-9-1-01",
+        "outcome": "Obtains information from data, interprets data, identifies errors in others' interpretations of data."
+    },
+    {
+        "id": "I-9-1-02",
+        "outcome": "Proposes and compares different methods of encoding data for storage and transmission."
+    },
+    {
+        "id": "I-9-1-03",
+        "outcome": "Defines a problem and determines what information is needed to solve it; models the situation using graphs or similar diagrams; compares their proposed model with other models for solving the same problem and selects the most appropriate one, providing justification for their choice."
+    },
+    {
+        "id": "I-9-1-04",
+        "outcome": "Evaluates whether all necessary data for solving the problem are included in the model; finds and corrects errors in the model."
+    }],
     "nodes": [
       {
         "data": {
@@ -1338,6 +1354,26 @@ graph_data = {
     ]
   },
   "algorithms": {
+    "ovu": [{
+        "id": "I-9-2-01",
+        "outcome": "After reading the individual steps of an algorithm or program, explains the entire process; identifies the problem that the algorithm solves."
+    },
+    {
+        "id": "I-9-2-02",
+        "outcome": "Breaks down a problem into individually solvable parts and proposes and describes steps to solve them."
+    },
+    {
+        "id": "I-9-2-03",
+        "outcome": "Selects an appropriate algorithm from multiple options for a given problem and justifies the selection; modifies the given algorithm for different problems, proposes various algorithms to solve a problem."
+    },
+    {
+        "id": "I-9-2-05",
+        "outcome": "Creates a clear program in a block-oriented programming language, considering its potential consequences and their responsibility for them; tests the program and corrects any errors; uses loops, branching, and variables."
+    },
+    {
+        "id": "I-9-2-06",
+        "outcome": "Verifies the correctness of the procedure, finds and corrects any errors in it."
+    }],
     "nodes": [
       {
         "data": {
@@ -1676,6 +1712,22 @@ graph_data = {
     ]
   },
   "systems": {
+    "ovu": [{
+        "id": "I-9-3-01",
+        "outcome": "Explains the purpose of information systems they use, identifies their individual components and relationships between them; considers possible risks in designing and using information systems."
+    },
+    {
+        "id": "I-9-3-02",
+        "outcome": "Configures display, sorting, and filtering of data in a table to answer a given question; uses functions to automate data processing."
+    },
+    {
+        "id": "I-9-3-03",
+        "outcome": "Defines a problem and determines how to use data recording to solve it; based on both recommended and their own design, creates a table for data recording and sets rules and procedures for working with records in the data register."
+    },
+    {
+        "id": "I-9-3-04",
+        "outcome": "Tests the data register themselves and subsequently evaluates its functionality, possibly suggesting improvements."
+    }],
     "nodes": [
       {
         "data": {
@@ -1976,6 +2028,26 @@ graph_data = {
     ]
   },
   "digital": {
+    "ovu": [{
+        "id": "I-9-4-01",
+        "outcome": "Describes how a computer works in terms of hardware and the operating system; discusses the functioning of digital technologies that define global trends."
+    },
+    {
+        "id": "I-9-4-02",
+        "outcome": "Stores and manages their data in an appropriate format considering further processing or transmission."
+    },
+    {
+        "id": "I-9-4-03",
+        "outcome": "Chooses the most suitable method of connecting digital devices to a computer network; provides examples of networks and describes their characteristics."
+    },
+    {
+        "id": "I-9-4-04",
+        "outcome": "Handles typical computer faults and error states."
+    },
+    {
+        "id": "I-9-4-05",
+        "outcome": "Can manage their activities to minimize the risk of data loss or misuse; describes the functioning and discusses limitations of security solutions."
+    }],
     "nodes": [
       {
         "data": {

@@ -1,0 +1,26 @@
+Based on the following activity and the previously selected OVU areas, analyze which specific topics would be most relevant:
+
+Activity Name: ${name}
+Description: ${description}
+
+Selected OVU Areas and their Outcomes:
+${selected_ovu_info}
+
+Available Topics in these Areas:
+${available_topics}
+
+Please select 1-3 most relevant topics that this activity directly addresses. The selection should be focused on topics where the activity provides substantial learning opportunities.
+
+Consider:
+- Direct alignment with the activity's goals
+- Depth of coverage for each topic
+- Primary learning focus (not incidental exposure)
+- Coherence with selected OVU areas
+
+Format the response as a JSON object with:
+"selected_topics": array of topic ids (1-3 items)
+
+Example format:
+{
+    "selected_topics": ["topic_id1", "topic_id2", "topic_id3"]
+} 

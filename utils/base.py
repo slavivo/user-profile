@@ -1,5 +1,5 @@
 from tenacity import retry, wait_random_exponential, stop_after_attempt
-from typing import Tuple, Dict, Any, Optional, List
+from typing import Tuple, Dict, Any, Optional, List, Callable
 import numpy as np
 import openai
 import google.generativeai as genai
@@ -552,8 +552,15 @@ def validate_and_extract_json(response_text: str, required_keys: Dict[str, type]
         print(f"JSON validation failed: {str(e)}")
         return False, None
 
-async def generate_with_retry(client: Any, provider: str, model: str, messages: List[Dict], max_attempts: int = 3) -> Any:
-    """Generate response with retry logic and JSON validation."""
+async def generate_with_retry(
+    client: Any, 
+    provider: str, 
+    model: str, 
+    messages: List[Dict], 
+    max_attempts: int = 3,
+    validator: Optional[Callable[[str], Tuple[bool, Any]]] = validate_and_extract_json
+) -> Any:
+    """Generate response with retry logic and custom validation."""
     api_client = ApiClientFactory.create_client(provider, client)
     
     for attempt in range(max_attempts):
@@ -566,14 +573,14 @@ async def generate_with_retry(client: Any, provider: str, model: str, messages: 
                 max_tokens=3000,
             )
             response = await api_client.chat_completion_request(params)
-            is_valid, data = validate_and_extract_json(response.content)
+            is_valid, data = validator(response.content)
             
             if is_valid:
                 return data
             
             if attempt == max_attempts - 1:
                 print(f"Response: {response.content}")
-                raise ValueError(f"Failed to generate valid JSON after {max_attempts} attempts")
+                raise ValueError(f"Failed to generate valid response after {max_attempts} attempts")
                 
         except Exception as e:
             if attempt == max_attempts - 1:
@@ -670,9 +677,6 @@ def is_valid_graph_format(response_text):
         print(f"Validation failed with exception: {str(e)}")
         print("Response text:", repr(response_text))
         return False
-    
-def get_learning_goals_prompt(name: str, description: str) -> str:
-    return PromptTemplate.render('get_learning_goals', name=name, description=description)
 
 def get_connected_concepts_prompt(name: str, description: str, goals_text: str, concepts_list: str) -> str:
     """Get prompt for generating connected concepts."""

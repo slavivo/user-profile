@@ -1,0 +1,22 @@
+Based on the following activity, analyze which Overall Value Understanding (OVU) areas would be most relevant:
+
+Activity Name: ${name}
+Description: ${description}
+
+Available OVU Areas and their Outcomes:
+${ovu_areas}
+
+Please select 1-2 most relevant OVU areas that this activity aligns with. The activity should strongly contribute to the understanding of the selected area(s).
+
+Consider:
+- How directly the activity supports the outcomes of each area
+- The depth of engagement with the area's concepts
+- The primary (not secondary) focus of the activity
+
+Format the response as a JSON object with:
+"selected_ovu": array of OVU ids (1-2 items)
+
+Example format:
+{
+    "selected_ovu": ["ovu_id1", "ovu_id2"]
+} 

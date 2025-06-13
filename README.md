@@ -109,7 +109,10 @@ The activity creation process is two-phased:
    - After full description is created, these prompts generate specific metadata:
      - `get_competencies.txt`: Extracts and scores relevant competencies
      - `get_taxonomy.txt`: Determines processing levels and knowledge domains
-     - `get_learning_goals.txt`: Identifies learning goals from knowledge graph and potentionally generates new ones (not into knowledge graph)
+     - Learning goals selection (three-step process):
+       1. `select_ovu_areas.txt`: Selects 1-2 most relevant Overall Value Understanding areas
+       2. `select_topics.txt`: Identifies 1-3 most relevant topics from the selected areas
+       3. `select_learning_goals.txt`: Chooses appropriate learning goals from the selected topics
 
 ### Learning Goals Generation
 

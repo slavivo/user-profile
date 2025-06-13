@@ -6,18 +6,33 @@ Description: ${description}
 Selected Topics and their Available Learning Goals:
 ${available_goals}
 
-Please select the most relevant learning goals from the provided list that this activity directly supports.
+First, select the most relevant learning goals from the provided list that this activity directly supports.
 
-Each selected learning goal should:
+Additional goals should ONLY be suggested in these specific cases:
+1. If NO suitable learning goals were found in the provided list
+2. If there is an absolutely essential learning goal for this activity that is not covered by any of the selected goals
+
+Each learning goal should:
 - Be clearly achievable through this activity
 - Be appropriate for 15-year-old students (8th grade)
 - Have measurable outcomes
 - Focus on core conceptual understanding or skill application
+- Have moderate granularity (not too specific to particular implementations)
 
 Format the response as a JSON object with:
-"selected_goals": array of learning goal ids
+1. "selected_goals": array of learning goal ids from the available goals
+2. "additional_goals": array of new learning goals ONLY if absolutely necessary (as per the criteria above)
 
 Example format:
 {
-    "selected_goals": ["goal_id1", "goal_id2", "goal_id3"]
+    "selected_goals": ["goal_id1", "goal_id2"],
+    "additional_goals": []  // Empty if existing goals are sufficient
+}
+
+Alternative example (when no suitable goals found):
+{
+    "selected_goals": [],
+    "additional_goals": [
+        "Master fundamental algorithmic concepts and their practical applications in data management"
+    ]
 } 

@@ -284,6 +284,8 @@ async def generate_learning_goals_metadata(
         # Format the final output
         print("\n=== Formatting Final Output ===")
         metadata_goals = []
+        
+        # Process selected goals from the graph
         for category, data in graph_data.items():
             print(f"Checking category: {category}")
             if "nodes" in data:
@@ -299,7 +301,21 @@ async def generate_learning_goals_metadata(
                                     'learning_goal_id': lg['id']
                                 })
         
-        print(f"\nFinal output contains {len(metadata_goals)} learning goals")
+        # Process additional generated goals
+        if "additional_goals" in goals_data and goals_data["additional_goals"]:
+            print("\nProcessing additional generated goals:")
+            for i, goal in enumerate(goals_data["additional_goals"]):
+                goal_id = f"generated_goal_{i+1}"
+                print(f"Including generated goal: {goal}")
+                metadata_goals.append({
+                    'id': goal_id,
+                    'type': 'external',
+                    'name': goal
+                })
+        
+        print(f"\nFinal output contains {len(metadata_goals)} learning goals "
+              f"({sum(1 for g in metadata_goals if g['type'] == 'graph')} from graph, "
+              f"{sum(1 for g in metadata_goals if g['type'] == 'external')} generated)")
         return metadata_goals
         
     except Exception as e:

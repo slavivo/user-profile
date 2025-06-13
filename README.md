@@ -112,7 +112,7 @@ The activity creation process is two-phased:
      - Learning goals selection (three-step process):
        1. `select_ovu_areas.txt`: Selects 1-2 most relevant Overall Value Understanding areas
        2. `select_topics.txt`: Identifies 1-3 most relevant topics from the selected areas
-       3. `select_learning_goals.txt`: Chooses appropriate learning goals from the selected topics
+       3. `select_learning_goals.txt`: Chooses appropriate learning goals from the selected topics, can also generate external ones if necessary
 
 ### Learning Goals Generation
 
